@@ -41,6 +41,7 @@ def article_page(request, article_pk):
     context = {
         'page_title': 'продукт',
         'article': article,
+        'category_menu': get_category_menu(),
         'category_pk': article.category_id,
     }
     return render(request, 'mainapp/article_page.html', context)
@@ -51,6 +52,7 @@ def article_category(request, category_pk):
     context = {
         'article': article,
         'category_pk': article.category_pk,
+        'category_menu': get_category_menu(),
     }
     return render(request, context)
 

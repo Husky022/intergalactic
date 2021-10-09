@@ -8,7 +8,7 @@
 	<div class="details">
 		{% include 'mainapp/includes/inc__category_articles.html' %}
 		<div class="related">
-			<div class="related-products clearfix">
+			<div class="related-articles">
 				{% for item in articles %}
 				<div class="block">
 					<a href="{% url 'article_page' item.pk %}">
@@ -21,7 +21,6 @@
 							<p>{{ item.tag }}</p>
 							<p>{{ item.hub }}</p>
 						</div>
-
 				</div>
 				{% endfor %}
 			</div>
