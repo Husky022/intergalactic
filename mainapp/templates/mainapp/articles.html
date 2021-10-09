@@ -1,15 +1,11 @@
 {% extends "mainapp/base.html" %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-    {% include 'mainapp/includes/inc__main_menu.html' %}
-{% endblock %}
-
-{% block articles %}
 	<div class="details">
 		{% include 'mainapp/includes/inc__category_articles.html' %}
 		<div class="related">
 			<div class="related-articles">
-				{% for item in articles %}
+				{% for item in object_list %}
 				<div class="block">
 					<a href="{% url 'article_page' item.pk %}">
                         <h4>{{ item.name }}</h4>

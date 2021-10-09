@@ -1,5 +1,4 @@
-    {% load static %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
@@ -9,16 +8,13 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    {% block menu %} {% include 'mainapp/includes/inc__main_menu.html' %} {% endblock %}
     {% block content %}{% endblock %}
-    {% block articles %}{% endblock %}
 </body>
     <footer class="footer">
         <div class="footer-menu">
 {#            {% include 'mainapp/includes/inc__main_menu.html' %}#}
             <a class="menu-point" href="{% url 'main' %}">Главная</a>
-            <a class="menu-point" href="{% url 'programming' %}">Программирование</a>
-            <a class="menu-point" href="{% url 'webdesign' %}">Веб-Дизайн</a>
-            <a class="menu-point" href="{% url 'htmlcss' %}">HTML/CSS</a>
         </div>
     </footer>
 </html>
