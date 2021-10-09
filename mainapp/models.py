@@ -1,4 +1,27 @@
+from os import name
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.db.models.fields import IntegerField
+
+from .utilities import get_timestamp_path
+
+
+
+class AdvUser(AbstractUser):
+    is_activated = models.BooleanField(
+        default=True, db_index=True, verbose_name='Прошел активацию?')
+    send_messages = models.BooleanField(
+        default=True, verbose_name='Слать оповещения о новых комментариях?')
+
+    class Meta(AbstractUser.Meta):
+        pass
+
+
+class Hab(models.Model):
+    name = models.CharField(max_length=20, db_index=True,
+                            ValueError='Название хаба')
+    order = models.SmallIntegerField(
+        default=0, db_index=True, verbose_name='Порядок вывода')
 
 
 class ArticlesCategory(models.Model):
@@ -11,8 +34,8 @@ class ArticlesCategory(models.Model):
 
     def __str__(self):
         return f'Категория {self.name}'
-
     def delete(self, using=None, keep_parents=False):
+
         self.is_active = False
         self.save()
         return 1, {}
@@ -21,12 +44,14 @@ class ArticlesCategory(models.Model):
 class Article(models.Model):
     category = models.ForeignKey(ArticlesCategory, on_delete=models.CASCADE)
     name = models.CharField('имя', max_length=64)
-    image = models.ImageField(upload_to='articles_images', blank=True)
+    image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     text = models.TextField('Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
-    hub = models.CharField('хаб статьи', max_length=64, blank=True)
+    hab = models.ForeignKey(Hab, on_delete=models.PROTECT, verbose_name='Хаб')
+    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE,
     add_datatime = models.DateField('время добавления', auto_now_add=True)
-    is_active = models.BooleanField('активность', default=True)
+    is_active = models.BooleanField(
+
 
     class Meta:
         verbose_name = 'статья'
