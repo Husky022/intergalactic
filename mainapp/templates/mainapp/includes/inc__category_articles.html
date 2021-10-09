@@ -1,0 +1,9 @@
+
+{% for item in article_category %}
+    <li>
+        <a href="{% url 'article_category' item.pk %}"
+            class="active">
+            {{ item.name }}
+        </a>
+     </li>
+{% endfor %}

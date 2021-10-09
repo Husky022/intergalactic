@@ -1,0 +1,25 @@
+{#<div class="header clearfix">#}
+{#    <a href="{% url 'index' %}" class="logo"></a>#}
+{#    <ul class="menu">#}
+{#        {% for link in links_main_menu %}#}
+{#            <li>#}
+{#                <a href="{% url link.href %}"#}
+{#                   class="{% if request.resolver_match.url_name == link.href %}#}
+{#                            active#}
+{#                          {% endif %}">#}
+{#                    {{ link.name }}#}
+{#                </a>#}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
+
+    <div class="container-menu">
+        <a class="project-menu-name">Intergalactic</a>
+        <a class="menu-point" href="{% url 'main' %}">Главная</a>
+        <a class="menu-point" href="{% url 'articles' %}">Статьи</a>
+        <a class="menu-point" href="{% url 'programming' %}">Программирование</a>
+        <a class="menu-point" href="{% url 'webdesign' %}">Веб-Дизайн</a>
+        <a class="menu-point" href="{% url 'htmlcss' %}">HTML/CSS</a>
+        <a class="menu-point" href="">Личный кабинет</a>
+    </div>
