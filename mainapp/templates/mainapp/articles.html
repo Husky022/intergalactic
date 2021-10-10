@@ -13,7 +13,7 @@
 						<img src="/media/{{ item.image }}" alt="">
 						<div class="text">
 							<p>{{ item.add_datatime }}</p>
-							<p>{{ item.text }}</p>
+							<p>{{ item.text|truncatewords:30 }}</p>
 							<p>{{ item.tag }}</p>
 							<p>{{ item.hub }}</p>
 						</div>
