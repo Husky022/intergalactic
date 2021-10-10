@@ -1,6 +1,6 @@
 {% for item in category_menu %}
     <li>
-        <a href="{% url 'hub' item.pk %}"
+        <a href="{% url 'article_category' item.pk %}"
             class="active">
             {{ item.name }}
         </a>
