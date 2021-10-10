@@ -27,13 +27,14 @@ class Article(models.Model):
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
-    hub = models.ForeignKey(Hub, on_delete=models.PROTECT, verbose_name='Хаб', blank=True)
+    hub = models.ForeignKey(Hub, on_delete=models.PROTECT,
+                            verbose_name='Хаб', blank=True)
     author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
                                verbose_name='Автор статьи')
-    add_datatime = models.DateTimeField('время добавления', auto_now_add=True, default=timezone.now)
+    add_datatime = models.DateTimeField(
+        'время добавления', default=timezone.now)
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Актуальность статьи')
-
 
     class Meta:
         verbose_name = 'статья'

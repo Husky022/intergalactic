@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Main, Articles, index, article_page, article_category
+from .views import Main, Articles, index, article_page, hub
 
 urlpatterns = [
     path('', index, name='index'),
@@ -8,5 +8,5 @@ urlpatterns = [
     path('article_page/<int:article_pk>/',
          article_page, name='article_page'),
     path('article_category/<int:category_pk>/',
-         article_category, name='article_category'),
+         hub, name='article_category'),
 ]

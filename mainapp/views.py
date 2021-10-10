@@ -16,12 +16,10 @@ class Articles(ListView):
     extra_context = {'title': 'Статьи'}
 
 
-
 def index(request):
-    recent_articles = Articles.objects.filter(is_active=True)[:10]
+    recent_articles = Article.objects.filter(is_active=True)[:10]
     context = {'articles': recent_articles, 'title': 'Главная'}
     return render(request, 'mainapp/index1.html', context)
-
 
 
 def article_page(request, hub_pk):
