@@ -8,7 +8,7 @@ from django.utils import timezone
 from .utilities import get_timestamp_path
 
 
-class Hub(models.Model):
+class Hab(models.Model):
     name = models.CharField(max_length=20, db_index=True,
                             verbose_name='Название хаба')
     order = models.SmallIntegerField(
