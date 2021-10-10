@@ -8,7 +8,7 @@ from django.utils import timezone
 from .utilities import get_timestamp_path
 
 
-class Hab(models.Model):
+class Hub(models.Model):
     name = models.CharField(max_length=20, db_index=True,
                             verbose_name='Название хаба')
     order = models.SmallIntegerField(
@@ -28,7 +28,7 @@ class Article(models.Model):
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
-    hab = models.ForeignKey(Hab, on_delete=models.PROTECT, verbose_name='Хаб', blank=True)
+    hub = models.ForeignKey(Hub, on_delete=models.PROTECT, verbose_name='Хаб', blank=True)
     author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
                                verbose_name='Автор статьи')
     add_datatime = models.DateField('время добавления', default=timezone.now)
