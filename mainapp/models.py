@@ -1,22 +1,9 @@
 from os import name
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.db.models.fields import IntegerField
+from authapp.models import IntergalacticUser
 
 from .utilities import get_timestamp_path
-
-
-class AdvUser(AbstractUser):
-    is_activated = models.BooleanField(
-        default=True, db_index=True, verbose_name='Прошел активацию?')
-    send_messages = models.BooleanField(
-        default=True, verbose_name='Слать оповещения о новых комментариях?')
-
-    class Meta(AbstractUser.Meta):
-        pass
-
-    def __str__(self):
-        return f'{self.username}'
 
 
 class Hab(models.Model):
@@ -58,7 +45,7 @@ class Article(models.Model):
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
     hab = models.ForeignKey(Hab, on_delete=models.PROTECT, verbose_name='Хаб', blank=True)
-    author = models.ForeignKey(AdvUser, on_delete=models.CASCADE,
+    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
                                verbose_name='Автор статьи')
     add_datatime = models.DateField('время добавления', auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True, verbose_name='Актуальность статьи')
