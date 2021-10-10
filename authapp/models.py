@@ -19,7 +19,7 @@ class IntergalacticUser(AbstractUser):
     )
     age = models.PositiveSmallIntegerField(
         verbose_name='возраст',
-        blank=True
+        null=True
     )
     sex = models.CharField(
         verbose_name='пол',
