@@ -60,7 +60,6 @@ body {
 }
 
 .footer {
-    position:fixed;
     bottom:0;
     background: #364850;
     color: #fff;
@@ -104,5 +103,34 @@ body {
     height: 50px;
     color: #fff;
     text-decoration: none;
+}
+
+.profile_info {
+	margin: 10px 0px;
+}
+
+.profile_image {
+	height: 200px;
+	width: 200px;
+	float: left;
+	margin: 0px 5px 5 px 0px;
+}
+
+.profile_article_section {
+	border: 2px dashed gray;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+
+.profile_articles_response {
+	width: 600px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.article_response {
+	width: 160px;
+	background-color: lightgray;
+	text-align: center;
 }
 
