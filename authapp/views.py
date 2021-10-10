@@ -1,69 +1,75 @@
 from django.contrib import auth
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
+from django.views.generic import FormView
+from django.views.generic.base import View
+from django.db import transaction
 
 
-def login(request):
-    title = 'Вход'
-    next_url = request.GET.get('next') if 'next' in request.GET.keys() else ''
-    login_form = IntergalacticUserLoginForm(data=request.POST)
-    if request.method == 'POST' and login_form.is_valid():
-        username = request.POST['username']
-        password = request.POST['password']
+class LoginView(FormView):
+    template_name = 'authapp/login.html'
+    form_class = IntergalacticUserLoginForm
+    success_url = reverse_lazy('main')
+
+    def form_valid(self, form):
+        username = self.request.POST['username']
+        password = self.request.POST['password']
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            auth.login(request, user)
-            if 'next' in request.POST.keys():
-                return HttpResponseRedirect(request.POST['next'])
-            else:
-                return HttpResponseRedirect(reverse('main'))
-    content = {
-        'title': title,
-        'login_form': login_form,
-        'next': next_url
-    }
-    return render(request, 'authapp/login.html', content)
+            auth.login(self.request, user)
+
+        return super().form_valid(form)
 
 
-def logout(request):
-    auth.logout(request)
-    return HttpResponseRedirect(reverse('main'))
+class LogoutView(View):
+    redirect_to = 'main'
+
+    def get(self, request):
+        auth.logout(request)
+        return HttpResponseRedirect(reverse(self.redirect_to))
 
 
-def register(request):
+class RegisterView(FormView):
     title = 'регистрация'
+    template_name = 'authapp/register.html'
+    form_class = IntergalacticUserRegisterForm
+    success_url = reverse_lazy('main')
+    redirect_with_args = ['successful_register']
 
-    if request.method == 'POST':
-        register_form = IntergalacticUserRegisterForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title
+        return context
 
-        if register_form.is_valid():
-            register_form.save()
-            return HttpResponseRedirect(reverse('auth:login'))
-    else:
-        register_form = IntergalacticUserRegisterForm()
-    content = {
-        'title': title,
-        'register_form': register_form
-    }
-    return render(request, 'authapp/register.html', content)
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse('auth:login'))
 
 
-def edit(request):
-    title = 'Редактирование'
+class UserEditView(View):
+    title = 'редактирование'
+    template_name = 'authapp/edit.html'
+    redirect_to = 'main'
+    account_form = IntergalacticUserEditForm
 
-    if request.method == 'POST':
-        edit_form = IntergalacticUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('auth:edit'))
-    else:
-        edit_form = IntergalacticUserEditForm(instance=request.user)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-    content = {
-        'title': title,
-        'edit_form': edit_form,
-    }
+    def get_context_data(self):
+        context = {
+            'title': self.title,
+            'form': self.account_form(instance=self.request.user),
+        }
+        return context
 
-    return render(request, 'authapp/edit.html', content)
+    @transaction.atomic
+    def post(self, request):
+        edit_account_form = self.account_form(data=request.POST, files=request.FILES, instance=request.user)
+        if edit_account_form.is_valid():
+            edit_account_form.save()
+            return HttpResponseRedirect(reverse(self.redirect_to))
+
+    def get(self, request):
+        return render(request, self.template_name, self.get_context_data())

@@ -5,7 +5,7 @@
 {% block content %}
     <form class="form-horizontal" action="{% url 'auth:login' %}" method="post">
         {% csrf_token %}
-        {{ login_form.as_p }}
+        {{ form.as_p }}
         <br>
         {% if next %}
             <input type="hidden" name="next" value="{{ next }}">
@@ -14,7 +14,7 @@
     </form>
 
     <button class="btn btn-round form-control">
-        <a href="{% url 'auth:register' %} class=""">
+        <a href="{% url 'auth:register' %}" class="">
             Зарегистрироваться
         </a>
     </button>
