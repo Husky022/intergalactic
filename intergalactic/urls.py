@@ -20,7 +20,7 @@ import mainapp.views as mainapp
 urlpatterns = [
     path('', mainapp.Main.as_view(), name='main'),
     path('articles/', mainapp.Articles.as_view(), name='articles'),
-    path('article_page/<int:article_pk>/', mainapp.article_page, name='article_page'),
-    path('article_category/<int:category_pk>/', mainapp.article_category, name='article_category'),
+    path('article_page/<int:hub_pk>/', mainapp.article_page, name='article_page'),
+    path('hub/<int:hub_pk>/', mainapp.hub, name='hub'),
     path('admin/', admin.site.urls),
 ]
