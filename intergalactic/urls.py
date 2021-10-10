@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import mainapp.views as mainapp
+from authapp import urls as auth_urls
 
 urlpatterns = [
     path('', mainapp.Main.as_view(), name='main'),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('article_page/<int:article_pk>/', mainapp.article_page, name='article_page'),
     path('article_category/<int:category_pk>/', mainapp.article_category, name='article_category'),
     path('admin/', admin.site.urls),
+    path('auth/', include(auth_urls, namespace='auth'))
 ]
