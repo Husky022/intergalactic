@@ -1,5 +1,5 @@
-from mainapp.models import Hab
+from mainapp.models import Hub
 
 
 def category(request):
-    return {"category_menu": Hab.objects.all()}
+    return {"category_menu": Hub.objects.all()}
