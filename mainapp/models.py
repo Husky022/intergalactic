@@ -31,10 +31,11 @@ class Article(models.Model):
                             verbose_name='Хаб', blank=True)
     author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
                                verbose_name='Автор статьи')
-    add_datatime = models.DateTimeField(
-        'время добавления', default=timezone.now)
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Актуальность статьи')
+    add_datatime = models.DateTimeField('время добавления', auto_now_add=True)
+    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Актуальность статьи')
+
 
     class Meta:
         verbose_name = 'статья'
