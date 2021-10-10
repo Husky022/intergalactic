@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView
 
-from mainapp.models import Article
+from mainapp.models import Article, Hub
 
 
 class Main(TemplateView):
@@ -14,6 +14,12 @@ class Articles(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
+
+
+def index(request):
+    recent_articles = Articles.objects.filter(is_active=True)[:10]
+    context = {'articles': recent_articles, 'title': 'Главная'}
+    return render(request, 'mainapp/index1.html', context)
 
 
 def article_page(request, article_pk):
@@ -33,4 +39,3 @@ def article_category(request, category_pk):
         'category_pk': article.category_pk,
     }
     return render(request, context)
-

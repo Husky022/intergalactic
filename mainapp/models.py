@@ -57,15 +57,18 @@ class Article(models.Model):
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
-    hab = models.ForeignKey(Hab, on_delete=models.PROTECT, verbose_name='Хаб', blank=True)
+    hab = models.ForeignKey(Hab, on_delete=models.PROTECT,
+                            verbose_name='Хаб', blank=True)
     author = models.ForeignKey(AdvUser, on_delete=models.CASCADE,
                                verbose_name='Автор статьи')
     add_datatime = models.DateField('время добавления', auto_now_add=True)
-    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Актуальность статьи')
+    is_active = models.BooleanField(
+        default=True, db_index=True, verbose_name='Актуальность статьи')
 
     class Meta:
         verbose_name = 'статья'
         verbose_name_plural = 'статьи'
+        ordering = ['-add_datatime']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
