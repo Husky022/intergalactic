@@ -168,3 +168,39 @@ button::-moz-focus-inner {
     color: #fff;
     text-decoration: none;
 }
+
+/* Классы для Личного кабинета */
+
+.profile_subheading_1 {
+    font-size: 30px;
+    color: #666666;
+    font-style:
+}
+
+.profile_subheading_2 {
+    font-size: 25px;
+    color: green;
+}
+
+
+.profile_info {
+	margin: 10px 0px;
+}
+
+.profile_image {
+	height: 200px;
+	width: 200px;
+	float: left;
+	margin: 0px 5px 5 px 0px;
+}
+
+.profile_article_section {
+	border-bottom: 2px dashed blue;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+
+.btn-light {
+    margin-top: 20px
+}
+

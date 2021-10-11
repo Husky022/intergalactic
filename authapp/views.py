@@ -1,5 +1,5 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
 from django.views.generic import FormView
@@ -73,3 +73,14 @@ class UserEditView(View):
 
     def get(self, request):
         return render(request, self.template_name, self.get_context_data())
+
+
+def user_profile(request):
+    user = request.user
+    #if not request.user.is_authenticated:
+         #return HttpResponseRedirect(reverse('auth:login'))
+    context = {
+        'title': 'личный кабинет',
+        'user': user
+    }
+    return render(request, 'authapp/profile.html', context)
