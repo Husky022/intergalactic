@@ -4,6 +4,32 @@
     box-sizing: border-box;
 }
 
+/*Классы из Bootstrap*/
+
+.navbar{
+    background-color: bisque;
+}
+
+.display-heading{
+    font-size: 35px;
+    color: #666666;
+}
+
+.right{
+    position: absolute;
+    right: 0;
+}
+
+.bg-footer{
+    background-color: #999999;
+}
+
+.orange{
+    background-color: orange;
+}
+
+
+/*Обычные классы*/
 html {
     min-width: 800px;
 }
@@ -19,9 +45,46 @@ body {
     color: #333;
 }
 
-.article-box{
+a{
+  text-decoration: none !important;
+  color: #666666;
+}
+
+a:hover{
+  color: black;
+}
+
+button:active, button:focus {
+  outline: none !important;
+}
+button::-moz-focus-inner {
+  border: 0 !important;
+}
+
+.block-article{
     margin-top: 5%;
-    margin-left: 15%;
+    margin-bottom: 5%;
+}
+
+
+.user-panel-button {
+    color: #666666;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.user-panel-button:hover {
+    color: black;
+}
+
+.article-box{
+    margin-top: 2%;
+    margin-left: 10%;
+    width: 80%;
 }
 
 .project-menu-name{
@@ -60,6 +123,7 @@ body {
 }
 
 .footer {
+    position:fixed;
     bottom:0;
     background: #364850;
     color: #fff;
@@ -104,33 +168,3 @@ body {
     color: #fff;
     text-decoration: none;
 }
-
-.profile_info {
-	margin: 10px 0px;
-}
-
-.profile_image {
-	height: 200px;
-	width: 200px;
-	float: left;
-	margin: 0px 5px 5 px 0px;
-}
-
-.profile_article_section {
-	border: 2px dashed gray;
-	margin-bottom: 10px;
-	padding: 5px;
-}
-
-.profile_articles_response {
-	width: 600px;
-	display: flex;
-	justify-content: space-between;
-}
-
-.article_response {
-	width: 160px;
-	background-color: lightgray;
-	text-align: center;
-}
-
