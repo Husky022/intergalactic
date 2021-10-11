@@ -1,37 +1,37 @@
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from datetime import datetime
-import json
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.decorators.cache import cache_page
-from django.shortcuts import render
+from django.views.generic import TemplateView, ListView
 
-# Create your views here.
+from mainapp.models import Article
 
-def base(request):
+
+class Main(ListView):
+    model = Article
+    template_name = 'mainapp/index.html'
+    extra_context = {'title': 'Главная'}
+
+
+class Articles(ListView):
+    model = Article
+    template_name = 'mainapp/articles.html'
+    extra_context = {'title': 'Статьи'}
+
+
+def article_page(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
     context = {
-        'now': datetime.now().year
+        'page_title': 'продукт',
+        'article': article,
+        'category_pk': article.category_id,
     }
-    return render(request, 'mainapp/base.html', context)
+    return render(request, 'mainapp/article_page.html', context)
 
-def main(request):
-    context = {}
-    return render(request, 'mainapp/index.html', context)
 
-def programming(request):
+def article_category(request, category_pk):
+    article = get_object_or_404(Article, pk=category_pk)
     context = {
-        'title': 'Программирование'
+        'article': article,
+        'category_pk': article.category_pk,
     }
-    return render(request, 'mainapp/category_base.html', context)
-
-def web_design_page(request):
-    context = {
-        'title': 'Веб-Дизайн'
-    }
-    return render(request, 'mainapp/category_base.html', context)
-
-def html_css_page(request):
-    context = {
-        'title': 'HTML/CSS'
-    }
-    return render(request, 'mainapp/category_base.html', context)
+    return render(request, context)
 
