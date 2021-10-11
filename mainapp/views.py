@@ -5,7 +5,8 @@ from django.views.generic import TemplateView, ListView
 from mainapp.models import Article
 
 
-class Main(TemplateView):
+class Main(ListView):
+    model = Article
     template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
 
