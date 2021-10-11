@@ -1,15 +1,14 @@
-
 <div class="container-menu">
     <a href="{% url 'main' %}" class="logo">Intergalactic</a>
     <a class="menu-point" href="{% url 'main' %}">Главная</a>
     <a class="menu-point" href="{% url 'articles' %}">Статьи</a>
     <a class="menu-point" href="">Личный кабинет</a>
 
-{#    для отображения на главной, раскомментировать:  #}
-{#    {% if user.is_authenticated %}#}
-{#      <a class="menu-point" href="{% url 'auth:edit' %}">{{ user.username }}</a>#}
-{#      <a class="menu-point" href="{% url 'auth:logout' %}">Выход</a>#}
-{#    {% else %}#}
-{#      <a class="menu-point" href="{% url 'auth:login' %}">Вход</a>#}
-{#    {% endif %}#}
+
+    {% if user.is_authenticated %}
+    <a class="menu-point" href="{% url 'auth:edit' %}">{{ user.username }}</a>
+    <a class="menu-point" href="{% url 'auth:logout' %}">Выход</a>
+    {% else %}
+    <a class="menu-point" href="{% url 'auth:login' %}">Вход</a>
+    {% endif %}
 </div>
