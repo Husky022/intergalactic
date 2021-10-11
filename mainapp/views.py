@@ -16,7 +16,7 @@ class Articles(ListView):
     extra_context = {'title': 'Статьи'}
 
     def get_queryset(self):
-        queryset = Article.objects.all()
+        queryset = Article.objects.all()[:10]
         return queryset
 
 
