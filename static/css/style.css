@@ -4,6 +4,32 @@
     box-sizing: border-box;
 }
 
+/*Классы из Bootstrap*/
+
+.navbar{
+    background-color: bisque;
+}
+
+.display-heading{
+    font-size: 35px;
+    color: #666666;
+}
+
+.right{
+    position: absolute;
+    right: 0;
+}
+
+.bg-footer{
+    background-color: #999999;
+}
+
+.orange{
+    background-color: orange;
+}
+
+
+/*Обычные классы*/
 html {
     min-width: 800px;
 }
@@ -19,9 +45,36 @@ body {
     color: #333;
 }
 
-.article-box{
+button:active, button:focus {
+  outline: none !important;
+}
+button::-moz-focus-inner {
+  border: 0 !important;
+}
+
+.block-article{
     margin-top: 5%;
-    margin-left: 15%;
+}
+
+
+.user-panel-button {
+    color: #666666;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.user-panel-button:hover {
+    color: black;
+}
+
+.article-box{
+    margin-top: 2%;
+    margin-left: 10%;
+    width: 80%;
 }
 
 .project-menu-name{

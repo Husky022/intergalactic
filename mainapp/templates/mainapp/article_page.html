@@ -1,17 +1,4 @@
-{% extends "mainapp/base.html" %}{% block articles %}
-	<div class="details">
-		<div class="details-articles">
-            <h4>{{ article.name }}</h4>
-            <img src="{% static 'img/python.jpeg' %}" alt="">
-            <div class="text">
-                <p>{{ article.add_datatime }}</p>
-                <p>{{ article.text }}</p>
-                <p>{{ article.tag }}</p>
-                <p>{{ article.hub }}</p>
-            </div>
-		</div>
-	</div>
-{% endblock %}
+{% extends "mainapp/base.html" %}
 {% load static %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
@@ -23,7 +10,10 @@
                 <p>{{ article.add_datatime }}</p>
                 <p>{{ article.text }}</p>
                 <p>{{ article.tag }}</p>
-                <p>{{ article.hub }}</p>
+                <div>
+                    <p>{{ article.hub }}</p>
+                </div>
+
             </div>
 		</div>
 	</div>
