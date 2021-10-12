@@ -1,57 +1,63 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-  <a class="navbar-brand" href="{% url 'main' %}">
-    <img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
-  </a>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-          <a class="nav-link" href="{% url 'main' %}">Главная</a>
-      </li>
-      <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Cтатьи
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Программирование</a>
-          <a class="dropdown-item" href="#">Веб-дизайн</a>
-          <a class="dropdown-item" href="#">HTML/CSS</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{% url 'articles' %}">Общий раздел</a>
+    <a class="navbar-brand" href="{% url 'main' %}">
+        <img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'main' %}">Главная</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Cтатьи
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Программирование</a>
+                    <a class="dropdown-item" href="#">Веб-дизайн</a>
+                    <a class="dropdown-item" href="#">HTML/CSS</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'articles' %}">Общий раздел</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </li>
+        </ul>
+        <div class="user-panel">
+            {% if user.is_authenticated %}
+                <button class="user-panel-button" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                    </svg>
+                </button>
+                <button class="user-panel-button" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                    </svg>
+                </button>
+                <a class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
+                    <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                </a>
+                <a class="user-panel-button btn btn-outline-secondary" href="{% url 'auth:logout' %}">
+                    Выход
+                </a>
+            {% else %}
+                <a class="user-panel-button btn btn-outline-success" href="{% url 'auth:login' %}">
+                    Вход
+                </a>
+                <a class="user-panel-button btn btn-outline-warning" href="{% url 'auth:register' %}">
+                    Регистрация
+                </a>
+            {% endif %}
         </div>
-      </li>
-    <li class="nav-item">
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-    </li>
-    </ul>
-          <div class="user-panel">
-{#          {% if user.is_authenticated %}#}
-              <button class="user-panel-button" href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
-                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-                  </svg>
-              </button>
-              <button class="user-panel-button" href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                  </svg>
-              </button>
-              <button class="user-panel-button" href="{% url 'auth:profile' %}">
-                  <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                  </svg>
-              </button>
-                  <a class="user-panel-button" href="{% url 'auth:logout' %}">Выход</a>
-{#          {% else %}#}
-                  <a class="user-panel-button" href="{% url 'auth:login' %}">Вход</a>
-
-{#          {% endif %}#}
-          </div>
-  </div>
+    </div>
 </nav>

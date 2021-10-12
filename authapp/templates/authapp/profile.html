@@ -1,12 +1,13 @@
 {% extends "mainapp/base.html" %}
+{% load project_tags %}
 {% block content %}
 <div class="article-box">
 <p class="display-heading">Личный кабинет</p>
-<button class="btn btn-primary">Редактировать профиль</button>
-<div class="profile_info"><img class="profile_image" src="" alt="profile_image">
+<a class="btn btn-primary" href="{% url 'auth:edit' %}">Редактировать профиль</a>
+<div class="profile_info"><img class="profile_image" src="{{ user.avatar|media_folder_users }}" alt="profile_image">
 	<div class="profile_about">
-		<p>{{ user.username }}Username</p>
-		<p>Возраст: {{ user.age }} Age</p>
+		<p>Username: {{ user.username }}</p>
+		<p>Возраст: {{ user.age }}</p>
 		<p>Обо мне: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis maiores itaque dolores similique, nam, repellendus quisquam ab amet voluptatum odio sunt mollitia enim! Ea iusto ut ipsum sint, autem expedita et suscipit deserunt accusamus, nesciunt cum, reiciendis quam quis! Accusantium quod minus error quisquam, tempora laudantium laborum aliquid quas est eum corporis iusto dicta consequatur doloremque quaerat nulla necessitatibus fugiat minima itaque expedita, dolorum veritatis rerum iure neque. Temporibus aspernatur quasi architecto, porro tenetur officiis iusto quaerat facere ex dicta asperiores iste eum nulla nesciunt aliquam. Nisi laborum officiis perspiciatis dolorem error explicabo atque. Voluptatum quisquam quam voluptatem sint quasi.</p>
 	</div>
 </div>

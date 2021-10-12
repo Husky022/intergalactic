@@ -75,6 +75,7 @@ button::-moz-focus-inner {
     cursor:pointer;
     overflow: hidden;
     outline:none;
+    margin-left: 10px;
 }
 
 .user-panel-button:hover {
@@ -174,7 +175,7 @@ button::-moz-focus-inner {
 .profile_subheading_1 {
     font-size: 30px;
     color: #666666;
-    font-style:
+    /*font-style: не было прописано PyCharm ругался*/
 }
 
 .profile_subheading_2 {
@@ -191,7 +192,7 @@ button::-moz-focus-inner {
 	height: 200px;
 	width: 200px;
 	float: left;
-	margin: 0px 5px 5 px 0px;
+	margin: 0px 5px 5px 0px;
 }
 
 .profile_article_section {
@@ -204,3 +205,15 @@ button::-moz-focus-inner {
     margin-top: 20px
 }
 
+/* Окно регистрации */
+
+.login {
+    max-width: 400px;
+    margin: 40px auto 0;
+}
+
+/*Окно изменения пользователя*/
+
+.user_avatar img {
+    max-width: 400px;
+}
