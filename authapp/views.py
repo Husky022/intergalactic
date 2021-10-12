@@ -75,13 +75,16 @@ class UserEditView(View):
         return render(request, self.template_name, self.get_context_data())
 
 
-# class UserProfileView(View):
-#     pass
-#
-def user_profile(request):
-    user = request.user
-    context = {
-        'title': 'личный кабинет',
-        'user': user
-    }
-    return render(request, 'authapp/profile.html', context)
+class UserProfileView(View):
+    title = 'личный кабинет'
+    template_name = 'authapp/profile.html'
+
+    def get_context_data(self):
+        context = {
+            'title': self.title,
+            'user': self.request.user,
+        }
+        return context
+
+    def get(self, request):
+        return render(request, self.template_name, self.get_context_data())
