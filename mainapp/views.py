@@ -29,11 +29,14 @@ def article_page(request, article_pk):
     }
     return render(request, 'mainapp/article_page.html', context)
 
+class Hub_category(ListView):
+    model = Article
+    template_name = 'mainapp/hub_category.html'
+    context_object_name = 'hub'
+    # allow_empty = False # Когда страница не найдена отдавать 404 ошибку
 
-def hub(request, hub_pk):
-    article = get_object_or_404(Article, pk=hub_pk)
-    context = {
-        'article': article,
-        'hub_pk': article.hub_id,
-    }
-    return render(request, context)
+    def get_queryset(self):
+        # Фильтр по категории и сортировка "сначала новые"
+        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datatime')
+
+
