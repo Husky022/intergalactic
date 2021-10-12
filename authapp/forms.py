@@ -32,6 +32,7 @@ class IntergalacticUserRegisterForm(UserCreationForm):
         super(IntergalacticUserRegisterForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+            self.fields[field_name].help_text = None
 
 
 class IntergalacticUserEditForm(UserChangeForm):

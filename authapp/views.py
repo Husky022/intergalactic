@@ -75,10 +75,11 @@ class UserEditView(View):
         return render(request, self.template_name, self.get_context_data())
 
 
+# class UserProfileView(View):
+#     pass
+#
 def user_profile(request):
     user = request.user
-    #if not request.user.is_authenticated:
-         #return HttpResponseRedirect(reverse('auth:login'))
     context = {
         'title': 'личный кабинет',
         'user': user

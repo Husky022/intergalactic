@@ -19,6 +19,7 @@ class IntergalacticUser(AbstractUser):
     )
     age = models.PositiveSmallIntegerField(
         verbose_name='возраст',
+        blank=True,
         null=True
     )
     sex = models.CharField(
@@ -32,9 +33,6 @@ class IntergalacticUser(AbstractUser):
         default=True,
         verbose_name='Оповещать о новых комментариях'
     )
-
-    # class Meta(AbstractUser.Meta):
-    #     pass
 
     def __str__(self):
         return f'{self.username}'
