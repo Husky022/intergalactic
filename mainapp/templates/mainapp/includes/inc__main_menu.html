@@ -14,9 +14,9 @@
                     Cтатьи
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Программирование</a>
-                    <a class="dropdown-item" href="#">Веб-дизайн</a>
-                    <a class="dropdown-item" href="#">HTML/CSS</a>
+                    {% for item in category_menu %}
+                    <a class="dropdown-item" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
+                    {% endfor %}
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'articles' %}">Общий раздел</a>
                 </div>
