@@ -8,13 +8,13 @@
                 <div class="related-articles">
                     {% for item in object_list %}
                     <div class="block-article">
-                    
+                    <a href="{% url 'article_page' item.pk %}">
                             <h4>{{ item.name }}</h4>
                         </a>
-                            <img src="/media/{{ item.image }}" alt="">
+<!--                            <img src="/media/{{ item.image }}" alt="">-->
                             <div class="text">
                                 <p>{{ item.add_datatime }}</p>
-                                <p>{{ item.text }}</p>
+                                <p>{{ item.text|truncatewords:33 }}</p>
                                 <p>#{{ item.tag }}</p>
                                 <p>{{ item.hub }}</p>
                                 <div>
