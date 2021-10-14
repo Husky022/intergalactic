@@ -45,6 +45,15 @@ body {
     color: #333;
 }
 
+a{
+  text-decoration: none !important;
+  color: #666666;
+}
+
+a:hover{
+  color: black;
+}
+
 button:active, button:focus {
   outline: none !important;
 }
@@ -54,6 +63,7 @@ button::-moz-focus-inner {
 
 .block-article{
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 
@@ -65,6 +75,7 @@ button::-moz-focus-inner {
     cursor:pointer;
     overflow: hidden;
     outline:none;
+    margin-left: 10px;
 }
 
 .user-panel-button:hover {
@@ -75,6 +86,7 @@ button::-moz-focus-inner {
     margin-top: 2%;
     margin-left: 10%;
     width: 80%;
+    margin-bottom: 5%;
 }
 
 .project-menu-name{
@@ -159,3 +171,75 @@ button::-moz-focus-inner {
     text-decoration: none;
 }
 
+/* Классы для Личного кабинета */
+
+.profile_subheading_1 {
+    font-size: 30px;
+    color: #666666;
+    /*font-style: не было прописано PyCharm ругался*/
+}
+
+.profile_subheading_2 {
+    font-size: 25px;
+    color: green;
+}
+
+
+.profile_info {
+	margin: 10px 0px;
+}
+
+.profile_image {
+	height: 200px;
+	width: 200px;
+	float: left;
+	margin: 0px 5px 5px 0px;
+}
+
+.profile_article_section {
+	border-bottom: 2px dashed blue;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+
+.btn-light {
+    margin-top: 20px
+}
+
+/* Окно регистрации */
+
+.login {
+    max-width: 400px;
+    margin: 40px auto 0;
+}
+
+/*Окно изменения пользователя*/
+
+.user_avatar img {
+    max-width: 400px;
+}
+
+.img-box{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.comments, .likes, .dislikes{
+    float: left;
+}
+
+.btn-comments, .btn-likes, .btn-dislikes{
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+}
+
+.btn-likes{
+    color: green;
+}
+
+.btn-dislikes{
+    color: red;
+}

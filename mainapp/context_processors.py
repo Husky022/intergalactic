@@ -1,4 +1,5 @@
-from mainapp.models import ArticlesCategory
+from mainapp.models import Hub
+
 
 def category(request):
-    return {"category_menu": ArticlesCategory.objects.all()}
+    return {"category_menu": Hub.objects.all()}
