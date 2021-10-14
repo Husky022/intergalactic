@@ -23,7 +23,7 @@ class Articles(ListView):
 def article_page(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     context = {
-        'page_title': 'продукт',
+        'page_title': 'Статья',
         'article': article,
         'article_pk': article.hub_id,
     }

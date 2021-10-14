@@ -86,6 +86,7 @@ button::-moz-focus-inner {
     margin-top: 2%;
     margin-left: 10%;
     width: 80%;
+    margin-bottom: 5%;
 }
 
 .project-menu-name{
@@ -216,4 +217,29 @@ button::-moz-focus-inner {
 
 .user_avatar img {
     max-width: 400px;
+}
+
+.img-box{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.comments, .likes, .dislikes{
+    float: left;
+}
+
+.btn-comments, .btn-likes, .btn-dislikes{
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+}
+
+.btn-likes{
+    color: green;
+}
+
+.btn-dislikes{
+    color: red;
 }
