@@ -23,7 +23,7 @@ class Hub(models.Model):
 
 
 class Article(models.Model):
-    name = models.CharField('имя', max_length=64)
+    name = models.CharField('имя', max_length=168)
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField('тэг статьи', max_length=64, blank=True)
