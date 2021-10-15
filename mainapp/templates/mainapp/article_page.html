@@ -40,21 +40,7 @@
                 (33)
             </button>
         </div>
-        <div>
-            <div class="comment-main" style="margin:2% 25% 2% 25%; color: #666666" >
-                Комментариев пока что нет...
-            </div>
-            <form class="form-horizontal" action="" method="post">
-                {% csrf_token %}
-                <br>
-{#                <label>Будьте первым:</label>#}
-                <label>Оставить комментарий:</label>
-                <textarea name="text_comment" rows="5" style="width: 100%"></textarea>
-                <div class="text-right">
-                    <input type="submit" value="Отправить">
-                </div>
-            </form>
-        </div>
+        {% block comments %} {% include 'mainapp/comments.html' %} {% endblock %}
     </div>
 {% endblock %}
 
