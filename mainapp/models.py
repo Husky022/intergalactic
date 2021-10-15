@@ -34,8 +34,6 @@ class Article(models.Model):
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Актуальность статьи')
     add_datatime = models.DateTimeField('время добавления', auto_now_add=True)
-    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Актуальность статьи')
-
 
     class Meta:
         verbose_name = 'статья'
@@ -48,3 +46,23 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.name} - ({self.hub.name})'
+
+
+class Comment(models.Model):
+    text = models.TextField(verbose_name='Текст комментария')
+    image = models.ImageField(blank=True, upload_to=get_timestamp_path)
+    article = models.ForeignKey(Article, on_delete=models.PROTECT,
+                            verbose_name='Статья')
+    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
+                               verbose_name='Автор комментария')
+    is_active = models.BooleanField(
+        default=True, db_index=True, verbose_name='Активация комментария')
+    add_datatime = models.DateTimeField('Время добавления комментария', auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.article.name}: {self.text}'
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'комментарии'
+

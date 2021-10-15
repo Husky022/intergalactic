@@ -2,6 +2,14 @@
 <div>
     <div class="comment-main" style="margin:2% 25% 2% 25%; color: #666666" >
         Комментариев пока что нет...
+        {% for item in object_list %}
+            <div class="block-article">
+                    <div class="text">
+                        <p>{{ item.add_datatime }}</p>
+                        <p>{{ item.text }}</p>
+                    </div>
+            </div>
+        {% endfor %}
     </div>
     <form class="form-horizontal" action="" method="post">
         {% csrf_token %}
