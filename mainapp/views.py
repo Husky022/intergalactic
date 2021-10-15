@@ -6,9 +6,12 @@ from mainapp.models import Article
 
 
 class Main(ListView):
-    model = Article
     template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
+
+    def get_queryset(self):
+        queryset = Article.objects.all()[:3]
+        return queryset
 
 
 class Articles(ListView):

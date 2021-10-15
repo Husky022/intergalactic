@@ -45,9 +45,14 @@ body {
     color: #333;
 }
 
+
 a{
   text-decoration: none !important;
   color: #666666;
+}
+
+.a_link_article{
+    color: maroon !important;
 }
 
 a:hover{
@@ -84,9 +89,18 @@ button::-moz-focus-inner {
 
 .article-box{
     margin-top: 2%;
-    margin-left: 10%;
-    width: 80%;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
     margin-bottom: 5%;
+}
+
+.article-img{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: 250px;
+    width: 400px;
 }
 
 .project-menu-name{
@@ -169,6 +183,11 @@ button::-moz-focus-inner {
     height: 50px;
     color: #fff;
     text-decoration: none;
+}
+
+.menu_category{
+    list-style-type: none;
+    background: lightgray;
 }
 
 /* Классы для Личного кабинета */

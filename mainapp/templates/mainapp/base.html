@@ -10,7 +10,10 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    {% block menu %} {% include 'mainapp/includes/inc__main_menu.html' %} {% endblock %}
+    {% block menu %}
+    {% include 'mainapp/includes/inc__main_menu.html' %}
+    {% include 'mainapp/includes/inc__category_articles.html' %}
+    {% endblock %}
     {% block content %}{% endblock %}
 </body>
      {% block footer %} {% include 'mainapp/includes/inc__footer.html' %} {% endblock %}
