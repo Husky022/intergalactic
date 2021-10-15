@@ -243,3 +243,7 @@ button::-moz-focus-inner {
 .btn-dislikes{
     color: red;
 }
+
+.comment-main {
+    color: red;
+}
