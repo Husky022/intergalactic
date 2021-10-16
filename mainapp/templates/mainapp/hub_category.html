@@ -15,11 +15,7 @@
                     <div class="text">
                         <p>{{ item.add_datatime }}</p>
                         <p>
-                            {% if item.from_summernote %}
-                                <p>{{ item.text|safe|truncatewords:33 }}</p>
-                            {% else %}
-                                <p>{{ item.text|truncatewords:33 }}</p>
-                            {% endif %}
+                            <p>{{ item.preview }}</p>
                             <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                                 читать дальше
                             </a>
