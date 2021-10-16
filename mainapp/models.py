@@ -34,7 +34,7 @@ class Article(models.Model):
     ]
 
     # Пока модерация не включена в настройках - публиковать сразу все написанные статьи
-    ARTICLE_DEFAULT_STATUS = 'MD' if settings.MODERATION_STATUS else ARTICLE_DEFAULT_STATUS = 'PB'
+    ARTICLE_DEFAULT_STATUS = 'MD' if settings.MODERATION_STATUS else 'PB'
 
     name = models.CharField(verbose_name='Название статьи', max_length=168)
     image = models.ImageField(verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
@@ -63,6 +63,7 @@ class Article(models.Model):
     )
     article_status = models.CharField(
         verbose_name='Статус публикации',
+        max_length=2,
         choices=ARTICLE_STATUS_CHOICES,
         default=ARTICLE_DEFAULT_STATUS
     )
