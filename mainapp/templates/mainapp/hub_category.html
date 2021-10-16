@@ -14,10 +14,16 @@
                     <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}" alt="">
                     <div class="text">
                         <p>{{ item.add_datatime }}</p>
-                        <p>{{ item.text|truncatewords:33 }}
+                        <p>
+                            {% if item.from_summernote %}
+                                <p>{{ item.text|safe|truncatewords:33 }}</p>
+                            {% else %}
+                                <p>{{ item.text|truncatewords:33 }}</p>
+                            {% endif %}
                             <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                                 читать дальше
-                            </a></p>
+                            </a>
+                        </p>
                         <p>#{{ item.tag }}</p>
                         <p>{{ item.hub }}</p>
                         <div>

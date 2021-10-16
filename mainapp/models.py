@@ -34,6 +34,7 @@ class Article(models.Model):
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Актуальность статьи')
     add_datetime = models.DateTimeField('время добавления', auto_now_add=True)
+    from_summernote = models.BooleanField('Самописная статья', blank=True, null=True)
 
     class Meta:
         verbose_name = 'статья'
