@@ -6,6 +6,7 @@
     <div class="details">
         <div class="related">
             <div class="related-articles">
+            {% if is_paginated %}
                 {% for item in object_list %}
                 <div class="block-article">
                     <a class="a_link_article" href="{% url 'article_page' item.pk %}">
@@ -47,6 +48,20 @@
                     </div>
                 </div>
                 {% endfor %}
+                <nav>
+                    <ul class="pager">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a></li>
+                    {% endif %}
+
+                        Страница {{ page_obj.number }} из {{ paginator.num_pages }}.
+
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">Следующая</a></li>
+                    {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
             </div>
         </div>
     </div>
