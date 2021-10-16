@@ -9,19 +9,21 @@ from mainapp.models import Article
 class Main(ListView):
     template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
+    paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.all()[:3]
+        queryset = Article.objects.all()
         return queryset
 
 
 class Articles(ListView):
+    model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.all()
+        queryset = Article.objects.filter(is_active=True)
         return queryset
 
 
@@ -39,6 +41,7 @@ class Hub_category(ListView):
     model = Article
     template_name = 'mainapp/hub_category.html'
     context_object_name = 'hub'
+    paginate_by = 5
     # allow_empty = False # Когда страница не найдена отдавать 404 ошибку
 
     def get_queryset(self):
