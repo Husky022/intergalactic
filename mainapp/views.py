@@ -43,6 +43,6 @@ class Hub_category(ListView):
 
     def get_queryset(self):
         # Фильтр по категории и сортировка "сначала новые"
-        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datatime')
+        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datetime')
 
 
