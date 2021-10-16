@@ -33,14 +33,12 @@ class Article(models.Model):
                                verbose_name='Автор статьи')
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Актуальность статьи')
-    add_datatime = models.DateTimeField('время добавления', auto_now_add=True)
-    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Актуальность статьи')
-
+    add_datetime = models.DateTimeField('время добавления', auto_now_add=True)
 
     class Meta:
         verbose_name = 'статья'
         verbose_name_plural = 'статьи'
-        ordering = ['-add_datatime']
+        ordering = ['-add_datetime']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
