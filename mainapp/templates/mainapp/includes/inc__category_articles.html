@@ -1,8 +1,14 @@
-<div >
-    <ul class = "menu_category d-flex justify-content-center">
-        <li class=""><a class="dropdown-item" href="{% url 'articles' %}">Все хабы</a></li>
-        {% for item in category_menu %}
-        <li class=""><a class="dropdown-item" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a></li>
-        {% endfor %}
-    </ul>
-</div>
+<nav class="sticky-top">
+    <div>
+        <ul class="menu_category nav-pills d-flex justify-content-center">
+            <li {% if request.resolver_match.url_name == "articles" %} class="active" {% endif %}>
+            <a class="nav-link text-secondary" href="{% url 'articles' %}">Все хабы</a>
+            </li>
+            {% for item in category_menu %}
+            <li {% if request.resolver_match.kwargs.hub_id == item.pk %} class="active" {% endif %}>
+            <a class="nav-link text-muted" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
