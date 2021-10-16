@@ -1,8 +1,0 @@
-<div >
-    <ul class = "menu_category d-flex justify-content-center">
-        <li class=""><a class="dropdown-item" href="{% url 'articles' %}">Все хабы</a></li>
-        {% for item in category_menu %}
-        <li class=""><a class="dropdown-item" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a></li>
-        {% endfor %}
-    </ul>
-</div>

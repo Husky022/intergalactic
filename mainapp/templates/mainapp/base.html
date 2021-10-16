@@ -9,13 +9,13 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=10">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
+<body class="sticky-top">
+<header class="sticky-top">
     {% block menu %}
     {% include 'mainapp/includes/inc__main_menu.html' %}
-    {% include 'mainapp/includes/inc__category_articles.html' %}
     {% endblock %}
     {% block content %}{% endblock %}
-</body>
+</header>
      {% block footer %} {% include 'mainapp/includes/inc__footer.html' %} {% endblock %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

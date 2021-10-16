@@ -52,11 +52,16 @@ a{
 }
 
 .a_link_article{
-    color: maroon !important;
+    color: maroon;
 }
 
 a:hover{
   color: black;
+}
+
+.active{
+    background: darkgrey;
+    border-radius: 10px;
 }
 
 button:active, button:focus {
@@ -96,7 +101,6 @@ button::-moz-focus-inner {
 }
 
 .article-img{
-    margin-left: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
     height: 250px;
