@@ -32,6 +32,7 @@ def article_page(request, article_pk):
     }
     return render(request, 'mainapp/article_page.html', context)
 
+
 class Hub_category(ListView):
     model = Article
     template_name = 'mainapp/hub_category.html'
@@ -40,6 +41,6 @@ class Hub_category(ListView):
 
     def get_queryset(self):
         # Фильтр по категории и сортировка "сначала новые"
-        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datatime')
+        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datetime')
 
 
