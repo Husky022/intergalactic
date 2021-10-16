@@ -12,11 +12,7 @@
                 </div>
                 <div class="text">
                     <p>{{ article.add_datatime }}</p>
-                    {% if article.from_summernote %}
-                        {{ article.text|safe }}
-                    {% else %}
-                        <p>{{ article.text|linebreaks}}</p>
-                    {% endif %}
+                    {{ article.text|safe|linebreaks }}
                     <hr>
                     <p>#{{ article.tag }}</p>
                     <p>{{ article.hub }}</p>
