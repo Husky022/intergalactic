@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from authapp.models import IntergalacticUser
 
@@ -32,7 +33,10 @@ class Article(models.Model):
         ('PB', 'Опубликована'),
     ]
 
-    name = models.CharField(verbose_name='Название статьи', max_length=64)
+    # Пока модерация не включена в настройках - публиковать сразу все написанные статьи
+    ARTICLE_DEFAULT_STATUS = 'MD' if settings.MODERATION_STATUS else ARTICLE_DEFAULT_STATUS = 'PB'
+
+    name = models.CharField(verbose_name='Название статьи', max_length=168)
     image = models.ImageField(verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
     preview = models.TextField(verbose_name='Предпросмотр', max_length=200)
     text = models.TextField(verbose_name='Текст статьи')
@@ -60,7 +64,7 @@ class Article(models.Model):
     article_status = models.CharField(
         verbose_name='Статус публикации',
         choices=ARTICLE_STATUS_CHOICES,
-        default='DR'
+        default=ARTICLE_DEFAULT_STATUS
     )
 
     def __init__(self, *args, **kwargs):

@@ -161,3 +161,6 @@ SUMMERNOTE_CONFIG = {
     # размер файла в байтах
     'attachment_filesize_limit': 20000000
 }
+
+# Модерация
+MODERATION_STATUS = False
