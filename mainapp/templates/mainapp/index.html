@@ -3,6 +3,7 @@
 {% load project_tags %}
 {% block title %}{{title|title}}{% endblock %}
 {% block content %}
+
     <div class="article-box">
         <p class="display-heading text-center">Intergalactic Entertainment - шаттл, уносящий к знаниям &#128640 &#128640 &#128640 </p>
         <div class="img-box">
@@ -13,12 +14,21 @@
                 <div class="related-articles">
                     {% for item in object_list %}
                     <div class="block-article">
+                      
+                    <p> <a href="{% url 'auth:profile' %}">
+                            <span class="font-weight-bold"><img class="mr-2"
+                                    src="{{ item.author.avatar|media_folder_users }}" alt="profile_image" height="24">
+                                {{item.author }}
+                            </span></a>
+                        <span class="font-weight-light">
+                            {{ item.add_datatime }}</span>
+                    </p>
                         <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                             <h3 class="text-center">{{ item.name }}</h3>
                         </a>
                             <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}" alt="">
                             <div class="text">
-                                <p>{{ item.add_datatime }}</p>
+                              
                                 <p>
                                     <p>{{ item.preview }}</p>
                                     <a class="a_link_article" href="{% url 'article_page' item.pk %}">
@@ -49,12 +59,15 @@
                                     </button>
                                 </div>
                             </div>
+
                     </div>
                     <hr>
 				{% endfor %}
-			</div>
-		</div>
-	</div>
+			    </div>
+		    </div>
+	    </div>
+    {% block pagination %} {% include 'mainapp/includes/inc__pagination.html' %} {% endblock %}
     </div>
+</div>
 
 {% endblock %}

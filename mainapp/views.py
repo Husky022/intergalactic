@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import TemplateView, ListView, FormView, CreateView
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 from authapp.models import IntergalacticUser
 from mainapp.forms import ArticleCreationForm
@@ -14,18 +16,21 @@ from mainapp.models import Article, Hub
 class Main(ListView):
     template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
+    paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.all()[:3]
+        queryset = Article.objects.all()
         return queryset
 
 
 class Articles(ListView):
+    model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
+    paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.all()[:10]
+        queryset = Article.objects.filter(is_active=True)
         return queryset
 
 
@@ -43,6 +48,7 @@ class Hub_category(ListView):
     model = Article
     template_name = 'mainapp/hub_category.html'
     context_object_name = 'hub'
+    paginate_by = 5
     # allow_empty = False # Когда страница не найдена отдавать 404 ошибку
 
     def get_queryset(self):

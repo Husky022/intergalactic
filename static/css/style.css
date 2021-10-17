@@ -308,3 +308,16 @@ a.article-anchor {
 .btn-dislikes{
     color: red;
 }
+
+.pagination > li > a
+{
+    /*background-color: #6c757d;*/
+    color: #6c757d;
+}
+
+.pagination > .active > a
+{
+    /*color: white;*/
+    background-color: #999999 !Important;
+    border: solid 1px #999999 !Important;
+}
