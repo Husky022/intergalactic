@@ -1,9 +1,16 @@
+from django.db import transaction
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.views.generic import TemplateView, ListView
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.generic import TemplateView, ListView, FormView, CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from mainapp.models import Article
+
+from authapp.models import IntergalacticUser
+from mainapp.forms import ArticleCreationForm
+from mainapp.models import Article, Hub
 
 
 class Main(ListView):
@@ -49,3 +56,14 @@ class Hub_category(ListView):
         return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datetime')
 
 
+class ArticleCreationView(CreateView):
+    model = Article
+    form_class = ArticleCreationForm
+    success_url = reverse_lazy('auth:profile')
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
