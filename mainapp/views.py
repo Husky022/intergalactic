@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import TemplateView, ListView, FormView, CreateView
+from django.views.generic import TemplateView, ListView, FormView, CreateView, DeleteView, UpdateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
@@ -19,7 +19,7 @@ class Main(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.all()
+        queryset = Article.objects.filter(is_active=True)
         return queryset
 
 
@@ -53,7 +53,10 @@ class Hub_category(ListView):
 
     def get_queryset(self):
         # Фильтр по категории и сортировка "сначала новые"
-        return Article.objects.filter(hub__id=self.kwargs['hub_id']).order_by('-add_datetime')
+        return Article.objects.filter(
+            is_active=True,
+            hub__id=self.kwargs['hub_id']
+        ).order_by('-add_datetime')
 
 
 class ArticleCreationView(CreateView):
@@ -67,3 +70,24 @@ class ArticleCreationView(CreateView):
         self.object.author = self.request.user
         self.object.save()
         return super().form_valid(form)
+
+
+class ArticleChangeActiveView(View):
+    def post(self, request, article_pk):
+        target_article = get_object_or_404(Article, pk=article_pk)
+        target_article.is_active = False if target_article.is_active else True
+        # Пока сделал, что все статьи из архива - попадают на модерацию
+        # Надо будет обдумать более гибкую логику
+        target_article.article_status = 'AR' if target_article.article_status != 'AR' else 'PB'
+        target_article.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class ArticleEditView(UpdateView):
+    """Контроллер для изменения товара"""
+    model = Article
+    form_class = ArticleCreationForm
+    success_url = reverse_lazy('auth:profile')
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER')
