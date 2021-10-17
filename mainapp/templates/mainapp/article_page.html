@@ -1,21 +1,25 @@
 {% extends "mainapp/base.html" %}
+{% load project_tags %}
 {% load static %}
-{% block title %}{{ page_title|title }} {{ article_pk }}: {{ article }}{% endblock %}
+{% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}
 {% block content %}
     <div class="article-box">
         <div class="details">
             <div class="details-articles">
-                <h4>{{ article.name }}</h4>
+                <h4 class="text-center">{{ article.name }}</h4>
                 <div class="img-box">
-                    <img src="{% static 'img/python.jpeg' %}" alt="">
-
+                    <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
                 </div>
                 <div class="text">
                     <p>{{ article.add_datatime }}</p>
-                    <p>{{ article.text }}</p>
+                    {% if article.from_summernote %}
+                        {{ article.text|safe }}
+                    {% else %}
+                        <p>{{ article.text|linebreaks}}</p>
+                    {% endif %}
                     <hr>
-                    <p>tags: #{{ article.tag }}</p>
-                    <p>hub: {{ article.hub }}</p>
+                    <p>#{{ article.tag }}</p>
+                    <p>{{ article.hub }}</p>
                 </div>
             </div>
         </div>
