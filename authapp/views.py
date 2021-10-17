@@ -6,6 +6,8 @@ from django.views.generic import FormView
 from django.views.generic.base import View
 from django.db import transaction
 
+from mainapp.models import Article
+
 
 class LoginView(FormView):
     template_name = 'authapp/login.html'
@@ -83,6 +85,7 @@ class UserProfileView(View):
         context = {
             'title': self.title,
             'user': self.request.user,
+            'articles': Article.objects.filter(author=self.request.user)
         }
         return context
 

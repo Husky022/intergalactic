@@ -207,7 +207,6 @@ button::-moz-focus-inner {
     color: green;
 }
 
-
 .profile_info {
 	margin: 10px 0px;
 }
@@ -228,6 +227,47 @@ button::-moz-focus-inner {
 .btn-light {
     margin-top: 20px
 }
+
+.article_line {
+    margin-top: 15px;
+}
+
+table.article-table {
+    border-collapse: separate;
+    width: 100%;
+    border-spacing: 0 10px;
+}
+
+td.article-table  {
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.article-table table {
+    min-height: 50px;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.article-table p {
+    margin-bottom: 0px;
+    font-size: medium;
+}
+
+.article-name {
+    width: 60%;
+}
+
+.hub-name {
+    width: 25%;
+}
+
+.hub-name p {
+    text-align: center;
+}
+
+
+
 
 /* Окно регистрации */
 
