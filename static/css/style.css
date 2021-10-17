@@ -309,6 +309,7 @@ a.article-anchor {
     color: red;
 }
 
+
 .pagination > li > a
 {
     /*background-color: #6c757d;*/
@@ -320,4 +321,10 @@ a.article-anchor {
     /*color: white;*/
     background-color: #999999 !Important;
     border: solid 1px #999999 !Important;
+
+}
+    }
+
+.comment-main {
+    color: red;
 }

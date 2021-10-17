@@ -1,25 +1,24 @@
-from django.db import transaction
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import TemplateView, ListView, FormView, CreateView, DeleteView, UpdateView
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 
-
-from authapp.models import IntergalacticUser
-from mainapp.forms import ArticleCreationForm
-from mainapp.models import Article, Hub
+from mainapp.forms import ArticleCreationForm, CommentForm
+from mainapp.comments import CommentAction
+from mainapp.models import Article, Comment
 
 
 class Main(ListView):
     template_name = 'mainapp/index.html'
-    extra_context = {'title': 'Главная'}
     paginate_by = 5
+    extra_context = {
+        'title': 'Статьи',
+        'comments': Comment.objects.all(),
+    }
 
     def get_queryset(self):
-        queryset = Article.objects.filter(is_active=True)
+        queryset = CommentAction.create("main")
         return queryset
 
 
@@ -30,33 +29,25 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.filter(is_active=True)
+        queryset = CommentAction.create("article", self)
         return queryset
 
 
-def article_page(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
-    context = {
-        'page_title': 'Статья',
-        'article': article,
-        'article_pk': article.hub_id,
-    }
-    return render(request, 'mainapp/article_page.html', context)
-
-
-class Hub_category(ListView):
+class ArticlePage(DetailView):
+    template_name = 'mainapp/article_page.html'
     model = Article
-    template_name = 'mainapp/hub_category.html'
-    context_object_name = 'hub'
-    paginate_by = 5
-    # allow_empty = False # Когда страница не найдена отдавать 404 ошибку
+    extra_context = {
+        'page_title': 'Статья',
+        'CommentForm': CommentForm,
+    }
 
-    def get_queryset(self):
-        # Фильтр по категории и сортировка "сначала новые"
-        return Article.objects.filter(
-            is_active=True,
-            hub__id=self.kwargs['hub_id']
-        ).order_by('-add_datetime')
+    def get(self, request, *args, **kwargs):
+        context = CommentAction.create("article_page_get", self)
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        CommentAction.create("article_page_post", self)
+        return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
 
 
 class ArticleCreationView(CreateView):
