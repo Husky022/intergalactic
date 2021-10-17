@@ -250,7 +250,7 @@ td.article-table  {
 }
 
 .article-table p {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     font-size: medium;
 }
 
@@ -266,7 +266,9 @@ td.article-table  {
     text-align: center;
 }
 
-
+a.article-anchor {
+    display: block;
+}
 
 
 /* Окно регистрации */

@@ -51,6 +51,8 @@ class Article(models.Model):
         IntergalacticUser,
         verbose_name='Автор статьи',
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     is_active = models.BooleanField(
         verbose_name='Актуальность статьи',

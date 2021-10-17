@@ -148,7 +148,7 @@ SUMMERNOTE_CONFIG = {
 
         # Change editor size
         'width': '100%',
-        'height': '480',
+        'height': '400',
         'lang': 'ru-ru',
         'codemirror': {
             'mode': 'htmlmixed',
