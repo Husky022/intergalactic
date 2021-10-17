@@ -1,12 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView
 
-from mainapp.models import Article, Comment
+from mainapp.models import Article, Comment, IntergalacticUser
 from mainapp.forms import CommentForm
 
+
+comments_quantity_dict = {id: len(Comment.objects.filter(article_id=id))  for id in range(1000)}
 
 class Main(ListView):
     model = Article
@@ -16,6 +16,7 @@ class Main(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Статьи'
         context['comments'] = Comment.objects.all()
+        context['comments_quantity'] = comments_quantity_dict
         return context
 
 
@@ -29,28 +30,14 @@ class Articles(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        print(comments_quantity_dict)
         context['title'] = 'Статьи'
-        context['comments_quantity'] = len(Comment.objects.all())
-        context.update({'CommentForm': CommentForm})  # передаем форму из forms.py
+        context['comments_quantity'] = comments_quantity_dict
+        context.update({'CommentForm': CommentForm})
         return context
 
 
-def article_page(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
-    print(article.name)
-    comments = Comment.objects.filter(article_id=article_pk)
-    comment_form = CommentForm
-    context = {
-        'page_title': 'Статья',
-        'article': article,
-        'article_pk': article.hub_id,
-        'comments': comments
-    }
-    return render(request, 'mainapp/article_page.html', context)
-
-
-class ArticlePage(ListView):
-    model = Article
+class ArticlePage(TemplateView):
     template_name = 'mainapp/article_page.html'
 
 
@@ -58,28 +45,21 @@ class ArticlePage(ListView):
         context = super().get_context_data(**kwargs)
         article_pk = self.kwargs.get('article_pk', None)
         print(article_pk)
-        article = Article.objects.filter(pk=article_pk)
+        article = Article.objects.filter(pk=article_pk).first()
         print(article)
         context['page_title'] = 'Статья'
         context['article'] = article
         context['article_pk'] = article_pk
-        context['comment'] = Comment.objects.filter(article_id=article_pk)
-        context.update({'CommentForm': CommentForm}) #передаем форму из forms.py
+        context['comments'] = Comment.objects.filter(article_id=article_pk)
+        context.update({'CommentForm': CommentForm})
         return self.render_to_response(context)
 
-    # def post(self, request, *args, **kwargs):
-    #     context = self.get_context_data()
-    #     article_pk = self.kwargs.get('article_pk', None)
-    #     formPost = CommentForm(self.request.POST)
-    #     if formPost.is_valid():
-    #         form_update = formPost.save(commit=False)
-    #         form_update.save()
-    #         return HttpResponseRedirect(reverse_lazy('article_page', args=(article_pk,)))
-    #     else:
-    #         print('NotValid')
-    #         context['comment'] = Comment.objects.filter(article_id=article_pk)
-    #         context.update({'CommentForm': formPost})
-    #         return self.render_to_response(context)
+    def post(self, request, *args, **kwargs):
+        article_pk = self.kwargs.get('article_pk', None)
+        author_pk = request.user.id
+        comment = Comment.objects.create(article_id=article_pk, author_id=author_pk, text=self.request.POST.dict()['text_comment'])
+        comment.save()
+        return HttpResponseRedirect(reverse_lazy('article_page', args=(article_pk,)))
 
 
 class Hub_category(ListView):
