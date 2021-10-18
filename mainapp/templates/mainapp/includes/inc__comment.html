@@ -1,0 +1,31 @@
+<div class="comment-main"  >
+    {% if not request.user.is_anonymous %}
+        {% if not comments %}
+            Комментариев пока что нет...
+        {% endif %}
+        {% for item in comments %}
+            <div class="block-article">
+                    <div class="text" name={{item.id}}>
+                        <p>{{ item.author }} оставил комментарий {{ item.add_datatime }}:</p>
+                        <p>{{ item.text }}</p>
+                    </div>
+            </div>
+            <hr>
+        {% endfor %}
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <br>
+            {% if not comments %}
+                <label>Будьте первым:</label>
+            {% else %}
+                <label>Оставить комментарий:</label>
+            {% endif %}
+            <textarea name="text_comment" rows="5" style="width: 100%"></textarea>
+            <div class="text-right">
+                <input class="sumbit_comment" name="{{article.pk}}" type="submit" value="Отправить">
+            </div>
+        </form>
+    {% else %}
+        Войдите в аккаунт, чтобы просматривать и оставлять комментарии...
+    {% endif %}
+</div>

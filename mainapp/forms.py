@@ -1,7 +1,8 @@
-from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
-from django.forms import ModelForm, FileField
+from django_summernote.widgets import SummernoteWidget
+from django.forms import ModelForm
 
 from mainapp.models import Article
+from django import forms
 
 
 class ArticleCreationForm(ModelForm):
@@ -17,3 +18,7 @@ class ArticleCreationForm(ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['style'] = 'width: 1000px;'
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(label='comment', max_length=1000)
