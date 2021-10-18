@@ -1,8 +1,10 @@
+from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.template.loader import render_to_string
 
 from mainapp.forms import ArticleCreationForm, CommentForm
 from mainapp.comments import CommentAction
@@ -43,6 +45,11 @@ class ArticlePage(DetailView):
 
     def get(self, request, *args, **kwargs):
         context = CommentAction.create("article_page_get", self)
+        if request.is_ajax():
+            CommentAction.create("article_page_ajax", self)
+            result = render_to_string(
+                'mainapp/includes/inc__comment.html', context)
+            return JsonResponse({'result': result})
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):

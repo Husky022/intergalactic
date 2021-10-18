@@ -1,3 +1,4 @@
+from django.template.loader import render_to_string
 from mainapp.models import Article, Comment
 
 
@@ -49,12 +50,19 @@ def comment_article_page_post(self):
     comment.save()
 
 
+def comment_article_page_ajax(self):
+    comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
+                                     text=self.request.GET.dict()['text_comment'])
+    comment.save()
+
+
 class CommentAction:
     types = {
         'main': comment_main,
         'article': comment_article,
         'article_page_get': comment_article_page_get,
-        'article_page_post': comment_article_page_post
+        'article_page_post': comment_article_page_post,
+        'article_page_ajax': comment_article_page_ajax,
     }
 
     @classmethod
