@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from authapp.models import IntergalacticUser
 
@@ -76,3 +77,26 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.name} - ({self.hub.name})'
+
+
+class Likes(models.Model):
+    class Meta:
+        verbose_name = 'лайк'
+        verbose_name_plural = 'лайки'
+
+    LIKE_STATUS_CHOICES = [
+        ('DZ', 'Дизлайк'),
+        ('UND', 'Не установлено'),
+        ('LK', 'Лайк'),
+    ]
+    LIKE_DEFAULT_STATUS = 'UND'
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+    #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
+    like_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Пользователь ({self.user.last_name}) ({self.user.first_name}) ' \
+               f'установил ({self.like_status}) к статье ({self.article.name})'
