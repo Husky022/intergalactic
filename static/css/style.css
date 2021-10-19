@@ -337,12 +337,12 @@ a.article-anchor {
 }
 
 
-.pagination>li>a {
+.pagination > li > a {
     /*background-color: #6c757d;*/
     color: #6c757d;
 }
 
-.pagination>.active>a {
+.pagination > .active > a {
     /*color: white;*/
     background-color: #999999 !Important;
     border: solid 1px #999999 !Important;
@@ -356,4 +356,178 @@ a.article-anchor {
 .comment-main {
     padding: 2% 25% 2% 10%;
     color: #666666;
+}
+
+/* Классы для администрования пользователей */
+
+.user_delete {
+    margin: 50px auto;
+    width: 600px;
+    font-size: 150%;
+}
+
+.user_delete .btn {
+    display: block;
+    float: left;
+    margin: 25px;
+    width: 150px;
+    color: #111;
+}
+
+.user_delete a {
+    color: #111;
+    text-decoration: none;
+}
+
+.users_list {
+    margin-left: 150px;
+}
+
+.users_list a {
+    color: #555;
+    text-decoration: none;
+}
+
+.users_list .new_user {
+    margin-left: 190px;
+}
+
+.users_list button {
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    padding: 0 15px;
+    margin-right: 50px;
+}
+
+.user_record {
+    height: 125px;
+    margin: 15px auto;
+    position: relative;
+    border: 1px solid #b3b3b3;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.user_record.not_active {
+    opacity: 0.5;
+}
+
+.user_record img {
+    display: block;
+    float: left;
+    height: 125px;
+    border-radius: 25px;
+}
+
+.user_record .user_name {
+    display: flex;
+    float: left;
+    margin-top: 5px;
+    margin-left: 25px;
+    width: 175px;
+    flex-direction: column;
+}
+
+.user_record .user_name a {
+    color: #555;
+}
+
+.user_record .user_name p {
+    /*font-weight: bold;*/
+    margin: 10px auto;
+}
+
+.user_record .user_email {
+    display: block;
+    float: left;
+    margin-top: 40px;
+    margin-left: 25px;
+    width: 175px;
+}
+
+.user_record .user_age {
+    display: block;
+    float: left;
+    margin-top: 5px;
+    margin-left: 25px;
+    width: 45px;
+}
+
+.user_record .user_role {
+    display: flex;
+    float: left;
+    margin-top: 15px;
+    margin-left: 25px;
+    width: 125px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user_record .user_lastlogin {
+    display: block;
+    float: left;
+    margin-top: 40px;
+    margin-left: 25px;
+    width: 175px;
+}
+
+.admin_container .menu span {
+    margin-left: 10px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #111;
+}
+
+.admin_container .h2 {
+    margin-top: 10px;
+}
+
+.menu {
+    list-style-type: none;
+    margin-top: 67px;
+    float: right;
+}
+
+.menu li {
+    float: left;
+}
+
+.menu a {
+    color: #8c8c8c;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 13px;
+}
+
+.menu .active {
+    color: #212121;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.menu a:hover {
+    color: #212121;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.menu a:active {
+    color: #8c8c8c;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.flex-block-profile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    align-items: baseline;
 }
