@@ -29,7 +29,7 @@ def user_create(request):
         user_form = IntergalacticUserRegisterForm(request.POST, request.FILES)
         if user_form.is_valid():
             user_form.save()
-            return HttpResponseRedirect(reverse("admin:users"))
+            return HttpResponseRedirect(reverse("adminapp:users"))
     else:
         user_form = IntergalacticUserRegisterForm()
 
@@ -47,7 +47,7 @@ def user_update(request, pk):
         edit_form = IntergalacticUserAdminEditForm(request.POST, request.FILES, instance=edit_user)
         if edit_form.is_valid():
             edit_form.save()
-            return HttpResponseRedirect(reverse("admin:user_update", args=[edit_user.pk]))
+            return HttpResponseRedirect(reverse("adminapp:user_update", args=[edit_user.pk]))
     else:
         edit_form = IntergalacticUserAdminEditForm(instance=edit_user)
 
@@ -65,7 +65,7 @@ def user_delete(request, pk):
     if request.method == "POST":
         user.is_active = False
         user.save()
-        return HttpResponseRedirect(reverse("admin:users"))
+        return HttpResponseRedirect(reverse("adminapp:users"))
 
     content = {"title": title, "user_to_delete": user, "media_url": settings.MEDIA_URL}
 

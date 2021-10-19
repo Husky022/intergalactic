@@ -337,12 +337,12 @@ a.article-anchor {
 }
 
 
-.pagination>li>a {
+.pagination > li > a {
     /*background-color: #6c757d;*/
     color: #6c757d;
 }
 
-.pagination>.active>a {
+.pagination > .active > a {
     /*color: white;*/
     background-color: #999999 !Important;
     border: solid 1px #999999 !Important;
@@ -395,15 +395,20 @@ a.article-anchor {
 .users_list button {
     border: 1px solid #eaeaea;
     border-radius: 5px;
-    height: 30px;
-    margin: 5px auto;
     padding: 0 15px;
+    margin-right: 50px;
 }
 
 .user_record {
     height: 125px;
     margin: 15px auto;
     position: relative;
+    border: 1px solid #b3b3b3;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
 }
 
 .user_record.not_active {
@@ -418,11 +423,12 @@ a.article-anchor {
 }
 
 .user_record .user_name {
-    display: block;
+    display: flex;
     float: left;
-    margin-top: 15px;
+    margin-top: 5px;
     margin-left: 25px;
     width: 175px;
+    flex-direction: column;
 }
 
 .user_record .user_name a {
@@ -445,17 +451,19 @@ a.article-anchor {
 .user_record .user_age {
     display: block;
     float: left;
-    margin-top: 40px;
+    margin-top: 5px;
     margin-left: 25px;
     width: 45px;
 }
 
 .user_record .user_role {
-    display: block;
+    display: flex;
     float: left;
     margin-top: 15px;
     margin-left: 25px;
     width: 125px;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .user_record .user_lastlogin {
@@ -475,23 +483,6 @@ a.article-anchor {
 
 .admin_container .h2 {
     margin-top: 10px;
-}
-
-.admin_menu {
-    display: block;
-    left: 15px;
-    top: 20px;
-    height: 40px;
-    width: 100%;
-}
-
-.admin_menu ul.menu {
-    display: block;
-    float: none;
-    width: 550px;
-    height: 50px;
-    margin: auto;
-    color: #555;
 }
 
 .menu {
@@ -530,4 +521,13 @@ a.article-anchor {
     color: #8c8c8c;
     font-weight: 700;
     border-bottom: 3px solid #212121;
+}
+
+.flex-block-profile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    align-items: baseline;
 }
