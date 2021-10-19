@@ -67,8 +67,6 @@ class ArticleChangeActiveView(View):
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
         target_article.is_active = False if target_article.is_active else True
-        # Пока сделал, что все статьи из архива - попадают на модерацию
-        # Надо будет обдумать более гибкую логику
         target_article.article_status = 'AR' if target_article.article_status != 'AR' else 'PB'
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
