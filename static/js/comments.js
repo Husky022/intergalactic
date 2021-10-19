@@ -1,5 +1,5 @@
 window.onload = function () {
-    $('.ajax_comment').on('click', '.sumbit_comment', function () {
+    $('.ajax_comment').on('click', '.submit_comment', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({

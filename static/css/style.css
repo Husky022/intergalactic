@@ -76,6 +76,17 @@ button::-moz-focus-inner {
 .block-article {
     margin-top: 5%;
     margin-bottom: 5%;
+    padding: 2%;
+    box-shadow: 0 0 5px 2px rgba(221, 221, 221, 1);
+    border-radius: 5px;
+}
+
+.block-comment {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 5%;
+    box-shadow: 0 0 5px 2px rgba(221, 221, 221, 1);
+    border-radius: 10px;
 }
 
 
@@ -300,12 +311,26 @@ a.article-anchor {
 
 .btn-comments,
 .btn-likes,
-.btn-dislikes {
+.btn-dislikes,
+.btn-comments-answer,
+.submit_comment {
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
     overflow: hidden;
+}
+
+.btn-comments-answer, .submit_comment{
+    background-color: lightgray;
+    border-radius: 5px;
+    color: #666666;
+    box-shadow: 0 0 5px 1px rgba(221, 221, 221, 1);
+}
+
+.btn-comments-answer:hover, .submit_comment:hover{
+    background-color: grey;
+    color: snow;
 }
 
 .btn-likes {
@@ -316,6 +341,9 @@ a.article-anchor {
     color: red;
 }
 
+.btn-comments {
+    color: black !important;
+}
 
 .pagination>li>a {
     /*background-color: #6c757d;*/
@@ -334,6 +362,15 @@ a.article-anchor {
 }
 
 .comment-main {
-    padding: 2% 25% 2% 10%;
     color: #666666;
+}
+
+.subcomment_block{
+    width: 80%;
+    margin-left: auto;
+    display: none;
+}
+
+textarea{
+    border-radius: 10px;
 }

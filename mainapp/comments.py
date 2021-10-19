@@ -45,12 +45,14 @@ def comment_article_page_get(self):
 
 
 def comment_article_page_post(self):
+    print(self.request.POST.dict()['text_comment'])
     comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
                                      text=self.request.POST.dict()['text_comment'])
     comment.save()
 
 
 def comment_article_page_ajax(self):
+    print(self.request.GET.dict())
     comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
                                      text=self.request.GET.dict()['text_comment'])
     comment.save()
