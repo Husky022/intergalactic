@@ -5,7 +5,7 @@
         {% endif %}
         {% for item in comments %}
             <div class="block-comment">
-                    <div class="text" name={{item.id}}>
+                    <div class="text" name="{{item.id}}">
                         <p>
                             {{ item.author }} оставил комментарий {{ item.add_datetime }}:
                         </p>
@@ -28,9 +28,9 @@
                         <div class="subcomment_block" id="subcomment_block_{{ item.id }}">
                             <form class="form-horizontal" action="" method="post">
                                 {% csrf_token %}
-                                <textarea name="text_comment_1" rows="3" style="width: 80%"></textarea>
+                                <textarea class="textarea_subcomment" name="text_subcomment" rows="3" style="width: 80%"></textarea>
                                 <div class="text-right">
-                                    <input class="submit_comment" name="{{article.pk}}" type="submit" value="Отправить">
+                                    <input class="submit_subcomment" name="{{article.pk}}" type="submit" value="Отправить">
                                 </div>
                             </form>
                         </div>
@@ -45,7 +45,7 @@
             {% else %}
                 <label>Оставить комментарий:</label>
             {% endif %}
-            <textarea name="text_comment" rows="5" style="width: 100%"></textarea>
+            <textarea class="textarea_comment" name="text_comment" rows="5" style="width: 100%"></textarea>
             <div class="text-right">
                 <input class="submit_comment" name="{{article.pk}}" type="submit" value="Отправить">
             </div>

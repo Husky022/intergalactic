@@ -45,25 +45,37 @@ def comment_article_page_get(self):
     subcomments_dict = {}
     for comment in comments:
         subcomments = SubComment.objects.filter(comment_id=comment.id)
-        # subcomments_dict[comment] = subcomments
         subcomments_dict[comment] = list(subcomments)
     context['subcomments'] = subcomments_dict
-    print(context)
     return context
 
 
 def comment_article_page_post(self):
-    print(self.request.POST.dict()['text_comment'])
-    comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
-                                     text=self.request.POST.dict()['text_comment'])
-    comment.save()
+    print('POST')
+    print(self.request.POST.dict())
+    if 'text_comment' in self.request.POST.dict():
+        comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
+                                         text=self.request.POST.dict()['text_comment'])
+        comment.save()
+    elif 'text_subcomment' in self.request.POST.dict():
+        subcomment = SubComment.objects.create(comment_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
+                                         text=self.request.POST.dict()['text_subcomment'])
+        subcomment.save()
+
 
 
 def comment_article_page_ajax(self):
+    print('GET')
     print(self.request.GET.dict())
-    comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
-                                     text=self.request.GET.dict()['text_comment'])
-    comment.save()
+    if 'text_comment' in self.request.GET.dict():
+        comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
+                                         text=self.request.GET.dict()['text_comment'])
+        comment.save()
+    elif 'text_subcomment' in self.request.GET.dict():
+        a = {'pk': 4}
+        subcomment = SubComment.objects.create(comment_id=int(a["pk"]), author_id=self.request.user.id,
+                                         text=self.request.GET.dict()['text_subcomment'])
+        subcomment.save()
 
 
 class CommentAction:

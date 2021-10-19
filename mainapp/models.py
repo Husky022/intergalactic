@@ -99,7 +99,7 @@ class Comment(models.Model):
 
 class SubComment(models.Model):
     text = models.TextField(verbose_name='Текст подкомментария')
-    comment = models.ForeignKey(Comment, on_delete=models.PROTECT,
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
                                 verbose_name='Комментарий')
     author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
                                verbose_name='Автор подкомментария')

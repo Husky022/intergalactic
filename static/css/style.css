@@ -313,7 +313,8 @@ a.article-anchor {
 .btn-likes,
 .btn-dislikes,
 .btn-comments-answer,
-.submit_comment {
+.submit_comment,
+.submit_subcomment{
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
@@ -321,14 +322,14 @@ a.article-anchor {
     overflow: hidden;
 }
 
-.btn-comments-answer, .submit_comment{
+.btn-comments-answer, .submit_comment, .submit_subcomment{
     background-color: lightgray;
     border-radius: 5px;
     color: #666666;
     box-shadow: 0 0 5px 1px rgba(221, 221, 221, 1);
 }
 
-.btn-comments-answer:hover, .submit_comment:hover{
+.btn-comments-answer:hover, .submit_comment:hover, .submit_subcomment:hover{
     background-color: grey;
     color: snow;
 }

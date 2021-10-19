@@ -1,5 +1,5 @@
 function show(id){
-    elem = document.getElementById(id); //находим блок div по его id, который передали в функцию
+    elem = document.getElementById(id);
     state = elem.style.display;
     if (state =='block')
         elem.style.display='none';
