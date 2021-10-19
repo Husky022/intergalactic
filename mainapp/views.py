@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.template.loader import render_to_string
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.comments import CommentAction
+from mainapp.comments import Action
 from mainapp.models import Article, Comment
 
 
@@ -22,7 +22,7 @@ class Main(ListView):
     }
 
     def get_queryset(self):
-        queryset = CommentAction.create("main")
+        queryset = Action.create("main")
         return queryset
 
 
@@ -33,7 +33,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = CommentAction.create("article", self)
+        queryset = Action.create("article", self)
         return queryset
 
 
@@ -47,9 +47,9 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        context = CommentAction.create("article_page_get", self)
+        context = Action.create("article_page_get", self)
         if request.is_ajax():
-            CommentAction.create("article_page_ajax", self)
+            Action.create("article_page_ajax", self)
             result = render_to_string(
                 'mainapp/includes/inc__comment.html', context)
             return JsonResponse({'result': result})
@@ -57,7 +57,7 @@ class ArticlePage(DetailView):
 
 
     def post(self, request, *args, **kwargs):
-        CommentAction.create("article_page_post", self)
+        Action.create("article_page_post", self)
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
 
 

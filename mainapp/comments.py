@@ -78,7 +78,7 @@ def comment_article_page_ajax(self):
         subcomment.save()
 
 
-class CommentAction:
+class Action:
     types = {
         'main': comment_main,
         'article': comment_article,
