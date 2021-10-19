@@ -8,13 +8,13 @@
             <div class="related-articles">
                 {% for item in object_list %}
                 <div class="block-article">
-                    <p> <a href="{% url 'auth:profile' %}">
-                            <span class="font-weight-bold"><img class="mr-2"
-                                    src="{{ item.author.avatar|media_folder_users }}" alt="profile_image" height="24">
-                                {{item.author }}
-                            </span></a>
+                    <p>
+                        <span class="font-weight-bold"><img class="mr-2"
+                                src="{{ item.author.avatar|media_folder_users }}" alt="profile_image" height="24">
+                            {{item.author }}
+                        </span>
                         <span class="font-weight-light">
-                            {{ item.add_datatime }}</span>
+                            {{ item.add_datetime }}</span>
                     </p>
                     <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                         <h4 class="text-center">{{ item.name }}</h4>
@@ -22,10 +22,10 @@
                     <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}" alt="">
                     <div class="articles-text">
                         <p>
-                            <p>{{ item.preview }}</p>
-                            <a class="a_link_article" href="{% url 'article_page' item.pk %}">
-                                читать дальше
-                            </a>
+                        <p>{{ item.preview }}</p>
+                        <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                            читать дальше
+                        </a>
                         </p>
                         <p>#{{ item.tag }}</p>
                         <p>{{ item.hub }}</p>
@@ -47,7 +47,7 @@
                 </div>
                 {% endfor %}
                 {% if is_paginated %}
-                    {% block pagination %} {% include 'mainapp/includes/inc__pagination.html' %} {% endblock %}
+                {% block pagination %} {% include 'mainapp/includes/inc__pagination.html' %} {% endblock %}
                 {% endif %}
             </div>
         </div>
