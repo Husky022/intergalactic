@@ -8,6 +8,5 @@ urlpatterns = [
     path('article_page/<int:pk>/', ArticlePage.as_view(), name='article_page'),
     path('create_article/', ArticleCreationView.as_view(), name='create_article'),
     path('change_active/<int:article_pk>/', ArticleChangeActiveView.as_view(), name='change_active'),
-    path('edit_active/<int:article_pk>/', ArticleEditView.as_view(), name='edit_article'),
-
+    path('edit_article/<int:pk>/', ArticleEditView.as_view(), name='edit_article'),
 ]
