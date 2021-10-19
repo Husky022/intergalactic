@@ -6,25 +6,26 @@
 
 /*Классы из Bootstrap*/
 
-.navbar{
+.navbar {
     background-color: bisque;
 }
 
-.display-heading{
-    font-size: 35px;
+.display-heading {
+    font-size: 65px;
     color: #666666;
+    margin-top: 70px;
 }
 
-.right{
+.right {
     position: absolute;
     right: 0;
 }
 
-.bg-footer{
+.bg-footer {
     background-color: #999999;
 }
 
-.orange{
+.orange {
     background-color: orange;
 }
 
@@ -46,32 +47,34 @@ body {
 }
 
 
-a{
-  text-decoration: none !important;
-  color: #666666;
+a {
+    text-decoration: none !important;
+    color: #666666;
 }
 
-.a_link_article{
+.a_link_article {
     color: maroon;
 }
 
-a:hover{
-  color: black;
+a:hover {
+    color: black;
 }
 
-.active{
+.active {
     background: darkgrey;
     border-radius: 10px;
 }
 
-button:active, button:focus {
-  outline: none !important;
-}
-button::-moz-focus-inner {
-  border: 0 !important;
+button:active,
+button:focus {
+    outline: none !important;
 }
 
-.block-article{
+button::-moz-focus-inner {
+    border: 0 !important;
+}
+
+.block-article {
     margin-top: 5%;
     margin-bottom: 5%;
 }
@@ -80,11 +83,11 @@ button::-moz-focus-inner {
 .user-panel-button {
     color: #666666;
     background-color: Transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
-    outline:none;
+    outline: none;
     margin-left: 10px;
 }
 
@@ -92,22 +95,18 @@ button::-moz-focus-inner {
     color: black;
 }
 
-.article-box{
-    margin-top: 2%;
-    margin-left: 25%;
-    margin-right: 25%;
-    width: 50%;
-    margin-bottom: 5%;
+.article-box {
+    margin: 2% 5% 5%;
 }
 
-.article-img{
+.article-img {
     margin-bottom: 10px;
     margin-top: 10px;
     height: 250px;
     width: 400px;
 }
 
-.project-menu-name{
+.project-menu-name {
     font-size: 30px;
     margin: 0;
     padding: 10px;
@@ -143,8 +142,8 @@ button::-moz-focus-inner {
 }
 
 .footer {
-    position:fixed;
-    bottom:0;
+    position: fixed;
+    bottom: 0;
     background: #364850;
     color: #fff;
     margin-left: 5%;
@@ -171,14 +170,15 @@ button::-moz-focus-inner {
     order: 0;
 }
 
-.container-menu, .footer-menu {
+.container-menu,
+.footer-menu {
     background-color: #6CAEDD;
     margin-left: 5%;
     padding-top: 20px;
     width: 80%;
 }
 
-.footer-menu{
+.footer-menu {
     background: #364850;
 }
 
@@ -189,10 +189,33 @@ button::-moz-focus-inner {
     text-decoration: none;
 }
 
-.menu_category{
+.menu_category {
     list-style-type: none;
     background: lightgray;
 }
+
+/* Классы для кирпичей */
+
+.related-articles {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    margin-bottom: 32px;
+}
+
+.article-brick {
+    width: 777px;
+    padding: 44px 32px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    box-shadow: 5px 20px 50px rgba(16, 112, 177, 0.2);
+    border-radius: 10px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* Классы для Личного кабинета */
 
@@ -207,27 +230,69 @@ button::-moz-focus-inner {
     color: green;
 }
 
-
 .profile_info {
-	margin: 10px 0px;
+    margin: 10px 0px;
 }
 
 .profile_image {
-	height: 200px;
-	width: 200px;
-	float: left;
-	margin: 0px 5px 5px 0px;
+    height: 200px;
+    width: 200px;
+    float: left;
+    margin: 0px 5px 5px 0px;
 }
 
 .profile_article_section {
-	border-bottom: 2px dashed blue;
-	margin-bottom: 10px;
-	padding: 5px;
+    border-bottom: 2px dashed blue;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 .btn-light {
     margin-top: 20px
 }
+
+.article_line {
+    margin-top: 15px;
+}
+
+table.article-table {
+    border-collapse: separate;
+    width: 100%;
+    border-spacing: 0 10px;
+}
+
+td.article-table {
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.article-table table {
+    min-height: 50px;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.article-table p {
+    margin-bottom: 0;
+    font-size: medium;
+}
+
+.article-name {
+    width: 60%;
+}
+
+.hub-name {
+    width: 25%;
+}
+
+.hub-name p {
+    text-align: center;
+}
+
+a.article-anchor {
+    display: block;
+}
+
 
 /* Окно регистрации */
 
@@ -242,42 +307,55 @@ button::-moz-focus-inner {
     max-width: 400px;
 }
 
-.img-box{
+.img-box {
     margin-top: 5%;
     margin-bottom: 5%;
 }
 
-.comments, .likes, .dislikes{
+.comments,
+.likes,
+.dislikes {
     float: left;
 }
 
-.btn-comments, .btn-likes, .btn-dislikes{
+.btn-comments,
+.btn-likes,
+.btn-dislikes {
     background-color: Transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
 }
 
-.btn-likes{
+.btn-likes {
     color: green;
 }
 
-.btn-dislikes{
+.btn-dislikes {
     color: red;
 }
 
-.pagination > li > a
-{
+
+.pagination>li>a {
     /*background-color: #6c757d;*/
     color: #6c757d;
 }
 
-.pagination > .active > a
-{
+.pagination>.active>a {
     /*color: white;*/
     background-color: #999999 !Important;
     border: solid 1px #999999 !Important;
+
+}
+
+.comment_h2 {
+    padding-top: 20px;
+}
+
+.comment-main {
+    padding: 2% 25% 2% 10%;
+    color: #666666;
 }
 
 /* Классы для администрования пользователей */

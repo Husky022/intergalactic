@@ -6,6 +6,9 @@ from django.views.generic import FormView
 from django.views.generic.base import View
 from django.db import transaction
 
+from mainapp.models import Article
+from mainapp.forms import ArticleCreationForm
+
 
 class LoginView(FormView):
     template_name = 'authapp/login.html'
@@ -80,9 +83,20 @@ class UserProfileView(View):
     template_name = 'authapp/profile.html'
 
     def get_context_data(self):
+        articles = Article.objects.filter(author=self.request.user)
+        articles_with_form = []
+        for article in articles:
+            # добавляем форму к объектам товаров, нужно для редактирования
+            articles_with_form.append({
+                'article': article,
+                'form': ArticleCreationForm(instance=article)
+            })
+
         context = {
             'title': self.title,
             'user': self.request.user,
+            'creation_form': ArticleCreationForm(),
+            'articles': articles_with_form
         }
         return context
 

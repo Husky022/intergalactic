@@ -1,28 +1,27 @@
 {% load static %}
 {% if page_obj.has_other_pages %}
 <nav>
-    <ul class="pagination">
+    <ul style="margin-left: 36%;" class="pagination">
         {% if page_obj.has_previous %}
-            <li class="page-item ">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" >&larr; Предыдущая</a>
-            </li>
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; Предыдущая</a>
+        </li>
         {% endif %}
         {% for page in paginator.page_range %}
-            {% if page_obj.number == page %}
-                <li class="page-item active" aria-current="page">
-                  <a class="page-link">{{ page }}</a>
-                </li>
-            {% elif page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}"> Следующая  &rarr; </a>
+        {% if page_obj.number == page %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link">{{ page }}</a>
+        </li>
+        {% elif page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %} <li class="page-item">
+            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
             </li>
-        {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}"> Следующая &rarr; </a>
+            </li>
+            {% endif %}
     </ul>
 </nav>
 {% endif %}

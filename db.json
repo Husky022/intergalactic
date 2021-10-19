@@ -26,34 +26,33 @@
             "is_active": true
         }
     },
-	{
-		 "model": "mainapp.hub",
-		 "pk": 4,
-		 "fields": {
-		"name": "Научно-популярное",
-		"order": 0,
-		"is_active": true
-	 }
-	},
-	{
-		 "model": "mainapp.hub",
-		 "pk": 5,
-		 "fields": {
-			"name": "Сетевые технологии",
-			"order": 0,
-			"is_active": true
-		}
-	},
-	{
-		"model": "mainapp.hub",
-		"pk": 6,
-		"fields": {
-			"name": "Big Data",
-			"order": 0,
-			"is_active": true
-	 }
-	},
-
+    {
+        "model": "mainapp.hub",
+        "pk": 4,
+        "fields": {
+            "name": "Научно-популярное",
+            "order": 0,
+            "is_active": true
+        }
+    },
+    {
+        "model": "mainapp.hub",
+        "pk": 5,
+        "fields": {
+            "name": "Сетевые технологии",
+            "order": 0,
+            "is_active": true
+        }
+    },
+    {
+        "model": "mainapp.hub",
+        "pk": 6,
+        "fields": {
+            "name": "Big Data",
+            "order": 0,
+            "is_active": true
+        }
+    },
     {
         "model": "mainapp.article",
         "pk": 1,
@@ -212,6 +211,42 @@
             "add_datetime": "2021-10-11T19:37:51.106Z",
             "is_active": true,
             "article_status": "PB"
+        }
+    },
+    {
+        "model": "mainapp.comment",
+        "pk": 1,
+        "fields": {
+            "text": "Это комментарий для теста",
+            "image": "",
+            "article": 14,
+            "author": 1,
+            "add_datetime": "2021-10-11T19:37:51.106Z",
+            "is_active": true
+        }
+    },
+    {
+        "model": "mainapp.comment",
+        "pk": 2,
+        "fields": {
+            "text": "А это еще один комментарий для теста",
+            "image": "",
+            "article": 14,
+            "author": 1,
+            "add_datetime": "2021-10-11T19:37:51.106Z",
+            "is_active": true
+        }
+    },
+    {
+        "model": "mainapp.comment",
+        "pk": 3,
+        "fields": {
+            "text": "Для статьи какой то там комментарий",
+            "image": "",
+            "article": 15,
+            "author": 1,
+            "add_datetime": "2021-10-11T19:37:51.106Z",
+            "is_active": true
         }
     },
     {
