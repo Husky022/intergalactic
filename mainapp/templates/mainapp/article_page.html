@@ -40,40 +40,10 @@
                 (33)
             </button>
         </div>
-        <div>
-            <div class="comment-main" style="margin:2% 25% 2% 25%; color: #666666" >
-                {% if user.is_authenticated %}
-                    {% if not comments %}
-                        Комментариев пока что нет...
-                    {% endif %}
-                    {% for item in comments %}
-                        <div class="block-article">
-                                <div class="text">
-                                    <p>{{ item.author }} оставил комментарий {{ item.add_datatime }}:</p>
-                                    <p>{{ item.text }}</p>
-                                </div>
-                        </div>
-                        <hr>
-                    {% endfor %}
-                    <form class="form-horizontal" action="" method="post">
-                        {% csrf_token %}
-                        <br>
-                        {% if not comments %}
-                            <label>Будьте первым:</label>
-                        {% else %}
-                            <label>Оставить комментарий:</label>
-                        {% endif %}
-                        <textarea name="text_comment" rows="5" style="width: 100%"></textarea>
-                        <div class="text-right">
-                            <input type="submit" value="Отправить">
-                        </div>
-                    </form>
-                {% else %}
-                    Войдите в аккаунт, чтобы просматривать и оставлять комментарии...
-                {% endif %}
-            </div>
+        <div class="ajax_comment">
+            <h2 class="comment_h2">Последние комментарии:</h2>
+            {% include 'mainapp/includes/inc__comment.html' %}
         </div>
     </div>
 {% endblock %}
-
 
