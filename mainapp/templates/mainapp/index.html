@@ -24,7 +24,6 @@
                 <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                     <h3 class="text-center">{{ item.name }}</h3>
                 </a>
-
             </div>
             <div style="margin:auto">
                 <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}"
@@ -36,7 +35,6 @@
                 <a class="a_link_article" href="{% url 'article_page' item.pk %}">
                     читать дальше
                 </a>
-                </p>
                 <p>#{{ item.tag }}</p>
                 <p>{{ item.hub }}</p>
                 <div class="likes-dislikes-comments-box">
@@ -67,11 +65,8 @@
                         (33)
                     </button>
                 </div>
-
             </div>
         </div>
-
-
         {% endfor %}
     </div>
     {% block pagination %} {% include 'mainapp/includes/inc__pagination.html' %} {% endblock %}
