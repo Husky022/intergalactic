@@ -11,8 +11,9 @@
 }
 
 .display-heading {
-    font-size: 35px;
+    font-size: 65px;
     color: #666666;
+    margin-top: 70px;
 }
 
 .right {
@@ -199,12 +200,12 @@ button::-moz-focus-inner {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    padding-top: 64px;
+    padding-top: 32px;
     margin-bottom: 32px;
 }
 
 .article-brick {
-    width: 444px;
+    width: 777px;
     padding: 44px 32px;
     box-sizing: border-box;
     background: #FFFFFF;
@@ -214,8 +215,6 @@ button::-moz-focus-inner {
     display: flex;
     flex-direction: column;
 }
-
-
 
 
 /* Классы для Личного кабинета */
