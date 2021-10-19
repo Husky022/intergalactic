@@ -1,9 +1,9 @@
-from django.http.response import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView, FormView
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 
 from mainapp.forms import ArticleCreationForm, CommentForm
@@ -74,18 +74,29 @@ class ArticleChangeActiveView(View):
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
         target_article.is_active = False if target_article.is_active else True
-        # Пока сделал, что все статьи из архива - попадают на модерацию
-        # Надо будет обдумать более гибкую логику
         target_article.article_status = 'AR' if target_article.article_status != 'AR' else 'PB'
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-class ArticleEditView(UpdateView):
-    """Контроллер для изменения товара"""
-    model = Article
+class ArticleEditView(View):
+    """Контроллер для изменения статьи"""
+    title = 'Редактирование статьи'
+    template_name = 'mainapp/edit_article.html'
     form_class = ArticleCreationForm
-    success_url = reverse_lazy('auth:profile')
+    redirect_to = 'auth:profile'
 
-    def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER')
+    def get(self, request, pk):
+        context = {
+            'form': self.form_class(instance=Article.objects.get(pk=pk)),
+            'article': Article.objects.get(pk=pk)
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        article_form = ArticleCreationForm(data=request.POST, files=request.FILES, instance=article)
+        if article_form.is_valid():
+            article_form.save()
+
+        return HttpResponseRedirect(reverse(self.redirect_to))
