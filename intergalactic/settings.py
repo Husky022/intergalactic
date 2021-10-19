@@ -86,18 +86,6 @@ DATABASES = {
 }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'intergalactic_entertainment_db',
-#         'USER': 'ie_admin',
-#         'PASSWORD': '657gneduithb4',
-#         'HOST': '194.67.92.198',
-#         'PORT': '5432',
-#     }
-# }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
