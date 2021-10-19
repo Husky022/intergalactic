@@ -1,4 +1,3 @@
-from Cryptodome.SelfTest import loader
 from django.contrib.auth.decorators import login_required
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -11,7 +10,7 @@ from django.template import loader
 from mainapp.forms import ArticleCreationForm, CommentForm
 from mainapp.comments import CommentAction
 from mainapp.models import Article, Comment, Likes
-
+from django.views.decorators.csrf import csrf_exempt
 
 class Main(ListView):
     template_name = 'mainapp/index.html'
@@ -19,6 +18,7 @@ class Main(ListView):
     extra_context = {
         'title': 'Статьи',
         'comments': Comment.objects.all(),
+        'like_status': 'эээээ',
     }
 
     def get_queryset(self):
@@ -46,7 +46,18 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
+        like_items_article = Likes.objects.filter(article_id=int(kwargs["pk"]))
+        user_like = like_items_article.filter(user_id=request.user.pk)
+        user_like_status = None
+        like_count = like_items_article.filter(like_status=True).count()
+        if user_like.filter(like_status=False):
+            user_like_status = False
+        else:
+            user_like_status = True
+
         context = CommentAction.create("article_page_get", self)
+        context.update(user_like_status=user_like_status, like_count=like_count)
+
         if request.is_ajax():
             CommentAction.create("article_page_ajax", self)
             result = render_to_string(
@@ -113,7 +124,8 @@ class ArticleEditView(UpdateView):
 #         CommentAction.create("like_post", self)
 #         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
 
-@login_required
+# @login_required
+@csrf_exempt
 def set_like(request, article_pk):
     like_items_article = Likes.objects.filter(article_id=article_pk)
     user_like = like_items_article.filter(user_id=request.user.pk)
@@ -121,7 +133,6 @@ def set_like(request, article_pk):
     like_count = like_items_article.filter(like_status=True).count()
     context = {
         'like_items_article': like_items_article,
-
     }
     if request.is_ajax():
         if not user_like:
