@@ -11,8 +11,9 @@
 }
 
 .display-heading {
-    font-size: 35px;
+    font-size: 65px;
     color: #666666;
+    margin-top: 70px;
 }
 
 .right {
@@ -95,11 +96,7 @@ button::-moz-focus-inner {
 }
 
 .article-box {
-    margin-top: 2%;
-    margin-left: 25%;
-    margin-right: 25%;
-    width: 50%;
-    margin-bottom: 5%;
+    margin: 2% 5% 5%;
 }
 
 .article-img {
@@ -196,6 +193,29 @@ button::-moz-focus-inner {
     list-style-type: none;
     background: lightgray;
 }
+
+/* Классы для кирпичей */
+
+.related-articles {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    margin-bottom: 32px;
+}
+
+.article-brick {
+    width: 777px;
+    padding: 44px 32px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    box-shadow: 5px 20px 50px rgba(16, 112, 177, 0.2);
+    border-radius: 10px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* Классы для Личного кабинета */
 
