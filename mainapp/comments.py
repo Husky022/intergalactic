@@ -1,5 +1,5 @@
 from django.template.loader import render_to_string
-from mainapp.models import Article, Comment
+from mainapp.models import Article, Comment, SubComment
 
 
 def add_item(item, comment_list):
@@ -40,7 +40,15 @@ def comment_article(self):
 def comment_article_page_get(self):
     self.object = self.get_object()
     context = self.get_context_data(object=self.get_object())
-    context['comments'] = Comment.objects.filter(article_id=self.kwargs["pk"])
+    comments = Comment.objects.filter(article_id=self.kwargs["pk"])
+    context['comments'] = comments
+    subcomments_dict = {}
+    for comment in comments:
+        subcomments = SubComment.objects.filter(comment_id=comment.id)
+        # subcomments_dict[comment] = subcomments
+        subcomments_dict[comment] = list(subcomments)
+    context['subcomments'] = subcomments_dict
+    print(context)
     return context
 
 

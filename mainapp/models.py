@@ -97,19 +97,19 @@ class Comment(models.Model):
         verbose_name_plural = 'комментарии'
 
 
-# class SubComment(models.Model):
-#     text = models.TextField(verbose_name='Текст подкомментария')
-#     comment = models.ForeignKey(Comment, on_delete=models.PROTECT,
-#                                 verbose_name='Подкомментарий')
-#     author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
-#                                verbose_name='Автор подкомментария')
-#     is_active = models.BooleanField(
-#         default=True, db_index=True, verbose_name='Активация комментария')
-#     add_datetime = models.DateTimeField('Время добавления ответа', auto_now_add=True)
-#
-#     def __str__(self):
-#         return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
-#
-#     class Meta:
-#         verbose_name = 'Подкомментарий'
-#         verbose_name_plural = 'Подкомментарии'
+class SubComment(models.Model):
+    text = models.TextField(verbose_name='Текст подкомментария')
+    comment = models.ForeignKey(Comment, on_delete=models.PROTECT,
+                                verbose_name='Комментарий')
+    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
+                               verbose_name='Автор подкомментария')
+    is_active = models.BooleanField(
+        default=True, db_index=True, verbose_name='Активация комментария')
+    add_datetime = models.DateTimeField('Время добавления ответа', auto_now_add=True)
+
+    def __str__(self):
+        return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
+
+    class Meta:
+        verbose_name = 'Подкомментарий'
+        verbose_name_plural = 'Подкомментарии'

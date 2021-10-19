@@ -11,13 +11,24 @@
                         </p>
                         <hr>
                         <p>{{ item.text }}</p>
+                        {% for subitem in subcomments.values %}
+                            <div class="block-subcomment" style="width: 80%; margin-left: 20%">
+                                {% for element in subitem %}
+                                    {% if item.id == element.comment_id %}
+                                        <p> {{ element.author }} ответил {{ element.add_datetime }}</p>
+                                        <p> {{ element.text }}</p>
+                                        <hr>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
                         <button class="btn-comments-answer"  onclick="show('subcomment_block_{{ item.id }}')">
                             Ответить
                         </button>
                         <div class="subcomment_block" id="subcomment_block_{{ item.id }}">
                             <form class="form-horizontal" action="" method="post">
                                 {% csrf_token %}
-                                <textarea name="text_comment" rows="3" style="width: 80%"></textarea>
+                                <textarea name="text_comment_1" rows="3" style="width: 80%"></textarea>
                                 <div class="text-right">
                                     <input class="submit_comment" name="{{article.pk}}" type="submit" value="Отправить">
                                 </div>
