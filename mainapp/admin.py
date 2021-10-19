@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
-from mainapp.models import Article, Hub, Likes
-from mainapp.models import Article, Hub, Comment
+from mainapp.models import Article, Hub, Comment, Likes
 from authapp.models import IntergalacticUser
 
 
