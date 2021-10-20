@@ -96,7 +96,8 @@ class UserProfileView(View):
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
-            'articles': articles_with_form
+            'articles': articles_with_form,
+            'role': "Администратор" if self.request.user.is_superuser else "Пользователь",
         }
         return context
 
