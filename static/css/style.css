@@ -96,6 +96,14 @@ button::-moz-focus-inner {
 }
 
 .article-box {
+    margin-top: 2%;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    margin-bottom: 5%;
+}
+
+.article-list-box {
     margin: 2% 5% 5%;
 }
 
