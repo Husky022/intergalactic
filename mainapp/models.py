@@ -113,3 +113,29 @@ class SubComment(models.Model):
     class Meta:
         verbose_name = 'Подкомментарий'
         verbose_name_plural = 'Подкомментарии'
+
+class Likes(models.Model):
+    class Meta:
+        verbose_name = 'лайк'
+        verbose_name_plural = 'лайки'
+
+    LIKE_STATUS_CHOICES = [
+        ('DZ', 'Дизлайк'),
+        ('UND', 'Не установлено'),
+        ('LK', 'Лайк'),
+    ]
+    LIKE_DEFAULT_STATUS = 'UND'
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+    #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
+    like_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
+        if self.like_status:
+            data_str += f'установил лайк к статье - \"{self.article.name}\"'
+        else:
+            data_str += f'снял лайк к статье - \"{self.article.name}\"'
+        return data_str

@@ -139,7 +139,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Summernote config
-SUMMERNOTE_THEME = 'bs4'
+SUMMERNOTE_THEME = 'bs5'
 SUMMERNOTE_CONFIG = {
     'iframe': True,
     # You can put custom Summernote settings
@@ -162,6 +162,7 @@ SUMMERNOTE_CONFIG = {
     # размер файла в байтах
     'attachment_filesize_limit': 20000000
 }
+
 
 # Модерация
 MODERATION_STATUS = False

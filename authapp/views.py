@@ -54,7 +54,7 @@ class RegisterView(FormView):
 class UserEditView(View):
     title = 'редактирование'
     template_name = 'authapp/edit.html'
-    redirect_to = 'main'
+    redirect_to = 'auth:profile'
     account_form = IntergalacticUserEditForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -96,7 +96,8 @@ class UserProfileView(View):
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
-            'articles': articles_with_form
+            'articles': articles_with_form,
+            'role': "Администратор" if self.request.user.is_superuser else "Пользователь",
         }
         return context
 

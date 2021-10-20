@@ -19,8 +19,8 @@ INTERGALACTIC
 
 ::
 
-    python3 manage.py loaddata
-(Обращение к базе на загрузку) db.json (файл в проекте)
+    python3 manage.py loaddata db.json
+python3 manage.py loaddata (Обращение к базе на загрузку) db.json (файл в проекте)
 Все миграции накатились данные снова вернулись.
 
 Для более опытных:

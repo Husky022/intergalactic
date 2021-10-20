@@ -1,0 +1,14 @@
+{% extends 'authapp/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<form class="form-horizontal" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ update_form.as_p }}
+    <input class="form-control" type="submit" value="сохранить">
+</form>
+<a href="{% url 'adminapp:users' %}" class="btn btn-outline-secondary btn-block my-3" role="button">
+    к списку пользователей
+</a>
+{% endblock content %}
