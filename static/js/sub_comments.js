@@ -3,8 +3,10 @@ window.onload = function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
-                url: "/article_page/" + target_href.name + "/",
-                data: {  text_subcomment: $('.textarea_subcomment').val()},
+                url: "/article_page/" + target_href.id + "/",
+                data: {  comment_id: $('.submit_subcomment_' + target_href.value).val(),
+                         text_subcomment: $('.textarea_subcomment' + target_href.value).val(),
+                      },
                 success: function (data) {
                     $('.comment-main').remove();
                     $('.ajax_comment').html(data.result);
@@ -13,7 +15,7 @@ window.onload = function () {
             });
 
         }
-        event.preventDefault();
+        event.preventDefault();s
     });
 
 };

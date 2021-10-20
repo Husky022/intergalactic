@@ -58,7 +58,7 @@ def comment_article_page_post(self):
                                          text=self.request.POST.dict()['text_comment'])
         comment.save()
     elif 'text_subcomment' in self.request.POST.dict():
-        subcomment = SubComment.objects.create(comment_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
+        subcomment = SubComment.objects.create(comment_id=self.request.POST.dict()['comment_id'], author_id=self.request.user.id,
                                          text=self.request.POST.dict()['text_subcomment'])
         subcomment.save()
 
@@ -72,13 +72,18 @@ def comment_article_page_ajax(self):
                                          text=self.request.GET.dict()['text_comment'])
         comment.save()
     elif 'text_subcomment' in self.request.GET.dict():
-        a = {'pk': 4}
-        subcomment = SubComment.objects.create(comment_id=int(a["pk"]), author_id=self.request.user.id,
+        print(self.request.GET.dict()['comment_id'])
+        print(self.request.GET.dict()['text_subcomment'])
+
+        subcomment = SubComment.objects.create(comment_id=self.request.GET.dict()['comment_id'], author_id=self.request.user.id,
                                          text=self.request.GET.dict()['text_subcomment'])
+        print(subcomment.comment_id)
+        print(subcomment.author_id)
+        print(subcomment.text)
         subcomment.save()
 
 
-class Action:
+class CommentAction:
     types = {
         'main': comment_main,
         'article': comment_article,
