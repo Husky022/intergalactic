@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, ValidationError, UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django_summernote.widgets import SummernoteWidget
 from authapp.models import IntergalacticUser
 
 
@@ -25,8 +26,12 @@ class IntergalacticUserRegisterForm(UserCreationForm):
             'email',
             'age',
             'sex',
+            'about_me',
             'avatar'
         )
+        widgets = {
+            'about_me': SummernoteWidget(),
+        }
 
     def __init__(self, *args, **kwargs):
         super(IntergalacticUserRegisterForm, self).__init__(*args, **kwargs)
@@ -38,7 +43,10 @@ class IntergalacticUserRegisterForm(UserCreationForm):
 class IntergalacticUserEditForm(UserChangeForm):
     class Meta(object):
         model = IntergalacticUser
-        fields = ('username', 'first_name', 'email', 'age', 'avatar')
+        fields = ('username', 'first_name', 'about_me', 'email', 'age', 'avatar')
+        widgets = {
+            'about_me': SummernoteWidget(),
+        }
 
     def __init__(self, *args, **kwargs):
         super(IntergalacticUserEditForm, self).__init__(*args, **kwargs)
