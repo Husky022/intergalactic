@@ -104,7 +104,11 @@ button::-moz-focus-inner {
 }
 
 .article-list-box {
-    margin: 2% 5% 5%;
+    margin-top: 2%;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    margin-bottom: 5%;
 }
 
 .article-img {
@@ -205,15 +209,15 @@ button::-moz-focus-inner {
 /* Классы для кирпичей */
 
 .related-articles {
-    display: flex;
+    /* display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
     padding-top: 32px;
     margin-bottom: 32px;
 }
 
 .article-brick {
-    width: 777px;
+    /* width: 777px; */
     padding: 44px 32px;
     box-sizing: border-box;
     background: #FFFFFF;
