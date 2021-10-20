@@ -1,5 +1,5 @@
 window.onload = function () {
-    $('.ajax_comment').on('click', '.submit_subcomment', function () {
+    $('.block-comment').on('click', '.submit_subcomment', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
@@ -9,7 +9,7 @@ window.onload = function () {
                       },
                 success: function (data) {
                     $('.comment-main').remove();
-                    $('.ajax_comment').html(data.result);
+                    $('.block-comment').html(data.result);
 
                 },
             });
