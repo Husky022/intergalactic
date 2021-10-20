@@ -337,9 +337,6 @@ a.article-anchor {
     padding: 2% 25% 2% 10%;
     color: #666666;
 }
-.hidden{
-    visibility: hidden;
-}
-.btn_like_position{
-    position: absolute;
+.like_colour{
+    color: rgba(135, 135, 135, 0.68);
 }

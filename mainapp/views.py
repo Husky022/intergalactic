@@ -12,6 +12,7 @@ from mainapp.comments import CommentAction
 from mainapp.models import Article, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
 
+
 class Main(ListView):
     template_name = 'mainapp/index.html'
     paginate_by = 5
@@ -50,7 +51,9 @@ class ArticlePage(DetailView):
         user_like = like_items_article.filter(user_id=request.user.pk)
         user_like_status = None
         like_count = like_items_article.filter(like_status=True).count()
-        if user_like.filter(like_status=False):
+        if not user_like:
+            user_like_status = False
+        elif user_like.filter(like_status=False):
             user_like_status = False
         else:
             user_like_status = True

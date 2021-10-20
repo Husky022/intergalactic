@@ -117,5 +117,9 @@ class Likes(models.Model):
     like_status = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Пользователь ({self.user.last_name}) ({self.user.first_name}) ' \
-               f'установил ({self.like_status}) к статье ({self.article.name})'
+        data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
+        if self.like_status:
+            data_str += f'установил лайк к статье - \"{self.article.name}\"'
+        else:
+            data_str += f'снял лайк к статье - \"{self.article.name}\"'
+        return data_str
