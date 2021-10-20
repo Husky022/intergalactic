@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render
+from threading import local
+
 from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, FormView
 from django.http import HttpResponseRedirect
@@ -9,6 +12,8 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 from django.template import loader
 from mainapp.forms import ArticleCreationForm, CommentForm
+
+from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.comments import CommentAction
 from mainapp.models import Article, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
@@ -45,6 +50,7 @@ class ArticlePage(DetailView):
     extra_context = {
         'page_title': 'Статья',
         'CommentForm': CommentForm,
+        'SubCommentForm': SubCommentForm
     }
 
     def get(self, request, *args, **kwargs):
@@ -68,6 +74,7 @@ class ArticlePage(DetailView):
                 'mainapp/includes/inc__comment.html', context)
             return JsonResponse({'result': result})
         return self.render_to_response(context)
+
 
     def post(self, request, *args, **kwargs):
         CommentAction.create("article_page_post", self)
