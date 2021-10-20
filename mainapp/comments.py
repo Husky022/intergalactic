@@ -1,4 +1,6 @@
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+
 from mainapp.models import Article, Comment, SubComment
 
 

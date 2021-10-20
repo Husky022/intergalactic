@@ -1,5 +1,5 @@
 <div class="comment-main"  >
-    {% if not request.user.is_anonymous %}
+    {% if not request.user.is_auntificated %}
         {% if not comments %}
             Комментариев пока что нет...
         {% endif %}

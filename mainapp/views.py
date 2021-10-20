@@ -53,6 +53,7 @@ class ArticlePage(DetailView):
         'SubCommentForm': SubCommentForm
     }
 
+
     def get(self, request, *args, **kwargs):
         like_items_article = Likes.objects.filter(article_id=int(kwargs["pk"]))
         user_like = like_items_article.filter(user_id=request.user.pk)
