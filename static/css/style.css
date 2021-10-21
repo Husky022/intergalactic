@@ -584,6 +584,19 @@ a.article-anchor {
     color: rgba(135, 135, 135, 0.68);
 }
 
+.btn-read-article{
+	border: 1px solid maroon;
+	border-radius: 5px;
+	background: white;
+	padding: 5px 5px;
+	text-decoration: none;
+    color: maroon;
+}
+
+.btn-read-article:hover{
+	background: maroon;
+    color: white;
+}
 
 .subcomment_block{
     width: 80%;
