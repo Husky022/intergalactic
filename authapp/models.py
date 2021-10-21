@@ -11,7 +11,6 @@ class IntergalacticUser(AbstractUser):
         (sex_female, 'женский'),
         (sex_not_selected, 'не выбран'),
     )
-
     avatar = models.ImageField(
         verbose_name='Аватарка',
         upload_to='avatars',
@@ -28,11 +27,11 @@ class IntergalacticUser(AbstractUser):
         choices=sex_choices,
         default=sex_not_selected
     )
-
     send_messages = models.BooleanField(
         default=True,
         verbose_name='Оповещать о новых комментариях'
     )
+    about_me = models.TextField(verbose_name='О себе', blank=True, null=True)
 
     def __str__(self):
         return f'{self.username}'

@@ -6,25 +6,26 @@
 
 /*Классы из Bootstrap*/
 
-.navbar{
+.navbar {
     background-color: bisque;
 }
 
-.display-heading{
-    font-size: 35px;
+.display-heading {
+    font-size: 65px;
     color: #666666;
+    margin-top: 70px;
 }
 
-.right{
+.right {
     position: absolute;
     right: 0;
 }
 
-.bg-footer{
+.bg-footer {
     background-color: #999999;
 }
 
-.orange{
+.orange {
     background-color: orange;
 }
 
@@ -45,36 +46,59 @@ body {
     color: #333;
 }
 
-a{
-  text-decoration: none !important;
-  color: #666666;
+
+a {
+    text-decoration: none !important;
+    color: #666666;
 }
 
-a:hover{
-  color: black;
+.a_link_article {
+    color: maroon;
 }
 
-button:active, button:focus {
-  outline: none !important;
+a:hover {
+    color: black;
 }
+
+.active {
+    background: darkgrey;
+    border-radius: 10px;
+}
+
+button:active,
+button:focus {
+    outline: none !important;
+}
+
 button::-moz-focus-inner {
-  border: 0 !important;
+    border: 0 !important;
 }
 
-.block-article{
+.block-article {
     margin-top: 5%;
     margin-bottom: 5%;
+    padding: 2%;
+    box-shadow: 0 0 5px 5px rgba(221, 221, 221, 1);
+    border-radius: 5px;
+}
+
+.block-comment{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 5%;
+    box-shadow: 0 0 5px 5px rgba(221, 221, 221, 1);
+    border-radius: 10px;
 }
 
 
 .user-panel-button {
     color: #666666;
     background-color: Transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
-    outline:none;
+    outline: none;
     margin-left: 10px;
 }
 
@@ -82,14 +106,30 @@ button::-moz-focus-inner {
     color: black;
 }
 
-.article-box{
+.article-box {
     margin-top: 2%;
-    margin-left: 10%;
-    width: 80%;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
     margin-bottom: 5%;
 }
 
-.project-menu-name{
+.article-list-box {
+    margin-top: 2%;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    margin-bottom: 5%;
+}
+
+.article-img {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: 250px;
+    width: 400px;
+}
+
+.project-menu-name {
     font-size: 30px;
     margin: 0;
     padding: 10px;
@@ -125,8 +165,8 @@ button::-moz-focus-inner {
 }
 
 .footer {
-    position:fixed;
-    bottom:0;
+    position: fixed;
+    bottom: 0;
     background: #364850;
     color: #fff;
     margin-left: 5%;
@@ -153,14 +193,15 @@ button::-moz-focus-inner {
     order: 0;
 }
 
-.container-menu, .footer-menu {
+.container-menu,
+.footer-menu {
     background-color: #6CAEDD;
     margin-left: 5%;
     padding-top: 20px;
     width: 80%;
 }
 
-.footer-menu{
+.footer-menu {
     background: #364850;
 }
 
@@ -170,6 +211,34 @@ button::-moz-focus-inner {
     color: #fff;
     text-decoration: none;
 }
+
+.menu_category {
+    list-style-type: none;
+    background: lightgray;
+}
+
+/* Классы для кирпичей */
+
+.related-articles {
+    /* display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; */
+    padding-top: 32px;
+    margin-bottom: 32px;
+}
+
+.article-brick {
+    /* width: 777px; */
+    padding: 44px 32px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    box-shadow: 5px 20px 50px rgba(16, 112, 177, 0.2);
+    border-radius: 10px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* Классы для Личного кабинета */
 
@@ -184,27 +253,69 @@ button::-moz-focus-inner {
     color: green;
 }
 
-
 .profile_info {
-	margin: 10px 0px;
+    margin: 10px 0px;
 }
 
 .profile_image {
-	height: 200px;
-	width: 200px;
-	float: left;
-	margin: 0px 5px 5px 0px;
+    height: 200px;
+    width: 200px;
+    float: left;
+    margin: 0px 5px 5px 0px;
 }
 
 .profile_article_section {
-	border-bottom: 2px dashed blue;
-	margin-bottom: 10px;
-	padding: 5px;
+    border-bottom: 2px dashed blue;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 .btn-light {
     margin-top: 20px
 }
+
+.article_line {
+    margin-top: 15px;
+}
+
+table.article-table {
+    border-collapse: separate;
+    width: 100%;
+    border-spacing: 0 10px;
+}
+
+td.article-table {
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.article-table table {
+    min-height: 50px;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.article-table p {
+    margin-bottom: 0;
+    font-size: medium;
+}
+
+.article-name {
+    width: 60%;
+}
+
+.hub-name {
+    width: 25%;
+}
+
+.hub-name p {
+    text-align: center;
+}
+
+a.article-anchor {
+    display: block;
+}
+
 
 /* Окно регистрации */
 
@@ -219,27 +330,280 @@ button::-moz-focus-inner {
     max-width: 400px;
 }
 
-.img-box{
-    margin-top: 5%;
-    margin-bottom: 5%;
+.img-box {
+    margin-top: 2%;
+    width: 50%;
+    margin-left: 32%;
+    margin-right: 25%;
 }
 
-.comments, .likes, .dislikes{
+.main-pic{
+    height: 65%;
+    width: 65%;
+
+}
+
+.comments,
+.likes,
+.dislikes {
     float: left;
 }
 
-.btn-comments, .btn-likes, .btn-dislikes{
+.btn-comments,
+.btn-likes,
+.btn-dislikes,
+.btn-comments-answer,
+.submit_comment,
+.submit_subcomment{
     background-color: Transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
 }
 
-.btn-likes{
+.btn-comments-answer, .submit_comment, .submit_subcomment{
+    background-color: lightgray;
+    border-radius: 5px;
+    color: #666666;
+    box-shadow: 0 0 5px 1px rgba(221, 221, 221, 1);
+}
+
+.btn-comments-answer:hover, .submit_comment:hover, .submit_subcomment:hover{
+    background-color: grey;
+    color: snow;
+}
+
+.btn-likes {
     color: green;
 }
 
-.btn-dislikes{
+.btn-dislikes {
     color: red;
+}
+
+.btn-comments {
+    color: black !important;
+}
+
+.pagination > li > a {
+    /*background-color: #6c757d;*/
+    color: #6c757d;
+}
+
+.pagination > .active > a {
+    /*color: white;*/
+    background-color: #999999 !Important;
+    border: solid 1px #999999 !Important;
+
+}
+
+.comment_h2 {
+    padding-top: 20px;
+}
+
+.comment-main {
+    color: #666666;
+}
+
+/* Классы для администрования пользователей */
+
+.user_delete {
+    margin: 50px auto;
+    width: 600px;
+    font-size: 150%;
+}
+
+.user_delete .btn {
+    display: block;
+    float: left;
+    margin: 25px;
+    width: 150px;
+    color: #111;
+}
+
+.user_delete a {
+    color: #111;
+    text-decoration: none;
+}
+
+.users_list {
+    margin-left: 150px;
+}
+
+.users_list a {
+    color: #555;
+    text-decoration: none;
+}
+
+.users_list .new_user {
+    margin-left: 190px;
+}
+
+.users_list button {
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    padding: 0 15px;
+    margin-right: 50px;
+}
+
+.user_record {
+    height: 125px;
+    margin: 15px auto;
+    position: relative;
+    border: 1px solid #b3b3b3;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.user_record.not_active {
+    opacity: 0.5;
+}
+
+.user_record img {
+    display: block;
+    float: left;
+    height: 125px;
+    border-radius: 25px;
+}
+
+.user_record .user_name {
+    display: flex;
+    float: left;
+    margin-top: 5px;
+    margin-left: 25px;
+    width: 175px;
+    flex-direction: column;
+}
+
+.user_record .user_name a {
+    color: #555;
+}
+
+.user_record .user_name p {
+    /*font-weight: bold;*/
+    margin: 10px auto;
+}
+
+.user_record .user_email {
+    display: block;
+    float: left;
+    margin-top: 40px;
+    margin-left: 25px;
+    width: 175px;
+}
+
+.user_record .user_age {
+    display: block;
+    float: left;
+    margin-top: 5px;
+    margin-left: 25px;
+    width: 45px;
+}
+
+.user_record .user_role {
+    display: flex;
+    float: left;
+    margin-top: 15px;
+    margin-left: 25px;
+    width: 125px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user_record .user_lastlogin {
+    display: block;
+    float: left;
+    margin-top: 40px;
+    margin-left: 25px;
+    width: 175px;
+}
+
+.admin_container .menu span {
+    margin-left: 10px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #111;
+}
+
+.admin_container .h2 {
+    margin-top: 10px;
+}
+
+.menu {
+    list-style-type: none;
+    margin-top: 67px;
+    float: right;
+}
+
+.menu li {
+    float: left;
+}
+
+.menu a {
+    color: #8c8c8c;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 13px;
+}
+
+.menu .active {
+    color: #212121;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.menu a:hover {
+    color: #212121;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.menu a:active {
+    color: #8c8c8c;
+    font-weight: 700;
+    border-bottom: 3px solid #212121;
+}
+
+.flex-block-profile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    align-items: baseline;
+}
+
+.like_colour{
+    color: rgba(135, 135, 135, 0.68);
+}
+
+.btn-read-article{
+	border: 1px solid maroon;
+	border-radius: 5px;
+	background: white;
+	padding: 5px 5px;
+	text-decoration: none;
+    color: maroon;
+}
+
+.btn-read-article:hover{
+	background: maroon;
+    color: white;
+}
+
+.subcomment_block{
+    width: 80%;
+    margin-left: auto;
+    display: none;
+}
+
+textarea{
+    border-radius: 10px;
 }

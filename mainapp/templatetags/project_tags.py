@@ -14,3 +14,15 @@ def media_folder_users(string):
         return '/static/img/default_avatar.jpg'
 
     return f'{settings.MEDIA_URL}{string}'
+
+
+@register.filter(name='media_folder_article')
+def media_folder_article(string):
+    """
+    Автоматически добавляет относительный URL-путь к медиафайлам пользователей
+    users_avatars/user1.jpg --> /media/users_avatars/user1.jpg
+    """
+    if not string:
+        return ''
+
+    return f'{settings.MEDIA_URL}{string}'

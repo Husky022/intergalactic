@@ -1,10 +1,23 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 
-from mainapp.models import Article, Hub
+from mainapp.models import Article, Hub, Comment, Likes
+from mainapp.models import Article, Hub, Comment, SubComment
 from authapp.models import IntergalacticUser
 
 
-admin.site.register(Article)
+class ArticleAdmin(SummernoteModelAdmin):
+    summernote_fields = ('text', )
+
+
+@admin.register(Likes)
+class LikesAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Article, ArticleAdmin)
 admin.site.register(Hub)
 
 admin.site.register(IntergalacticUser)
+admin.site.register(Comment)
+admin.site.register(SubComment)

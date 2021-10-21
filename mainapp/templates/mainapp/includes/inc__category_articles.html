@@ -1,8 +1,0 @@
-{% for item in category_menu %}
-    <li>
-        <a href="{% url 'hub_category' item.pk %}"
-            class="active">
-            {{ item.name }}
-        </a>
-     </li>
-{% endfor %}

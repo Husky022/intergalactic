@@ -1,0 +1,16 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% load project_tags %}
+{% block content %}
+    <div class="article-box">
+        <form class="form-horizontal" action="{% url 'edit_article' article.pk %}" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <br>
+            <input class="form-control btn btn-success btn-lg btn-block" type="submit" value="Сохранить">
+        </form>
+        <br>
+        <a class="btn btn-secondary btn-lg btn-block" type="button" href="{% url 'auth:profile' %}">Не сохранять</a>
+    </div>
+{% endblock %}
