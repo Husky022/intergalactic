@@ -33,11 +33,12 @@
 
                                 <p>
                                     {{ item.preview }}
-                                    <a class="a_link_article" href="{% url 'article_page' item.pk %}">
-                                        Далее
+                                </p>
+                                    <a class="btn-read-article" href="{% url 'article_page' item.pk %}">
+                                        Читать полностью
                                     </a>
                                 <hr>
-                                </p>
+
                                     <p >#{{ item.tag }}</p>
                                     <p>{{ item.hub }}</p>
                                 <div class="likes-dislikes-comments-box">
