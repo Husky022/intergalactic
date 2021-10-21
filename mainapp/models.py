@@ -39,7 +39,7 @@ class Article(models.Model):
 
     name = models.CharField(verbose_name='Название статьи', max_length=168)
     image = models.ImageField(verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
-    preview = models.TextField(verbose_name='Предпросмотр', max_length=200)
+    preview = models.TextField(verbose_name='Предпросмотр', max_length=250)
     text = models.TextField(verbose_name='Текст статьи')
     tag = models.CharField(verbose_name='Тэг статьи', max_length=64, blank=True)
     hub = models.ForeignKey(
