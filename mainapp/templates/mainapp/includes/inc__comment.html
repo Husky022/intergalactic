@@ -1,5 +1,5 @@
 <div class="comment-main"  >
-    {% if not request.user.is_auntificated %}
+    {% if not request.user.is_anonymous %}
         {% if not comments %}
             Комментариев пока что нет...
         {% endif %}
@@ -23,7 +23,7 @@
                             </div>
                         {% endfor %}
                         <button class="btn-comments-answer"  onclick="show('subcomment_block_{{ item.id }}')">
-                            Ответить
+                            Ответитькомментарии
                         </button>
                         <div class="subcomment_block" id="subcomment_block_{{ item.id }}">
                             <form class="form-horizontal" action="" method="post">
