@@ -331,8 +331,16 @@ a.article-anchor {
 }
 
 .img-box {
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 2%;
+    width: 50%;
+    margin-left: 32%;
+    margin-right: 25%;
+}
+
+.main-pic{
+    height: 65%;
+    width: 65%;
+
 }
 
 .comments,

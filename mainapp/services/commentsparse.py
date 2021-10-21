@@ -2,11 +2,11 @@ from mainapp.models import Article, Comment, SubComment
 
 
 def parse_all():
-    return Article.objects.all()
+    return Article.objects.filter(is_active=True)
 
 
 def parse_filter(self):
-    return Article.objects.filter(hub__id=self.kwargs['pk'])
+    return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True)
 
 
 def add_item(item, comment_list):

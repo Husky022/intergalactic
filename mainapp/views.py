@@ -18,11 +18,7 @@ from mainapp.services.commentsview import CommentAction
 class Main(ListView):
     template_name = 'mainapp/index.html'
     paginate_by = 5
-    extra_context = {
-        'title': 'Статьи',
-        'comments': Comment.objects.all(),
-        'like_status': 'эээээ',
-    }
+    extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
         queryset = comment(self)

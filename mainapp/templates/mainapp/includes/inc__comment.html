@@ -6,8 +6,11 @@
         {% for item in comments %}
             <div class="block-comment">
                     <div class="text" name="{{item.id}}">
-                        <p>
-                            {{ item.author }} оставил комментарий {{ item.add_datetime }}:
+                        <p style="color: maroon">
+                            <span class="font-weight-bold">
+                                    {{ item.author }}
+                            </span>
+                            оставил комментарий {{ item.add_datetime }}:
                         </p>
                         <hr>
                         <p>{{ item.text }}</p>
@@ -15,7 +18,12 @@
                             <div class="block-subcomment" style="width: 80%; margin-left: 20%">
                                 {% for element in subitem %}
                                     {% if item.id == element.comment_id %}
-                                        <p> {{ element.author }} ответил {{ element.add_datetime }}</p>
+                                        <p style="color: maroon">
+                                            <span class="font-weight-bold">
+                                                    {{ element.author }}
+                                            </span>
+                                            ответил {{ element.add_datetime }}:
+                                        </p>
                                         <p> {{ element.text }}</p>
                                         <hr>
                                     {% endif %}
@@ -23,7 +31,7 @@
                             </div>
                         {% endfor %}
                         <button class="btn-comments-answer"  onclick="show('subcomment_block_{{ item.id }}')">
-                            Ответитькомментарии
+                            Ответить
                         </button>
                         <div class="subcomment_block" id="subcomment_block_{{ item.id }}">
                             <form class="form-horizontal" action="" method="post">
