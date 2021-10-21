@@ -2,6 +2,7 @@ from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
 from mainapp.models import Article, Hub, Comment, Likes
+from mainapp.models import Article, Hub, Comment, SubComment
 from authapp.models import IntergalacticUser
 
 
@@ -19,3 +20,4 @@ admin.site.register(Hub)
 
 admin.site.register(IntergalacticUser)
 admin.site.register(Comment)
+admin.site.register(SubComment)
