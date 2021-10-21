@@ -1,20 +1,18 @@
 from django.shortcuts import get_object_or_404, render
-from django.http.response import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.http.response import JsonResponse
 from django.template.loader import render_to_string
+from django.template import loader
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from django.template import loader
-from mainapp.forms import ArticleCreationForm, CommentForm
-from mainapp.comments import CommentAction
+from mainapp.services.commentsparse import comment
 from mainapp.models import Article, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
+
+from mainapp.services.commentsview import CommentAction
 
 
 class Main(ListView):
@@ -23,10 +21,11 @@ class Main(ListView):
     extra_context = {
         'title': 'Статьи',
         'comments': Comment.objects.all(),
+        'like_status': 'эээээ',
     }
 
     def get_queryset(self):
-        queryset = CommentAction.create("main")
+        queryset = comment(self)
         return queryset
 
 
@@ -37,7 +36,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = CommentAction.create("article", self)
+        queryset = comment(self)
         return queryset
 
 
@@ -53,7 +52,6 @@ class ArticlePage(DetailView):
     def get(self, request, *args, **kwargs):
         like_items_article = Likes.objects.filter(article_id=int(kwargs["pk"]))
         user_like = like_items_article.filter(user_id=request.user.pk)
-        user_like_status = None
         like_count = like_items_article.filter(like_status=True).count()
         if not user_like:
             user_like_status = False
@@ -62,19 +60,14 @@ class ArticlePage(DetailView):
         else:
             user_like_status = True
 
-        context = CommentAction.create("article_page_get", self)
-        context.update(user_like_status=user_like_status, like_count=like_count)
-
+        context = CommentAction.create("comment_get", self, user_like_status, like_count)
         if request.is_ajax():
-            CommentAction.create("article_page_ajax", self)
-            result = render_to_string(
-                'mainapp/includes/inc__comment.html', context)
+            result = CommentAction.create("comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
             return JsonResponse({'result': result})
         return self.render_to_response(context)
 
-
-    def post(self, request, *args, **kwargs):
-        CommentAction.create("article_page_post", self)
+    def post(self, **kwargs):
+        CommentAction.create("comment_post", self, self.request.POST.dict())
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
 
 

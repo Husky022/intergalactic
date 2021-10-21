@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from authapp.models import IntergalacticUser
 
@@ -97,23 +98,6 @@ class Comment(models.Model):
         verbose_name_plural = 'комментарии'
 
 
-class SubComment(models.Model):
-    text = models.TextField(verbose_name='Текст подкомментария')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
-                                verbose_name='Комментарий')
-    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
-                               verbose_name='Автор подкомментария')
-    is_active = models.BooleanField(
-        default=True, db_index=True, verbose_name='Активация комментария')
-    add_datetime = models.DateTimeField('Время добавления ответа', auto_now_add=True)
-
-    def __str__(self):
-        return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
-
-    class Meta:
-        verbose_name = 'Подкомментарий'
-        verbose_name_plural = 'Подкомментарии'
-
 class Likes(models.Model):
     class Meta:
         verbose_name = 'лайк'
@@ -139,3 +123,21 @@ class Likes(models.Model):
         else:
             data_str += f'снял лайк к статье - \"{self.article.name}\"'
         return data_str
+
+
+class SubComment(models.Model):
+    text = models.TextField(verbose_name='Текст подкомментария')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
+                                verbose_name='Комментарий')
+    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
+                               verbose_name='Автор подкомментария')
+    is_active = models.BooleanField(
+        default=True, db_index=True, verbose_name='Активация комментария')
+    add_datetime = models.DateTimeField('Время добавления ответа', auto_now_add=True)
+
+    def __str__(self):
+        return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
+
+    class Meta:
+        verbose_name = 'Подкомментарий'
+        verbose_name_plural = 'Подкомментарии'
