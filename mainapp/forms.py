@@ -19,6 +19,8 @@ class ArticleCreationForm(ModelForm):
         super(ArticleCreationForm, self).__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
+            if field_name in ['name', 'preview', 'hub']:
+                field.required = True
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['style'] = 'width: 1000px;'
 
