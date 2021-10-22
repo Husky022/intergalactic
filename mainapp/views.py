@@ -13,6 +13,7 @@ from mainapp.models import Article, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
 
 from mainapp.services.commentsview import CommentAction
+from django.db.models import Q
 
 
 class Main(ListView):
@@ -194,3 +195,18 @@ def set_like(request, article_pk):
                 'like_list': like_list,
                 'like_count': like_count,
             })
+
+
+class Search(ListView):
+    """Поиск статей"""
+    # paginate_by = 5
+    model = Article
+    template_name = 'mainapp/articles.html'
+    def get_queryset(self):
+        return Article.objects.filter(name__contains=self.request.GET.get("q", ''))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["q"] = self.request.GET.get("q", '')
+        return context
+
