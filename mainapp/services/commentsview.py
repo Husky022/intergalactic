@@ -1,20 +1,21 @@
 from django.template.loader import render_to_string
-
+from mainapp.services.commentsparse import comment
 from mainapp.models import Comment, SubComment
+from mainapp.services.likes import likes_view
 from mainapp.services.subcomment import parse_sub_comment
 
 
 def fill_context(self):
     self.object = self.get_object()
     context = self.get_context_data(object=self.get_object())
-    context['comments'] = Comment.objects.filter(article_id=self.kwargs["pk"])
+    context['comments'] = comment(self)
     context['subcomments'] = parse_sub_comment(self)
+    context['likes'] = likes_view(self)
     return context
 
 
-def comment_article_page_get(self, user_like_status, like_count):
+def comment_article_page_get(self):
     context = fill_context(self)
-    context.update(user_like_status=user_like_status, like_count=like_count)
     return context
 
 
@@ -34,9 +35,9 @@ def comment_article_page_post(self, gp):
     get_or_post(self, gp)
 
 
-def comment_article_page_ajax(self, user_like_status, like_count, gp):
+def comment_article_page_ajax(self, gp):
     get_or_post(self, gp)
-    context = CommentAction.create("comment_get", self, user_like_status, like_count)
+    context = CommentAction.create("comment_get", self)
     result = render_to_string('mainapp/includes/inc__comment.html', context, request=self.request)
     return result
 
