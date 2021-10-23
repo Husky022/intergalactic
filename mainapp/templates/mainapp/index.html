@@ -7,16 +7,15 @@
 
     <p class="display-heading text-center">Intergalactic Entertainment</p>
 {#        <p class="display-heading text-center">Intergalactic Entertainment &#128640 &#128640 &#128640 </p>#}
-    <div class="img-box">
-        <img class="main-pic" src="{% static 'img/brain-rocket.jpg' %}" alt="">
-    </div>
+{#    <div class="img-box">#}
+{#        <img class="main-pic" src="{% static 'img/brain-rocket.jpg' %}" alt="">#}
+{#    </div>#}
     <div class="article-box">
         <div class="details">
             <div class="related">
                 <div class="related-articles">
                     {% for item in object_list %}
                     <div class="block-article">
-
                     <p> <a href="{% url 'auth:profile' %}">
                             <span class="font-weight-bold"><img class="mr-2"
                                     src="{{ item.author.avatar|media_folder_users }}" alt="profile_image" height="24">

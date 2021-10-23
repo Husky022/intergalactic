@@ -7,7 +7,28 @@
 /*Классы из Bootstrap*/
 
 .navbar {
-    background-color: bisque;
+    background-color: Grey;
+}
+
+.nav-link{
+    color: Gainsboro !important;
+}
+
+.nav-link:hover{
+    color: white !important;
+}
+
+.black{
+    color: DimGrey !important;
+}
+
+.black:hover{
+    color: black !important;
+}
+
+.active {
+    background: Grey;
+    color: white;
 }
 
 .display-heading {
@@ -29,6 +50,20 @@
     background-color: orange;
 }
 
+#menu-icon{
+    color: Gainsboro;
+}
+
+#menu-icon:hover{
+    color: white;
+}
+
+.menu-icon-box{
+    border: 1px;
+    border-color: white;
+    float: left;
+}
+
 
 /*Обычные классы*/
 html {
@@ -37,7 +72,8 @@ html {
 
 html,
 body {
-    height: 100%;
+    background-color: Gainsboro;
+    height: 0;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -45,7 +81,9 @@ body {
     line-height: 1.4;
     color: #333;
 }
-
+html{
+    min-height: 0;
+}
 
 a {
     text-decoration: none !important;
@@ -60,10 +98,6 @@ a:hover {
     color: black;
 }
 
-.active {
-    background: darkgrey;
-    border-radius: 10px;
-}
 
 button:active,
 button:focus {
@@ -75,10 +109,11 @@ button::-moz-focus-inner {
 }
 
 .block-article {
+    background-color: white;
     margin-top: 5%;
     margin-bottom: 5%;
     padding: 2%;
-    box-shadow: 0 0 5px 5px rgba(221, 221, 221, 1);
+    box-shadow: 0 0 3px 3px Silver;
     border-radius: 5px;
 }
 
@@ -92,7 +127,7 @@ button::-moz-focus-inner {
 
 
 .user-panel-button {
-    color: #666666;
+    color: gainsboro;
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
@@ -214,7 +249,8 @@ button::-moz-focus-inner {
 
 .menu_category {
     list-style-type: none;
-    background: lightgray;
+    background: Silver;
+    box-shadow: 0 0 3px 3px darkgray;
 }
 
 /* Классы для кирпичей */
@@ -561,7 +597,6 @@ a.article-anchor {
 
 .menu a:hover {
     color: #212121;
-    font-weight: 700;
     border-bottom: 3px solid #212121;
 }
 
@@ -607,3 +642,4 @@ a.article-anchor {
 textarea{
     border-radius: 10px;
 }
+
