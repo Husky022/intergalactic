@@ -1,4 +1,4 @@
-from mainapp.models import Article, Comment, SubComment
+from mainapp.models import Article, ArticleStatus, Comment, SubComment
 
 
 def parse_all():
@@ -6,7 +6,11 @@ def parse_all():
 
 
 def parse_filter(self):
-    return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True)
+    return Article.objects.filter(
+        hub__id=self.kwargs['pk'],
+        is_active=True,
+        article_status_new=ArticleStatus.objects.get(name='Опубликована')
+    )
 
 
 def add_item(item, comment_list):
