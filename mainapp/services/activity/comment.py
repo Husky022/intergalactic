@@ -21,6 +21,10 @@ def get_or_post(self, get_post):
 def delete(self, get_post, context):
     if 'com_delete' in get_post:
         comment = Comment.objects.filter(id=get_post["com_delete"]).first()
+        sub_comment = SubComment.objects.filter(comment=comment)
+        for item in sub_comment:
+            item.is_active = False
+            item.save()
     elif 'sub_com_delete' in get_post:
         comment = SubComment.objects.filter(id=get_post["sub_com_delete"]).first()
     comment.is_active = False

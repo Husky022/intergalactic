@@ -10,8 +10,10 @@ def parse_filter(self):
 
 
 def add_item(item, comment_list):
-    item.item_comment = Comment.objects.filter(article=item).count() + SubComment.objects.filter(article=item).count()
-    item.item_like = Likes.objects.filter(article=item, status=True).count()
+    item.item_comment = Comment.objects.filter(article=item, is_active=True).count() + SubComment.objects.filter(
+        article=item, is_active=True).count()
+    item.like_count = Likes.objects.filter(article=item, status="LK").count()
+    item.dislike_count = Likes.objects.filter(article=item, status="DZ").count()
     comment_list.append(item)
 
 

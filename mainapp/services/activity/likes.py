@@ -13,29 +13,31 @@ def change_like(self):
     return like
 
 
-def define_count_like(self):
-    return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=True))
+def define_count_like(self, status):
+    return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=status))
 
 
-def if_status_like(like):
-    if not like or like.status is False:
-        like.status = True
+def status_like(like, status):
+    if like.status == status:
+        like.status = "UND"
     else:
-        like.status = False
+        like.status = status
     like.save()
     return like
 
 
 def view_like(self):
     like = change_like(self)
-    like.count = define_count_like(self)
+    like.like_count = define_count_like(self, "LK")
+    like.dislike_count = define_count_like(self, "DZ")
     return like
 
 
 def set_like(self, context):
     like = change_like(self)
-    like = if_status_like(like)
-    like.count = define_count_like(self)
+    like = status_like(like, self.request.GET.dict()["status"])
+    like.like_count = define_count_like(self, "LK")
+    like.dislike_count = define_count_like(self, "DZ")
     context["likes"] = like
-    result = render_to_string('mainapp/includes/inc__like.html', context=context, request=self.request)
+    result = render_to_string('mainapp/includes/inc__icon.html', context=context, request=self.request)
     return result

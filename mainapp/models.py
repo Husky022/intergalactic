@@ -103,18 +103,17 @@ class Likes(models.Model):
         verbose_name = 'лайк'
         verbose_name_plural = 'лайки'
 
-    # LIKE_STATUS_CHOICES = [
-    #     ('DZ', 'Дизлайк'),
-    #     ('UND', 'Не установлено'),
-    #     ('LK', 'Лайк'),
-    # ]
-    # LIKE_DEFAULT_STATUS = 'UND'
+    LIKE_STATUS_CHOICES = [
+        ('DZ', 'Дизлайк'),
+        ('UND', 'Не установлено'),
+        ('LK', 'Лайк'),
+    ]
+    LIKE_DEFAULT_STATUS = 'UND'
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-    #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-    status = models.BooleanField(default=False)
+    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
 
     def __str__(self):
         data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
@@ -123,33 +122,6 @@ class Likes(models.Model):
         else:
             data_str += f'снял лайк к статье - \"{self.article.name}\"'
         return data_str
-
-
-# class DisLikes(models.Model):
-#     class Meta:
-#         verbose_name = 'дизлайк'
-#         verbose_name_plural = 'дизлайки'
-#
-#     # LIKE_STATUS_CHOICES = [
-#     #     ('DZ', 'Дизлайк'),
-#     #     ('UND', 'Не установлено'),
-#     #     ('LK', 'Лайк'),
-#     # ]
-#     # LIKE_DEFAULT_STATUS = 'UND'
-#
-#     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-#     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-#     # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-#     #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-#     status = models.BooleanField(default=False)
-#
-#     def __str__(self):
-#         data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
-#         if self.status:
-#             data_str += f'установил дизлайк к статье - \"{self.article.name}\"'
-#         else:
-#             data_str += f'снял дизлайк к статье - \"{self.article.name}\"'
-#         return data_str
 
 
 class SubComment(models.Model):

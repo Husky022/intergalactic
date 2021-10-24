@@ -19,7 +19,6 @@ def fill_context(self):
 def article_page_get(self):
     context = fill_context(self)
     if self.request.is_ajax():
-        print(self.request.GET.dict())
         if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
             result = get_comment(self, context)
         elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):

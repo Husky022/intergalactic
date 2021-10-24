@@ -30,16 +30,21 @@ window.onload = function () {
 
     $(".ajax_like").on('click', '.btn-likes', function(event){
             $.ajax({
+                data: {status: "LK"},
                 url: "/article_page/" + event.target.id + '/',
                 success: function(data) {
-                    console.log(data)
                     document.querySelector('.ajax_like').innerHTML = data.result;
-                    if (document.querySelector('.like_colour')) {
-                        document.querySelector('.btn_liked').classList.add("like_colour")
-                    }else{
-                        document.querySelector('.btn_liked').classList.remove("like_colour")
                     }
-                }
+            });
+    })
+
+    $(".ajax_like").on('click', '.btn-dislikes', function(event){
+            $.ajax({
+                data: {status: "DZ"},
+                url: "/article_page/" + event.target.id + '/',
+                success: function(data) {
+                    document.querySelector('.ajax_like').innerHTML = data.result;
+                    }
             });
     })
 
