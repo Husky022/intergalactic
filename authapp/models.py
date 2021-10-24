@@ -35,3 +35,19 @@ class IntergalacticUser(AbstractUser):
 
     def __str__(self):
         return f'{self.username}'
+
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(IntergalacticUser, on_delete=models.PROTECT,
+                                verbose_name='Получатель')
+    is_read = models.BooleanField(
+        default=False, db_index=True, verbose_name='Статус прочтения')
+    text = models.TextField(verbose_name='Текст уведомления')
+    add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
+
+    def __str__(self):
+        return f'Уведомление: {self.text}'
+
+    class Meta:
+        verbose_name = 'Уведомление'
+        verbose_name_plural = 'Уведомления'
