@@ -62,6 +62,43 @@ window.onload = function () {
         event.preventDefault();
     });
 
+    $('.ajax_comment').on('click', '.com_delete', function () {
+        let target_href = event.target;
+        if (target_href) {
+            $.ajax({
+                url: "/article_page/" + target_href.name + "/",
+                data: {
+                         com_delete: target_href.value,
+                      },
+                success: function (data) {
+                    $('.comment-main').remove();
+                    $('.ajax_comment').html(data.result);
+
+                },
+            });
+
+        }
+        event.preventDefault();
+    });
+    $('.ajax_comment').on('click', '.sub_com_delete', function () {
+        let target_href = event.target;
+        if (target_href) {
+            $.ajax({
+                url: "/article_page/" + target_href.name + "/",
+                data: {  comment_id: target_href.name,
+                         sub_com_delete: target_href.value,
+                      },
+                success: function (data) {
+                    $('.comment-main').remove();
+                    $('.ajax_comment').html(data.result);
+
+                },
+            });
+
+        }
+        event.preventDefault();
+    });
+
 
 
 };
