@@ -56,10 +56,19 @@ class ArticlePage(DetailView):
         else:
             user_like_status = True
 
-        context = CommentAction.create("comment_get", self, user_like_status, like_count)
+        context = CommentAction.create(
+            "comment_get", self, user_like_status, like_count)
         if request.is_ajax():
-            result = CommentAction.create("comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
+            result = CommentAction.create(
+                "comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
             return JsonResponse({'result': result})
+        self.object = self.get_object()
+        self.object.views += 1
+        self.object.rating = self.object.views + like_count
+        self.object.save()
+        # r = Rating.objects.filter(article_id=int(kwargs["pk"]))
+        # print(f'рейтинг: {r.rating}')
+
         return self.render_to_response(context)
 
     def post(self, **kwargs):
@@ -105,7 +114,8 @@ class ArticleEditView(View):
 
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
-        article_form = ArticleCreationForm(data=request.POST, files=request.FILES, instance=article)
+        article_form = ArticleCreationForm(
+            data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
             article_form.save()
 
