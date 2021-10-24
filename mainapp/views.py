@@ -7,6 +7,11 @@ from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
+from mainapp.services.commentsparse import comment
+from mainapp.models import Article, ArticleStatus, Comment, Likes
+from django.views.decorators.csrf import csrf_exempt
+
+from mainapp.services.commentsview import CommentAction
 
 
 class Main(ListView):
@@ -79,6 +84,7 @@ class ArticleCreationView(CreateView):
         """If the form is valid, save the associated model."""
         self.object = form.save(commit=False)
         self.object.author = self.request.user
+        self.object.article_status_new = ArticleStatus.objects.get(name='Черновик')
         self.object.save()
         return super().form_valid(form)
 
@@ -89,7 +95,12 @@ class ArticleChangeActiveView(View):
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
         target_article.is_active = False if target_article.is_active else True
-        target_article.article_status = 'AR' if target_article.article_status != 'AR' else 'PB'
+
+        if target_article.article_status_new.name == 'В архиве':
+            target_article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        else:
+            target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
+
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -113,6 +124,7 @@ class ArticleEditView(View):
         article_form = ArticleCreationForm(
             data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
+            article_form.article_status_new = ArticleStatus.objects.get(name='На модерации')
             article_form.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
