@@ -11,7 +11,10 @@ def change_like(self):
     if not self.request.user.is_anonymous:
         like = Likes.objects.filter(article_id=int(self.kwargs["pk"]), user_id=self.request.user.pk).first()
     else:
-        like = Likes.objects.filter(article_id=int(self.kwargs["pk"])).first()
+        if Likes.objects.filter(article_id=int(self.kwargs["pk"])):
+            like = Likes.objects.filter(article_id=int(self.kwargs["pk"])).first()
+        else:
+            return None
     return like
 
 
@@ -30,10 +33,11 @@ def status_like(like, status):
 
 def view_like(self):
     like = change_like(self)
-    like.like_count = define_count_like(self, "LK")
-    like.dislike_count = define_count_like(self, "DZ")
-    return like
-
+    if like:
+        like.like_count = define_count_like(self, "LK")
+        like.dislike_count = define_count_like(self, "DZ")
+        return like
+    return None
 
 def set_like(self, context):
     new_like(self)
