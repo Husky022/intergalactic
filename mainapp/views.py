@@ -9,7 +9,7 @@ from django.template import loader
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.services.commentsparse import comment
-from mainapp.models import Article, Comment, Likes
+from mainapp.models import Article, Comment, Likes, SubComment
 from django.views.decorators.csrf import csrf_exempt
 
 from mainapp.services.commentsview import CommentAction
@@ -62,12 +62,18 @@ class ArticlePage(DetailView):
             result = CommentAction.create(
                 "comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
             return JsonResponse({'result': result})
+
+        # подсчёт рейтинга (и просмотров):
         self.object = self.get_object()
         self.object.views += 1
-        self.object.rating = self.object.views + like_count
+        cmnts = Comment.objects.filter(article_id=int(kwargs["pk"]))
+        comment_count = cmnts.count()
+        sub_cmnt_count = 0
+        for cmnt in cmnts:
+            sub_cmnt_count += SubComment.objects.filter(comment=cmnt).count()
+        self.object.rating = self.object.views * 2 + \
+            like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
         self.object.save()
-        # r = Rating.objects.filter(article_id=int(kwargs["pk"]))
-        # print(f'рейтинг: {r.rating}')
 
         return self.render_to_response(context)
 

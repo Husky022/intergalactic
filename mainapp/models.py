@@ -72,8 +72,8 @@ class Article(models.Model):
         choices=ARTICLE_STATUS_CHOICES,
         default=ARTICLE_DEFAULT_STATUS
     )
-    views = models.IntegerField(default=22, verbose_name='просмотры')
-    rating = models.IntegerField(default='33', verbose_name='рейтинг')
+    views = models.IntegerField(default=0, verbose_name='просмотры')
+    rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
