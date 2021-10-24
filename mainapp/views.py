@@ -1,18 +1,12 @@
 from django.shortcuts import get_object_or_404, render
-from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.http.response import JsonResponse
-from django.template.loader import render_to_string
-from django.template import loader
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.services.commentsparse import comment
-from mainapp.models import Article, Comment, Likes
-from django.views.decorators.csrf import csrf_exempt
-
-from mainapp.services.commentsview import CommentAction
+from mainapp.models import Article
+from mainapp.services.activity.parse import queryset_activity
+from mainapp.services.activity.view import Activity
 
 
 class Main(ListView):
@@ -21,7 +15,7 @@ class Main(ListView):
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -32,7 +26,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -46,25 +40,10 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        like_items_article = Likes.objects.filter(article_id=int(kwargs["pk"]))
-        user_like = like_items_article.filter(user_id=request.user.pk)
-        like_count = like_items_article.filter(like_status=True).count()
-        if not user_like:
-            user_like_status = False
-        elif user_like.filter(like_status=False):
-            user_like_status = False
-        else:
-            user_like_status = True
+        return Activity.create("get", self)
 
-        context = CommentAction.create("comment_get", self, user_like_status, like_count)
-        if request.is_ajax():
-            result = CommentAction.create("comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
-            return JsonResponse({'result': result})
-        return self.render_to_response(context)
-
-    def post(self, **kwargs):
-        CommentAction.create("comment_post", self, self.request.POST.dict())
-        return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
+    def post(self):
+        return Activity.create("post", self)
 
 
 class ArticleCreationView(CreateView):
@@ -81,6 +60,7 @@ class ArticleCreationView(CreateView):
 
 
 class ArticleChangeActiveView(View):
+
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
         target_article.is_active = False if target_article.is_active else True
@@ -110,87 +90,3 @@ class ArticleEditView(View):
             article_form.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
-
-
-# class Like(DetailView):
-#     template_name = 'mainapp/article_page.html'
-#     model = Likes
-#     extra_context = {
-#         'LikeForm': LikeForm,
-#     }
-#
-#     def get(self, request, *args, **kwargs):
-#         context = CommentAction.create("like_get", self)
-#         if request.is_ajax():
-#             CommentAction.create("like_ajax", self)
-#             result = render_to_string(
-#                 'mainapp/includes/inc__like.html', context)
-#             return JsonResponse({'result': result})
-#         return self.render_to_response(context)
-#
-#     def post(self, request, *args, **kwargs):
-#         CommentAction.create("like_post", self)
-#         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
-
-# @login_required
-@csrf_exempt
-def set_like(request, article_pk):
-    like_items_article = Likes.objects.filter(article_id=article_pk)
-    user_like = like_items_article.filter(user_id=request.user.pk)
-    user_like_first = user_like.first()
-    like_count = like_items_article.filter(like_status=True).count()
-    context = {
-        'like_items_article': like_items_article,
-    }
-    if request.is_ajax():
-        if not user_like:
-            Likes.objects.create(
-                article_id=article_pk,
-                user_id=request.user.pk,
-                like_status=True
-            )
-            like_list = loader.render_to_string(
-                'mainapp/includes/inc__like.html',
-                context=context,
-                request=request,
-            )
-            like_count += 1
-            return JsonResponse({
-                'status': 'ok',
-                'like_status': True,
-                'like_list': like_list,
-                'like_count': like_count,
-            })
-
-        elif user_like.filter(like_status=False):
-
-            like_list = loader.render_to_string(
-                'mainapp/includes/inc__like.html',
-                context=context,
-                request=request,
-            )
-            user_like_first.like_status = True
-            user_like_first.save()
-            like_count += 1
-            return JsonResponse({
-                'status': 'ok',
-                'like_status': True,
-                'like_list': like_list,
-                'like_count': like_count,
-            })
-
-        else:
-            like_list = loader.render_to_string(
-                'mainapp/includes/inc__like.html',
-                context=context,
-                request=request,
-            )
-            user_like_first.like_status = False
-            user_like_first.save()
-            like_count -= 1
-            return JsonResponse({
-                'status': 'ok',
-                'like_status': False,
-                'like_list': like_list,
-                'like_count': like_count,
-            })

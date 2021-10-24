@@ -419,11 +419,11 @@ a.article-anchor {
 }
 
 .btn-likes {
-    color: green;
+    color: green !important;
 }
 
 .btn-dislikes {
-    color: red;
+    color: red !important;
 }
 
 .btn-comments {
@@ -650,4 +650,3 @@ a.article-anchor {
 textarea{
     border-radius: 10px;
 }
-

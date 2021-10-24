@@ -30,16 +30,21 @@ window.onload = function () {
 
     $(".ajax_like").on('click', '.btn-likes', function(event){
             $.ajax({
-                url: "/set_like/" + event.target.id + '/',
-                // type: 'POST',
-                success: function(answer) {
-                    document.querySelector('#like_count').innerHTML = answer.like_count;
-                    if (answer.like_status) {
-                        document.querySelector('.btn_liked').classList.remove("like_colour")
-                    }else{
-                        document.querySelector('.btn_liked').classList.add("like_colour")
+                data: {status: "LK"},
+                url: "/article_page/" + event.target.id + '/',
+                success: function(data) {
+                    document.querySelector('.ajax_like').innerHTML = data.result;
                     }
-                }
+            });
+    })
+
+    $(".ajax_like").on('click', '.btn-dislikes', function(event){
+            $.ajax({
+                data: {status: "DZ"},
+                url: "/article_page/" + event.target.id + '/',
+                success: function(data) {
+                    document.querySelector('.ajax_like').innerHTML = data.result;
+                    }
             });
     })
 
@@ -50,6 +55,43 @@ window.onload = function () {
                 url: "/article_page/" + target_href.id + "/",
                 data: {  comment_id: $('.submit_subcomment_' + target_href.value).val(),
                          text_subcomment: $('.textarea_subcomment_' + target_href.value).val(),
+                      },
+                success: function (data) {
+                    $('.comment-main').remove();
+                    $('.ajax_comment').html(data.result);
+
+                },
+            });
+
+        }
+        event.preventDefault();
+    });
+
+    $('.ajax_comment').on('click', '.com_delete', function () {
+        let target_href = event.target;
+        if (target_href) {
+            $.ajax({
+                url: "/article_page/" + target_href.name + "/",
+                data: {
+                         com_delete: target_href.value,
+                      },
+                success: function (data) {
+                    $('.comment-main').remove();
+                    $('.ajax_comment').html(data.result);
+
+                },
+            });
+
+        }
+        event.preventDefault();
+    });
+    $('.ajax_comment').on('click', '.sub_com_delete', function () {
+        let target_href = event.target;
+        if (target_href) {
+            $.ajax({
+                url: "/article_page/" + target_href.name + "/",
+                data: {  comment_id: target_href.name,
+                         sub_com_delete: target_href.value,
                       },
                 success: function (data) {
                     $('.comment-main').remove();

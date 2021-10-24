@@ -112,13 +112,12 @@ class Likes(models.Model):
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-    #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-    like_status = models.BooleanField(default=False)
+    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
 
     def __str__(self):
         data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
-        if self.like_status:
+        if self.status:
             data_str += f'установил лайк к статье - \"{self.article.name}\"'
         else:
             data_str += f'снял лайк к статье - \"{self.article.name}\"'
@@ -126,6 +125,8 @@ class Likes(models.Model):
 
 
 class SubComment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.PROTECT,
+                                verbose_name='Статья')
     text = models.TextField(verbose_name='Текст подкомментария')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
                                 verbose_name='Комментарий')
