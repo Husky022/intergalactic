@@ -1,16 +1,12 @@
 from django.shortcuts import get_object_or_404, render
-from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.http.response import JsonResponse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.services.commentsparse import comment
 from mainapp.models import Article
-
-from mainapp.services.commentsview import CommentAction
-from mainapp.services.likes import likes_view, set_like
+from mainapp.services.activity.parse import queryset_activity
+from mainapp.services.activity.view import Activity
 
 
 class Main(ListView):
@@ -19,7 +15,7 @@ class Main(ListView):
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -30,7 +26,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -44,17 +40,10 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
+        return Activity.create("get", self)
 
-        context = CommentAction.create("comment_get", self)
-        if request.is_ajax():
-            user_like_status, like_count = set_like(self, context)
-            result = CommentAction.create("comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
-            return JsonResponse({'result': result, "like_count": like_count, "like_status": user_like_status})
-        return self.render_to_response(context)
-
-    def post(self, **kwargs):
-        CommentAction.create("comment_post", self, self.request.POST.dict())
-        return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
+    def post(self):
+        return Activity.create("post", self)
 
 
 class ArticleCreationView(CreateView):

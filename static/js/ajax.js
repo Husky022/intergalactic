@@ -31,13 +31,13 @@ window.onload = function () {
     $(".ajax_like").on('click', '.btn-likes', function(event){
             $.ajax({
                 url: "/article_page/" + event.target.id + '/',
-                // type: 'POST',
                 success: function(data) {
-                    document.querySelector('#like_count').innerHTML = data.like_count;
-                    if (data.like_status) {
-                        document.querySelector('.btn_liked').classList.remove("like_colour")
-                    }else{
+                    console.log(data)
+                    document.querySelector('.ajax_like').innerHTML = data.result;
+                    if (document.querySelector('.like_colour')) {
                         document.querySelector('.btn_liked').classList.add("like_colour")
+                    }else{
+                        document.querySelector('.btn_liked').classList.remove("like_colour")
                     }
                 }
             });
