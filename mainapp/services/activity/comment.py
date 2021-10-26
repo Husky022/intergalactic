@@ -1,13 +1,18 @@
 from django.template.loader import render_to_string
 
-from mainapp.models import SubComment, Comment
+from authapp.models import IntergalacticUser
+from mainapp.models import SubComment, Comment, Article
+from authapp.services.notifications import NewNotification
 
 
 def get_or_post(self, get_post):
+    article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
+    recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
     if 'text_comment' in get_post:
         comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
                                          text=get_post['text_comment'])
         comment.save()
+        NewNotification.create('comment', recipient, self.request.user, get_post['text_comment'], article.name)
     elif 'text_subcomment' in get_post:
         subcomment = SubComment.objects.create(
             comment_id=get_post['comment_id'],
@@ -16,6 +21,8 @@ def get_or_post(self, get_post):
             article_id=int(self.kwargs["pk"]),
         )
         subcomment.save()
+        comment = Comment.objects.filter(id=get_post['comment_id']).first()
+        NewNotification.create('subcomment', recipient, self.request.user, get_post['text_subcomment'], comment.text)
 
 
 def delete(self, get_post, context):

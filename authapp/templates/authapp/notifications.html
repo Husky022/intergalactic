@@ -10,6 +10,22 @@
     {% endif %}
     <div class="article-box">
         {% for item in notifications %}
+            <div class="block-article">
+                <p>
+                    {{ item.add_datetime }}
+                    <a href="{% url 'auth:profile' %}">
+                        <span class="font-weight-bold">
+                            {{item.sender }}
+                        </span>
+                    </a>
+                    {{ item.action }}
+                    {{ item.target }}
+                    {% if item.text %}
+                        <hr>
+                        {{ item.text }}
+                    {% endif %}
+                </p>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
