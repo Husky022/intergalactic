@@ -2,10 +2,11 @@ from django.contrib import auth
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
+from authapp.models import Notification
 from mainapp.models import Article
 from mainapp.forms import ArticleCreationForm
 
@@ -102,4 +103,21 @@ class UserProfileView(View):
         return context
 
     def get(self, request):
+        return render(request, self.template_name, self.get_context_data())
+
+
+class NotificationView(ListView):
+    title = 'Уведомления'
+    template_name = 'authapp/notifications.html'
+
+    def get_context_data(self, **kwargs):
+        notifications = Notification.objects.filter(recipient_id=self.request.user.id)
+        context = {
+            'title': self.title,
+            'user': self.request.user,
+            'notifications': notifications,
+        }
+        return context
+
+    def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context_data())

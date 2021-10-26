@@ -1,0 +1,15 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% load project_tags %}
+{% block title %}{{ title|title }}{% endblock %}
+{% block content %}
+    {% if not notifications %}
+        <p class="display-heading text-center red">Уведомлений пока что нет...</p>
+    {% else %}
+        <p class="display-heading text-center">Последние уведомления</p>
+    {% endif %}
+    <div class="article-box">
+        {% for item in notifications %}
+        {% endfor %}
+    </div>
+{% endblock %}
