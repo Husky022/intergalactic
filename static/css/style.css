@@ -7,22 +7,22 @@
 /*Классы из Bootstrap*/
 
 .navbar {
-    background-color: Grey;
+    background-color: #3a3a3a;
 }
 
-.nav-link{
+.nav-link {
     color: Gainsboro !important;
 }
 
-.nav-link:hover{
+.nav-link:hover {
     color: white !important;
 }
 
-.black{
+.black {
     color: DimGrey !important;
 }
 
-.black:hover{
+.black:hover {
     color: black !important;
 }
 
@@ -32,9 +32,9 @@
 }
 
 .display-heading {
-    font-size: 65px;
-    color: #666666;
-    margin-top: 70px;
+    color: #3a3a3a;
+    margin-top: 20px;
+    margin-bottom: 0px;
 }
 
 .right {
@@ -42,29 +42,25 @@
     right: 0;
 }
 
-.bg-footer {
-    background-color: #999999;
-}
-
 .orange {
     background-color: orange;
 }
 
-#menu-icon{
+#menu-icon {
     color: Gainsboro;
 }
 
-#menu-icon:hover{
+#menu-icon:hover {
     color: white;
 }
 
-.menu-icon-box{
+.menu-icon-box {
     border: 1px;
     border-color: white;
     float: left;
 }
 
-.article-img{
+.article-img {
     margin-top: 5% !important;
     margin-bottom: 5% !important;
     margin-left: 15%;
@@ -89,7 +85,8 @@ body {
     line-height: 1.4;
     color: #333;
 }
-html{
+
+html {
     min-height: 0;
 }
 
@@ -121,11 +118,11 @@ button::-moz-focus-inner {
     margin-top: 5%;
     margin-bottom: 5%;
     padding: 2%;
-    box-shadow: 0 0 3px 3px Silver;
+    box-shadow: 0 0 3px 3px silver;
     border-radius: 5px;
 }
 
-.block-comment{
+.block-comment {
     margin-top: 5%;
     margin-bottom: 5%;
     padding: 5%;
@@ -150,11 +147,12 @@ button::-moz-focus-inner {
 }
 
 .article-box {
-    margin-top: 2%;
-    margin-left: 25%;
-    margin-right: 25%;
-    width: 50%;
-    margin-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: space-around;
 }
 
 .article-list-box {
@@ -267,8 +265,8 @@ button::-moz-focus-inner {
     /* display: flex;
     justify-content: space-around;
     flex-wrap: wrap; */
-    padding-top: 32px;
-    margin-bottom: 32px;
+    /*padding-top: 32px;*/
+    /*margin-bottom: 32px;*/
 }
 
 .article-brick {
@@ -381,7 +379,7 @@ a.article-anchor {
     margin-right: 25%;
 }
 
-.main-pic{
+.main-pic {
     height: 65%;
     width: 65%;
 
@@ -398,21 +396,21 @@ a.article-anchor {
 .btn-dislikes,
 .btn-comments-answer,
 .submit_comment,
-.submit_subcomment{
+.submit_subcomment {
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
 }
 
-.btn-comments-answer, .submit_comment, .submit_subcomment{
+.btn-comments-answer, .submit_comment, .submit_subcomment {
     background-color: lightgray;
     border-radius: 5px;
     color: #666666;
     box-shadow: 0 0 5px 1px rgba(221, 221, 221, 1);
 }
 
-.btn-comments-answer:hover, .submit_comment:hover, .submit_subcomment:hover{
+.btn-comments-answer:hover, .submit_comment:hover, .submit_subcomment:hover {
     background-color: grey;
     color: snow;
 }
@@ -622,30 +620,73 @@ a.article-anchor {
     align-items: baseline;
 }
 
-.like_colour{
+.like_colour {
     color: rgba(135, 135, 135, 0.68);
 }
 
-.btn-read-article{
-	border: 1px solid maroon;
-	border-radius: 5px;
-	background: white;
-	padding: 5px 5px;
-	text-decoration: none;
+.btn-read-article {
+    border: 1px solid maroon;
+    border-radius: 5px;
+    background: white;
+    padding: 5px 5px;
+    text-decoration: none;
     color: maroon;
 }
 
-.btn-read-article:hover{
-	background: maroon;
+.btn-read-article:hover {
+    background: maroon;
     color: white;
 }
 
-.subcomment_block{
+.subcomment_block {
     width: 80%;
     margin-left: auto;
     display: none;
 }
 
-textarea{
+textarea {
     border-radius: 10px;
+}
+
+.details {
+    width: 600px;
+}
+
+.likes-dislikes-comments-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.box-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.box-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.box-top a{
+   margin-right: 10px;
+    color: #6c757d;
+}
+
+.box-btn-read {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.nav-page {
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
 }
