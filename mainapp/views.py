@@ -7,6 +7,7 @@ from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
+from .search_filter import ArticleFilter
 
 
 class Main(ListView):
@@ -24,6 +25,7 @@ class Articles(ListView):
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
     paginate_by = 5
+
 
     def get_queryset(self):
         queryset = queryset_activity(self)
@@ -112,3 +114,11 @@ class ArticleEditView(View):
             article_form.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
+
+
+def search(request):
+    article = Article.objects.filter(article_status='PB')
+    search_filter = ArticleFilter(request.GET, queryset=article)
+    article = search_filter.qs
+    contex = {'page_title': 'Поиск', 'article': article, 'search_filter': search_filter}
+    return render(request, 'mainapp/search.html', contex)

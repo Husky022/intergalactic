@@ -1,0 +1,25 @@
+<section id="intro">
+    <div class="container-lg">
+        <div class="row g-4 justify-content-center align-items-center">
+            <div class="col-md-5 text-center text-md-start">
+                <a href="#sidebar" class="d-block mt-3" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
+                Поиск
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebar-label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebar-label">Поиск статей</h5>
+
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="form-inline my-2 my-lg-0">
+            {{ search_filter.form }}
+            <button action="{% url 'search' %}" class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</div>
