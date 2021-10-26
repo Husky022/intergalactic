@@ -1,19 +1,12 @@
 from django.shortcuts import get_object_or_404, render
-from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.http.response import JsonResponse
-from django.template.loader import render_to_string
-from django.template import loader
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.services.commentsparse import comment
-from mainapp.models import Article, Comment, Likes
-from django.views.decorators.csrf import csrf_exempt
-
-from mainapp.services.commentsview import CommentAction
-from django.db.models import Q
+from mainapp.models import Article, Comment, Likes, SubComment
+from mainapp.services.activity.parse import queryset_activity
+from mainapp.services.activity.view import Activity
 
 
 class Main(ListView):
@@ -22,7 +15,7 @@ class Main(ListView):
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -33,7 +26,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = comment(self)
+        queryset = queryset_activity(self)
         return queryset
 
 
@@ -47,25 +40,31 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        like_items_article = Likes.objects.filter(article_id=int(kwargs["pk"]))
-        user_like = like_items_article.filter(user_id=request.user.pk)
-        like_count = like_items_article.filter(like_status=True).count()
-        if not user_like:
-            user_like_status = False
-        elif user_like.filter(like_status=False):
-            user_like_status = False
-        else:
-            user_like_status = True
 
-        context = CommentAction.create("comment_get", self, user_like_status, like_count)
-        if request.is_ajax():
-            result = CommentAction.create("comment_ajax", self, user_like_status, like_count, self.request.GET.dict())
-            return JsonResponse({'result': result})
-        return self.render_to_response(context)
+        # подсчёт рейтинга (и просмотров):
+        self.object = self.get_object()
+        self.object.views += 1
+        lks = Likes.objects.filter(article_id=int(kwargs["pk"]))
+        like_count = lks.filter(status='LK').count()
+        dislike_count = lks.filter(status='DZ').count()
+        cmnts = Comment.objects.filter(
+            article_id=int(kwargs["pk"])).filter(is_active=True)
+        comment_count = cmnts.count()
+        sub_cmnt_count = 0
+        for cmnt in cmnts:
+            sub_cmnt_count += SubComment.objects.filter(
+                comment=cmnt).filter(is_active=True).count()
+        self.object.rating = dislike_count + self.object.views * 2 + \
+            like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
 
-    def post(self, **kwargs):
-        CommentAction.create("comment_post", self, self.request.POST.dict())
-        return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
+        print(f'dislike_count {dislike_count}\t views {self.object.views} + \
+            like_count {like_count}  comment_count {comment_count} + sub_cmnt_count {sub_cmnt_count}')
+        self.object.save()
+
+        return Activity.create("get", self)
+
+    def post(self):
+        return Activity.create("post", self)
 
 
 class ArticleCreationView(CreateView):
@@ -82,6 +81,7 @@ class ArticleCreationView(CreateView):
 
 
 class ArticleChangeActiveView(View):
+
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
         target_article.is_active = False if target_article.is_active else True
@@ -106,7 +106,8 @@ class ArticleEditView(View):
 
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
-        article_form = ArticleCreationForm(data=request.POST, files=request.FILES, instance=article)
+        article_form = ArticleCreationForm(
+            data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
             article_form.save()
 

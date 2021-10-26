@@ -35,21 +35,38 @@
                 <!--                </svg>-->
                 <!--            </button>-->
                 <a class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
-                    <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg>
-                    {{ user.username }}
+                    {% if True %}
+                        <div class="menu-icon-box">
+                            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                        </div>
+                    {% else %}
+                        <div class="menu-icon-box">
+                            <svg id="menu-icon"  xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                            </svg>
+                        </div>
+                    {% endif %}
                 </a>
-                <a class="user-panel-button btn btn-outline-secondary" href="{% url 'auth:logout' %}">
+                    <div class="menu-icon-box">
+                        <a id="menu-icon" class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
+                        <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                        {{ user.username }}
+                        </a>
+                    </div>
+                <a class="user-panel-button" href="{% url 'auth:logout' %}">
                     Выход
                 </a>
                 {% else %}
-                <a class="user-panel-button btn btn-outline-success" href="{% url 'auth:login' %}">
+                <a class="user-panel-button" href="{% url 'auth:login' %}">
                     Вход
                 </a>
-                <a class="user-panel-button btn btn-outline-warning" href="{% url 'auth:register' %}">
+                <a class="user-panel-button" href="{% url 'auth:register' %}">
                     Регистрация
                 </a>
                 {% endif %}
@@ -60,11 +77,11 @@
     <div>
         <ul class="menu_category nav-pills d-flex justify-content-center">
             <li {% if request.resolver_match.url_name == "articles" %} class="active" {% endif %}>
-            <a class="nav-link text-secondary" href="{% url 'articles' %}">Все хабы</a>
+            <a class="nav-link black" href="{% url 'articles' %}">Все хабы</a>
             </li>
             {% for item in category_menu %}
             <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category" == request.resolver_match.url_name  %} class="active" {% endif %}>
-            <a class="nav-link text-muted" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
+            <a class="nav-link black" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
             </li>
             {% endfor %}
         </ul>

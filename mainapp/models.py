@@ -38,10 +38,12 @@ class Article(models.Model):
     ARTICLE_DEFAULT_STATUS = 'MD' if settings.MODERATION_STATUS else 'PB'
 
     name = models.CharField(verbose_name='Название статьи', max_length=168)
-    image = models.ImageField(verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
+    image = models.ImageField(
+        verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
     preview = models.TextField(verbose_name='Предпросмотр', max_length=250)
     text = models.TextField(verbose_name='Текст статьи')
-    tag = models.CharField(verbose_name='Тэг статьи', max_length=64, blank=True)
+    tag = models.CharField(verbose_name='Тэг статьи',
+                           max_length=64, blank=True)
     hub = models.ForeignKey(
         Hub,
         verbose_name='Хаб',
@@ -70,6 +72,8 @@ class Article(models.Model):
         choices=ARTICLE_STATUS_CHOICES,
         default=ARTICLE_DEFAULT_STATUS
     )
+    views = models.IntegerField(default=0, verbose_name='просмотры')
+    rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,7 +92,8 @@ class Comment(models.Model):
                                verbose_name='Автор комментария')
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Активация комментария')
-    add_datetime = models.DateTimeField('Время добавления комментария', auto_now_add=True)
+    add_datetime = models.DateTimeField(
+        'Время добавления комментария', auto_now_add=True)
 
     def __str__(self):
         return f'{self.article.name}: {self.text}'
@@ -112,13 +117,12 @@ class Likes(models.Model):
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    # like_status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-    #                                choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-    like_status = models.BooleanField(default=False)
+    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
 
     def __str__(self):
         data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
-        if self.like_status:
+        if self.status:
             data_str += f'установил лайк к статье - \"{self.article.name}\"'
         else:
             data_str += f'снял лайк к статье - \"{self.article.name}\"'
@@ -126,6 +130,8 @@ class Likes(models.Model):
 
 
 class SubComment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.PROTECT,
+                                verbose_name='Статья')
     text = models.TextField(verbose_name='Текст подкомментария')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
                                 verbose_name='Комментарий')
@@ -133,7 +139,8 @@ class SubComment(models.Model):
                                verbose_name='Автор подкомментария')
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name='Активация комментария')
-    add_datetime = models.DateTimeField('Время добавления ответа', auto_now_add=True)
+    add_datetime = models.DateTimeField(
+        'Время добавления ответа', auto_now_add=True)
 
     def __str__(self):
         return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
