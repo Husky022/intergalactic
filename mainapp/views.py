@@ -4,12 +4,13 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.models import Article
+from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
 
 
 class Main(ListView):
+    """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
     paginate_by = 5
     extra_context = {'title': 'Главная'}
@@ -20,6 +21,7 @@ class Main(ListView):
 
 
 class Articles(ListView):
+    """ CBV хабов страницы """
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
@@ -31,6 +33,7 @@ class Articles(ListView):
 
 
 class ArticlePage(DetailView):
+    """CBV одной статьи"""
     template_name = 'mainapp/article_page.html'
     model = Article
     extra_context = {
@@ -40,6 +43,26 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
+        # подсчёт рейтинга (и просмотров):
+        self.object = self.get_object()
+        self.object.views += 1
+        lks = Likes.objects.filter(article_id=int(kwargs["pk"]))
+        like_count = lks.filter(status='LK').count()
+        dislike_count = lks.filter(status='DZ').count()
+        cmnts = Comment.objects.filter(
+            article_id=int(kwargs["pk"])).filter(is_active=True)
+        comment_count = cmnts.count()
+        sub_cmnt_count = 0
+        for cmnt in cmnts:
+            sub_cmnt_count += SubComment.objects.filter(
+                comment=cmnt).filter(is_active=True).count()
+        self.object.rating = dislike_count + self.object.views * 2 + \
+                             like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
+
+        print(f'dislike_count {dislike_count}\t views {self.object.views} + \
+            like_count {like_count}  comment_count {comment_count} + sub_cmnt_count {sub_cmnt_count}')
+        self.object.save()
+
         return Activity.create("get", self)
 
     def post(self):
@@ -47,6 +70,7 @@ class ArticlePage(DetailView):
 
 
 class ArticleCreationView(CreateView):
+    """CBV для создание статьи"""
     model = Article
     form_class = ArticleCreationForm
     success_url = reverse_lazy('auth:profile')
@@ -60,6 +84,7 @@ class ArticleCreationView(CreateView):
 
 
 class ArticleChangeActiveView(View):
+    """CBV для активации статьи"""
 
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
@@ -85,7 +110,8 @@ class ArticleEditView(View):
 
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
-        article_form = ArticleCreationForm(data=request.POST, files=request.FILES, instance=article)
+        article_form = ArticleCreationForm(
+            data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
             article_form.save()
 

@@ -1,4 +1,5 @@
 from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 from mainapp.models import Comment, SubComment
