@@ -403,7 +403,6 @@ a.article-anchor {
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .btn-comments-answer, .submit_comment, .submit_subcomment{

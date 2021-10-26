@@ -39,6 +39,7 @@ def view_like(self):
         return like
     return None
 
+
 def set_like(self, context):
     new_like(self)
     like = change_like(self)
@@ -46,5 +47,5 @@ def set_like(self, context):
     like.like_count = define_count_like(self, "LK")
     like.dislike_count = define_count_like(self, "DZ")
     context["likes"] = like
-    result = render_to_string('mainapp/includes/inc__icon.html', context=context, request=self.request)
+    result = render_to_string('mainapp/includes/inc__activity.html', context=context, request=self.request)
     return result
