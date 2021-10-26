@@ -1,10 +1,17 @@
 from django.template.loader import render_to_string
-from mainapp.models import Likes
+
+from authapp.models import IntergalacticUser
+from mainapp.models import Likes, Article
+from authapp.services.notifications import NewNotification
 
 
 def new_like(self):
+    article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
+    recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
+    NewNotification.create('like_article', recipient, self.request.user, None, article.name)
     if not Likes.objects.filter(article_id=int(self.kwargs["pk"]), user_id=self.request.user.pk):
         Likes.objects.create(article_id=self.kwargs["pk"], user_id=self.request.user.pk)
+
 
 
 def change_like(self):
