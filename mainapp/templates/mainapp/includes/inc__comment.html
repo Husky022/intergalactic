@@ -14,9 +14,11 @@
                 оставил комментарий {{ item.add_datetime }}:
             </p>
             <p>{{ item.text }}</p>
+            {% if request.user.username == item.author.username or request.user.is_superuser %}
             <button class="btn-comments-answer com_delete" name="{{article.id}}" value="{{item.id}}">
                 Удалить
             </button>
+            {% endif %}
             <hr>
             {% for subitem in subcomments.values %}
             <div class="block-subcomment" style="width: 80%; margin-left: 20%">
@@ -29,9 +31,11 @@
                     ответил {{ element.add_datetime }}:
                 </p>
                 <p> {{ element.text }}</p>
+                {% if request.user.username == element.author.username or request.user.is_superuser %}
                 <button class="btn-comments-answer sub_com_delete" name="{{article.id}}" value="{{element.id}}">
                     Удалить
                 </button>
+                {% endif %}
                 <hr>
                 {% endif %}
                 {% endfor %}

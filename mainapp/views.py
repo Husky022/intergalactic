@@ -10,6 +10,7 @@ from mainapp.services.activity.view import Activity
 
 
 class Main(ListView):
+    """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
     paginate_by = 5
     extra_context = {'title': 'Главная'}
@@ -20,6 +21,7 @@ class Main(ListView):
 
 
 class Articles(ListView):
+    """ CBV хабов страницы """
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
@@ -31,6 +33,7 @@ class Articles(ListView):
 
 
 class ArticlePage(DetailView):
+    """CBV одной статьи"""
     template_name = 'mainapp/article_page.html'
     model = Article
     extra_context = {
@@ -40,7 +43,6 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-
         # подсчёт рейтинга (и просмотров):
         self.object = self.get_object()
         self.object.views += 1
@@ -55,7 +57,7 @@ class ArticlePage(DetailView):
             sub_cmnt_count += SubComment.objects.filter(
                 comment=cmnt).filter(is_active=True).count()
         self.object.rating = dislike_count + self.object.views * 2 + \
-            like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
+                             like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
 
         print(f'dislike_count {dislike_count}\t views {self.object.views} + \
             like_count {like_count}  comment_count {comment_count} + sub_cmnt_count {sub_cmnt_count}')
@@ -68,6 +70,7 @@ class ArticlePage(DetailView):
 
 
 class ArticleCreationView(CreateView):
+    """CBV для создание статьи"""
     model = Article
     form_class = ArticleCreationForm
     success_url = reverse_lazy('auth:profile')
@@ -81,6 +84,7 @@ class ArticleCreationView(CreateView):
 
 
 class ArticleChangeActiveView(View):
+    """CBV для активации статьи"""
 
     def post(self, request, article_pk):
         target_article = get_object_or_404(Article, pk=article_pk)
