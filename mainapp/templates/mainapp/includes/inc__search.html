@@ -1,8 +1,9 @@
+{% load widget_tweaks %}
 <section id="intro">
     <div class="container-lg">
         <div class="row g-4 justify-content-center align-items-center">
             <div class="col-md-5 text-center text-md-start">
-                <a href="#sidebar" class="d-block mt-3" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
+                <a href="#sidebar" class="btn btn-outline-success" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
                 Поиск
                 </a>
             </div>
@@ -10,7 +11,7 @@
     </div>
 </section>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebar-label">
+<div class="offcanvas offcanvas-start search_canvas" tabindex="-1" id="sidebar" aria-labelledby="sidebar-label">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="sidebar-label">Поиск статей</h5>
 
@@ -18,7 +19,38 @@
     </div>
     <div class="offcanvas-body">
         <form class="form-inline my-2 my-lg-0">
-            {{ search_filter.form }}
+            <div class="mb-3">
+                <label for="search_name" class="form-label">Название статьи:</label>
+                {% render_field search_filter.form.name class="form-control" id="search_name" placeholder="название статьи"%}
+            </div>
+            <div class="mb-3">
+                <label for="search_text" class="form-label">Текст статьи:</label>
+                {% render_field search_filter.form.text class="form-control" id="search_text" placeholder="текст статьи"%}
+            </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Автор статьи:</label>
+                {% render_field search_filter.form.author class="form-control" id="author" placeholder="автора статьи"%}
+            </div>
+            <div class="mb-3">
+                <label for="hub" class="form-label">Хаб статьи:</label>
+                {% render_field search_filter.form.hub class="form-control" id="hub" placeholder="хаб статьи"%}
+            </div>
+            <div class="mb-3">
+                <label for="start_date" class="form-label">По дате от:</label>
+                {% render_field search_filter.form.start_date class="form-control" id="start_date" placeholder="дата от"%}
+            </div>
+            <div class="mb-3">
+                <label for="end_date" class="form-label">По дате до:</label>
+                {% render_field search_filter.form.end_date class="form-control" id="end_date" placeholder="дата до"%}
+            </div>
+            <div class="mb-3">
+                <label for="rating_start" class="form-label">По рейтингу от:</label>
+                {% render_field search_filter.form.start_date class="form-control" id="rating_start" placeholder="рейтинг от"%}
+            </div>
+            <div class="mb-3">
+                <label for="rating_end" class="form-label">По рейтингу до:</label>
+                {% render_field search_filter.form.start_date class="form-control" id="rating_end" placeholder="рейтинг до"%}
+            </div>
             <button action="{% url 'search' %}" class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>

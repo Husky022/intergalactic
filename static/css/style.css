@@ -650,3 +650,21 @@ a.article-anchor {
 textarea{
     border-radius: 10px;
 }
+
+.search_canvas{
+    width: 490px !Important;
+}
+
+#search_name{
+    width: 440px !Important;
+}
+
+#search_text{
+    width: 440px !Important;
+}
+#author{
+    width: 220px !Important;
+}
+#hub{
+    width: 220px !Important;
+}

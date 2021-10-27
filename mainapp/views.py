@@ -19,13 +19,16 @@ class Main(ListView):
         queryset = queryset_activity(self)
         return queryset
 
+    # def get(self, request, *args, **kwargs):
+    #     article = Article.objects.filter(article_status='PB')
+    #     search_filter = ArticleFilter(request.GET, queryset=article)
+
 
 class Articles(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
     paginate_by = 5
-
 
     def get_queryset(self):
         queryset = queryset_activity(self)
@@ -120,5 +123,5 @@ def search(request):
     article = Article.objects.filter(article_status='PB')
     search_filter = ArticleFilter(request.GET, queryset=article)
     article = search_filter.qs
-    contex = {'page_title': 'Поиск', 'article': article, 'search_filter': search_filter}
-    return render(request, 'mainapp/search.html', contex)
+    contex = {'page_title': 'Поиск', 'object_list': article, 'search_filter': search_filter}
+    return render(request, 'mainapp/articles.html', contex)

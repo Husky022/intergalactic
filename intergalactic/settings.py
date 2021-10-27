@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authapp',
     'adminapp',
     'django_filters',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
