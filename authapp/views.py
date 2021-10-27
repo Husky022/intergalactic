@@ -111,11 +111,13 @@ class NotificationView(ListView):
     template_name = 'authapp/notifications.html'
 
     def get_context_data(self, **kwargs):
-        notifications = Notification.objects.filter(recipient_id=self.request.user.id)
+        notifications_not_read = Notification.objects.filter(recipient_id=self.request.user.id, is_read=0)
+        notifications_read = Notification.objects.filter(recipient_id=self.request.user.id, is_read=1)
         context = {
             'title': self.title,
             'user': self.request.user,
-            'notifications': notifications,
+            'notifications_not_read': notifications_not_read,
+            'notifications_read': notifications_read,
         }
         return context
 
