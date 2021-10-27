@@ -650,3 +650,8 @@ a.article-anchor {
 textarea{
     border-radius: 10px;
 }
+
+.notification-icon{
+    color: white;
+    background-color: red;
+}
