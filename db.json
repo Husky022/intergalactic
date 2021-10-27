@@ -911,7 +911,7 @@
  "fields": {
   "user": 1,
   "article": 4,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -920,7 +920,7 @@
  "fields": {
   "user": 5,
   "article": 16,
-  "like_status": false
+  "status": "UND"
  }
 },
 {
@@ -929,7 +929,7 @@
  "fields": {
   "user": 4,
   "article": 33,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -938,7 +938,7 @@
  "fields": {
   "user": 4,
   "article": 29,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -947,7 +947,7 @@
  "fields": {
   "user": 4,
   "article": 30,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -956,7 +956,7 @@
  "fields": {
   "user": 4,
   "article": 31,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -965,7 +965,7 @@
  "fields": {
   "user": 6,
   "article": 28,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -974,7 +974,7 @@
  "fields": {
   "user": 6,
   "article": 26,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -983,7 +983,7 @@
  "fields": {
   "user": 1,
   "article": 33,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -992,7 +992,7 @@
  "fields": {
   "user": 1,
   "article": 32,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1001,7 +1001,7 @@
  "fields": {
   "user": 1,
   "article": 31,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1010,7 +1010,7 @@
  "fields": {
   "user": 1,
   "article": 30,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1019,7 +1019,7 @@
  "fields": {
   "user": 1,
   "article": 29,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1028,7 +1028,7 @@
  "fields": {
   "user": 1,
   "article": 28,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1037,7 +1037,7 @@
  "fields": {
   "user": 5,
   "article": 33,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1046,7 +1046,7 @@
  "fields": {
   "user": 5,
   "article": 32,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1055,7 +1055,7 @@
  "fields": {
   "user": 5,
   "article": 24,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1064,7 +1064,7 @@
  "fields": {
   "user": 5,
   "article": 25,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1073,7 +1073,7 @@
  "fields": {
   "user": 5,
   "article": 27,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1082,7 +1082,7 @@
  "fields": {
   "user": 6,
   "article": 33,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1091,7 +1091,7 @@
  "fields": {
   "user": 6,
   "article": 32,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1100,7 +1100,7 @@
  "fields": {
   "user": 6,
   "article": 21,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1109,7 +1109,7 @@
  "fields": {
   "user": 6,
   "article": 19,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1118,7 +1118,7 @@
  "fields": {
   "user": 6,
   "article": 14,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1127,7 +1127,7 @@
  "fields": {
   "user": 5,
   "article": 41,
-  "like_status": true
+  "status": "UND"
  }
 },
 {
@@ -1136,51 +1136,7 @@
  "fields": {
   "user": 5,
   "article": 38,
-  "like_status": true
- }
-},
-{
- "model": "mainapp.subcomment",
- "pk": 1,
- "fields": {
-  "text": "Yes. It's true!",
-  "comment": 5,
-  "author": 5,
-  "is_active": true,
-  "add_datetime": "2021-10-21T14:13:46.287Z"
- }
-},
-{
- "model": "mainapp.subcomment",
- "pk": 2,
- "fields": {
-  "text": "Yess!",
-  "comment": 6,
-  "author": 5,
-  "is_active": true,
-  "add_datetime": "2021-10-21T14:14:12.177Z"
- }
-},
-{
- "model": "mainapp.subcomment",
- "pk": 3,
- "fields": {
-  "text": "Amazing!",
-  "comment": 5,
-  "author": 6,
-  "is_active": true,
-  "add_datetime": "2021-10-21T14:15:18.295Z"
- }
-},
-{
- "model": "mainapp.subcomment",
- "pk": 4,
- "fields": {
-  "text": "согласен",
-  "comment": 7,
-  "author": 6,
-  "is_active": true,
-  "add_datetime": "2021-10-21T14:35:50.650Z"
+  "status": "UND"
  }
 },
 {

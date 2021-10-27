@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View, CreateView, ListView, DetailView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
@@ -11,7 +11,6 @@ from mainapp.services.commentsparse import comment
 from mainapp.models import Article, ArticleStatus, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
 
-from mainapp.services.commentsview import CommentAction
 
 
 class Main(ListView):
