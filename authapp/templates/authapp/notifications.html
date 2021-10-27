@@ -4,11 +4,11 @@
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
     {% if not notifications_not_read and not notifications_read %}
-        <p class="display-heading text-center red">Уведомлений пока что нет...</p>
+        <h3 class="display-heading text-center">Уведомлений пока что нет...</h3>
     {% else %}
         <div class="article-box">
             {% if notifications_not_read %}
-                <h2>Новые уведомления: </h2>
+                <h3>Новые уведомления: </h3>
                 {% for item in notifications_not_read %}
                     <div class="block-article">
                             {{ item.add_datetime }}
@@ -32,7 +32,7 @@
             {% endif %}
             <hr>
             {% if notifications_read %}
-                <h2>Ранее прочитанные: </h2>
+                <h3>Ранее прочитанные: </h3>
                 {% for item in notifications_read %}
                     <div class="block-article">
                             {{ item.add_datetime }}
@@ -42,7 +42,11 @@
                                 </span>
                             </a>
                             {{ item.action }}
-                            {{ item.target }}
+                            <a href="{% url 'article_page' item.pk %}">
+                                <span class="font-weight-bold">
+                                    {{ item.target }}
+                                </span>
+                            </a>
                             {% if item.text %}
                                 <hr>
                                 {{ item.text }}
