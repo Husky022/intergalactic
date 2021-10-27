@@ -43,6 +43,10 @@ class LikeDislike(object):
         if self.like.status == status:
             self.like.status = "UND"
         else:
+            article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
+            recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
+            Notification.create('like_article', recipient, self.request.user, None, article.name,
+                                int(self.kwargs["pk"]), None, None)
             self.like.status = status
         self.like.save()
 
@@ -98,12 +102,12 @@ class LikeDislike(object):
 #     result = render_to_string('mainapp/includes/inc__activity.html', context=context, request=self.request)
 #     return result
 
-def set_like(self, context):
-    new_like(self)
-    like = change_like(self)
-    like = status_like(self, like, self.request.GET.dict()["status"])
-    like.like_count = define_count_like(self, "LK")
-    like.dislike_count = define_count_like(self, "DZ")
-    context["likes"] = like
-    result = render_to_string('mainapp/includes/inc__icon.html', context=context, request=self.request)
-    return result
+# def set_like(self, context):
+#     new_like(self)
+#     like = change_like(self)
+#     like = status_like(self, like, self.request.GET.dict()["status"])
+#     like.like_count = define_count_like(self, "LK")
+#     like.dislike_count = define_count_like(self, "DZ")
+#     context["likes"] = like
+#     result = render_to_string('mainapp/includes/inc__icon.html', context=context, request=self.request)
+#     return result
