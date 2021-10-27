@@ -3,7 +3,7 @@
 {% load project_tags %}
 {% block content %}
     <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
-    <div class="article-box">
+    <div class="profile-box">
         <div class="flex-block-profile">
             <p class="display-heading">Личный кабинет</p>
             <p>Роль: {{ role }}</p>
@@ -11,11 +11,12 @@
         <div class="flex-block-profile">
             <a class="btn btn-primary" href="{% url 'auth:edit' %}">Редактировать профиль</a>
             {% if user.is_superuser %}
-            <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Редактировать пользователей</a>
+                <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Редактировать пользователей</a>
             {% endif %}
         </div>
-        <div class="profile_info"><img class="profile_image" src="{{ user.avatar|media_folder_users }}"
-                                       alt="profile_image">
+        <div class="profile_info">
+            <div><img class="profile_image" src="{{ user.avatar|media_folder_users }}"
+                      alt="profile_image"></div>
             <div class="profile_about">
                 <p>Username: {{ user.username }}</p>
                 <p>Возраст: {{ user.age }}</p>
@@ -31,9 +32,14 @@
 
         <p class="profile_subheading_1">Мои статьи</p>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
-            Создать статью
-        </button>
+        <div class="profile-article">
+            <p class="profile_subheading_2">Опубликованные</p>
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
+                    Создать статью
+                </button>
+            </div>
+        </div>
 
         <div class="modal fade" id="createArticle" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -58,7 +64,6 @@
             </div>
         </div>
 
-        <p class="profile_subheading_2">Опубликованные</p>
         <table class="article-table">
             <tbody>
             {% for art in articles %}
