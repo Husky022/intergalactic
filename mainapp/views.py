@@ -4,13 +4,12 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.models import Article, Comment, Likes, SubComment
+from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
 from mainapp.services.commentsparse import comment
 from mainapp.models import Article, ArticleStatus, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
-
 
 
 class Main(ListView):
@@ -48,8 +47,18 @@ class ArticlePage(DetailView):
 
     def get(self, request, *args, **kwargs):
         # подсчёт рейтинга (и просмотров):
+        visitor_IP = request.get_host()
+        print(f'int(kwargs["pk"] = {int(kwargs["pk"])}')
+        Hosts.objects.get_or_create(host=visitor_IP)
         self.object = self.get_object()
-        self.object.views += 1
+        for v in Art_Visits.objects.filter(host=Hosts.objects.get(host=visitor_IP).pk):
+            if v.article_id == int(kwargs["pk"]):
+                break
+        else:
+            self.object.views += 1
+            v = Art_Visits(article=self.object,
+                           host=Hosts.objects.get(host=visitor_IP))
+            v.save()
         lks = Likes.objects.filter(article_id=int(kwargs["pk"]))
         like_count = lks.filter(status='LK').count()
         dislike_count = lks.filter(status='DZ').count()
@@ -60,8 +69,11 @@ class ArticlePage(DetailView):
         for cmnt in cmnts:
             sub_cmnt_count += SubComment.objects.filter(
                 comment=cmnt).filter(is_active=True).count()
+        # Окончательная формула рейтинга:
         self.object.rating = dislike_count + self.object.views * 2 + \
-                             like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
+            like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
+        # print(
+        #     f'cmnt: {comment_count}   sub_cmnt: {sub_cmnt_count}   dislike_count {dislike_count}   views {self.object.views}   like_count {like_count}')
         self.object.save()
 
         return Activity.create("get", self)

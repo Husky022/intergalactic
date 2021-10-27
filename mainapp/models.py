@@ -173,3 +173,14 @@ class SubComment(models.Model):
     class Meta:
         verbose_name = 'Подкомментарий'
         verbose_name_plural = 'Подкомментарии'
+
+
+class Hosts(models.Model):
+    host = models.CharField(max_length=22, verbose_name='АйПи посетителя')
+
+
+class Art_Visits(models.Model):
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, verbose_name='Статья')
+    host = models.ForeignKey(
+        Hosts, on_delete=models.CASCADE, verbose_name='адрес посетителя')
