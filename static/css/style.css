@@ -704,3 +704,63 @@ textarea {
     flex-direction: row;
     justify-content: space-between;
 }
+
+/*Модерация*/
+
+.moderation-chat{
+    float: left;
+    margin-left: 30px;
+    min-width: 550px !important;
+}
+
+.moderation-article-box {
+    margin-top: 2%;
+    margin-left: 20%;
+    width: 70%;
+    margin-bottom: 5%;
+    display: flex;
+}
+
+.moderation-details-articles {
+    max-width: 1000px;
+}
+
+.first-line {
+    display: flex;
+}
+
+.first-line p {
+    margin-top: 10px;
+}
+
+.moderation-messages {
+    min-width: 500px;
+}
+
+.moderation-message {
+    border: 1px solid black;
+    border-radius: 7px;
+    margin-bottom: 5px;
+}
+
+.datetime {
+    width: 40%;
+    text-align: right;
+}
+
+.datetime p {
+    margin-right: 10px;
+}
+
+.author {
+    width: 60%;
+}
+
+.author p {
+    margin-left: 10px;
+}
+
+.second-line p {
+    margin-left: 10px;
+}
+

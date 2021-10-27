@@ -1,0 +1,38 @@
+<button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+        data-target="#moderation_{{ art.pk }}" title="Отправить на модерацию">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-person"
+         viewBox="0 0 16 16">
+        <path
+            d="M12 1a1 1 0 0 1 1 1v10.755S12 11 8 11s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/>
+        <path d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+    </svg>
+</button>
+
+<div class="modal fade" id="moderation_{{ art.pk }}" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">отправить статью на проверку</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Вы собираетесь отправить статью на проверку:</p>
+                <p><b>{{ art.name }}</b></p>
+                <p>Подтвердите действие.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                </button>
+                <form class="form-horizontal" action="{% url 'send_to_moderation' art.pk %}"
+                      method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input class="form-control" type="submit" value="Подтвердить">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
