@@ -62,9 +62,6 @@ class ArticlePage(DetailView):
                 comment=cmnt).filter(is_active=True).count()
         self.object.rating = dislike_count + self.object.views * 2 + \
                              like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
-
-        print(f'dislike_count {dislike_count}\t views {self.object.views} + \
-            like_count {like_count}  comment_count {comment_count} + sub_cmnt_count {sub_cmnt_count}')
         self.object.save()
 
         return Activity.create("get", self)
