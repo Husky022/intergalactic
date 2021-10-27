@@ -4,10 +4,9 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits
+from mainapp.models import SubComment, Hosts, Art_Visits
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
-from mainapp.services.commentsparse import comment
 from mainapp.models import Article, ArticleStatus, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
 

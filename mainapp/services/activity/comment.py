@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from authapp.models import IntergalacticUser
 from mainapp.models import SubComment, Comment, Article
 from authapp.services.notifications import NewNotification
-from mainapp.services.activity.likes import view_like
+
 
 from mainapp.services.activity.likes import LikeDislike
 
