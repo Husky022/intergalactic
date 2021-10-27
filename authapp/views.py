@@ -9,6 +9,7 @@ from django.db import transaction
 from authapp.models import NotificationModel
 from mainapp.models import Article
 from mainapp.forms import ArticleCreationForm
+from functools import wraps
 
 
 class LoginView(FormView):
@@ -106,8 +107,15 @@ class UserProfileView(View):
         return render(request, self.template_name, self.get_context_data())
 
 
-
-
+def reading_notifications(func):
+    def wrapper(self, request, **kwargs):
+        res = func(self, request, **kwargs)
+        notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
+        for item in notifications_not_read:
+            item.is_read = 1
+            item.save()
+        return res
+    return wrapper
 
 
 
@@ -127,16 +135,7 @@ class NotificationView(ListView):
         }
         return context
 
-    def reading_notifications(self, func):
-        def wrapper(self, request, **kwargs):
-            func(self, request, **kwargs)
-            notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
-            for item in notifications_not_read:
-                item.is_read = 1
-                item.save()
-        return wrapper
-
-
     @reading_notifications
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context_data())
+
