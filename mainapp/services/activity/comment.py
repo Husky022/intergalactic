@@ -1,7 +1,7 @@
 from django.template.loader import render_to_string
 
 from mainapp.models import SubComment, Comment
-from mainapp.services.activity.likes import view_like
+from mainapp.services.activity.likes import Like
 
 
 def get_or_post(self, get_post):
@@ -30,19 +30,21 @@ def delete(self, get_post, context):
         comment = SubComment.objects.filter(id=get_post["sub_com_delete"]).first()
     comment.is_active = False
     comment.save()
-    context["likes"] = view_like(self)
+    context["likes"] = Like(self.request, self.kwargs).view_like()
     context['comments'] = Comment.objects.filter(article_id=self.kwargs["pk"], is_active=True)
     context['subcomments'] = parse_sub_comment(self)
-    context['comments_count'] = len(context['comments']) + len(SubComment.objects.filter(article_id=self.kwargs["pk"],is_active=True))
+    context['comments_count'] = len(context['comments']) + len(
+        SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True))
     return render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
 
 
 def get_comment(self, context):
     get_or_post(self, self.request.GET.dict())
-    context["likes"] = view_like(self)
+    context["likes"] = Like(self.request, self.kwargs).view_like()
     context['comments'] = Comment.objects.filter(article_id=self.kwargs["pk"], is_active=True)
     context['subcomments'] = parse_sub_comment(self)
-    context['comments_count'] = len(context['comments']) + len(SubComment.objects.filter(article_id=self.kwargs["pk"],is_active=True))
+    context['comments_count'] = len(context['comments']) + len(
+        SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True))
     return render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
 
 
