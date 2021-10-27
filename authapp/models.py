@@ -37,7 +37,7 @@ class IntergalacticUser(AbstractUser):
         return f'{self.username}'
 
 
-class Notification(models.Model):
+class NotificationModel(models.Model):
     recipient = models.ForeignKey(IntergalacticUser, on_delete=models.PROTECT,
                                 verbose_name='Получатель', related_name='recipient')
     sender = models.ForeignKey(IntergalacticUser, on_delete=models.PROTECT,
@@ -48,7 +48,10 @@ class Notification(models.Model):
     text = models.TextField(verbose_name='Текст', blank=True, null=True)
     target = models.TextField(verbose_name='Цель')
     article_id = models.PositiveIntegerField(verbose_name='ID статьи')
+    comment_id = models.PositiveIntegerField(verbose_name='ID комментария', null=True)
+    subcomment_id = models.PositiveIntegerField(verbose_name='ID подкомментария', null=True)
     add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
+
 
     def __str__(self):
         return f'Уведомление: {self.text}'

@@ -1,4 +1,4 @@
-from authapp.models import Notification
+from authapp.models import NotificationModel
 from mainapp.models import Article, Comment, Likes, SubComment
 
 
@@ -32,7 +32,7 @@ def if_article(comment_list, self):
 
 def queryset_activity(self):
     object_list = {'comment_list':[]}
-    object_list['notifications_not_read'] = Notification.objects.filter(is_read=0).count()
+    object_list['notifications_not_read'] = NotificationModel.objects.filter(is_read=0).count()
     if_article(object_list['comment_list'], self)
     return object_list
     # comment_list=[]

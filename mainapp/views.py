@@ -8,7 +8,7 @@ from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
-from authapp.services.notifications import NewNotification, notifications_not_read_quantity
+from authapp.services.notifications import Notification, notifications_not_read_quantity
 
 
 class Main(ListView):

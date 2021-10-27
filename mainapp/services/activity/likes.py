@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 
 from authapp.models import IntergalacticUser
 from mainapp.models import Likes, Article
-from authapp.services.notifications import NewNotification
+from authapp.services.notifications import Notification
 
 
 def new_like(self):
@@ -32,7 +32,7 @@ def status_like(self, like, status):
     else:
         article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
         recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
-        NewNotification.create('like_article', recipient, self.request.user, None, article.name, int(self.kwargs["pk"]))
+        Notification.create('like_article', recipient, self.request.user, None, article.name, int(self.kwargs["pk"]))
         like.status = status
     like.save()
     return like

@@ -6,7 +6,7 @@ from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
-from authapp.models import Notification
+from authapp.models import NotificationModel
 from mainapp.models import Article
 from mainapp.forms import ArticleCreationForm
 
@@ -111,13 +111,13 @@ class NotificationView(ListView):
     template_name = 'authapp/notifications.html'
 
     def get_context_data(self, **kwargs):
-        notifications_not_read = Notification.objects.filter(recipient_id=self.request.user.id, is_read=0)
-        notifications_read = Notification.objects.filter(recipient_id=self.request.user.id, is_read=1)
+        notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
+        notifications_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=1)
         context = {
             'title': self.title,
             'user': self.request.user,
             'notifications_not_read': notifications_not_read,
-            'notifications_read': notifications_read,
+            'notifications_read': notifications_read
         }
         return context
 

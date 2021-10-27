@@ -1,8 +1,8 @@
 from django.template.loader import render_to_string
 
-from authapp.models import IntergalacticUser
+from authapp.models import IntergalacticUser, NotificationModel
 from mainapp.models import SubComment, Comment, Article
-from authapp.services.notifications import NewNotification
+from authapp.services.notifications import Notification
 
 
 def get_or_post(self, get_post):
@@ -12,7 +12,7 @@ def get_or_post(self, get_post):
         comment = Comment.objects.create(article_id=int(self.kwargs["pk"]), author_id=self.request.user.id,
                                          text=get_post['text_comment'])
         comment.save()
-        NewNotification.create('comment', recipient, self.request.user, get_post['text_comment'], article.name, int(self.kwargs["pk"]))
+        Notification.create('comment', recipient, self.request.user, get_post['text_comment'], article.name, int(self.kwargs["pk"]), comment.id, None)
     elif 'text_subcomment' in get_post:
         subcomment = SubComment.objects.create(
             comment_id=get_post['comment_id'],
@@ -22,7 +22,7 @@ def get_or_post(self, get_post):
         )
         subcomment.save()
         comment = Comment.objects.filter(id=get_post['comment_id']).first()
-        NewNotification.create('subcomment', recipient, self.request.user, get_post['text_subcomment'], comment.text, int(self.kwargs["pk"]))
+        Notification.create('subcomment', recipient, self.request.user, get_post['text_subcomment'], comment.text, int(self.kwargs["pk"]), None, subcomment.id)
 
 
 def delete(self, get_post, context):
@@ -32,10 +32,14 @@ def delete(self, get_post, context):
         for item in sub_comment:
             item.is_active = False
             item.save()
+        notification = NotificationModel.objects.filter(comment_id=comment.id)
+        notification.delete()
     elif 'sub_com_delete' in get_post:
         comment = SubComment.objects.filter(id=get_post["sub_com_delete"]).first()
     comment.is_active = False
     comment.save()
+    notification = NotificationModel.objects.filter(subcomment_id=comment.id)
+    notification.delete()
     context['comments'] = Comment.objects.filter(article_id=self.kwargs["pk"], is_active=True)
     context['subcomments'] = parse_sub_comment(self)
     return render_to_string('mainapp/includes/inc__comment.html', context, request=self.request)
