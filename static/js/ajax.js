@@ -11,15 +11,15 @@ window.onload = function () {
 
 
 
-    $('.ajax_comment').on('click', '.submit_comment', function () {
+    $('.likes-dislikes-comments-box').on('click', '.submit_comment', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
                 url: "/article_page/" + target_href.name + "/",
                 data: {text_comment: $('.textarea').val()},
                 success: function (data) {
-                    $('.comment-main').remove();
-                    $('.ajax_comment').html(data.result);
+                    $('.ajax_activity').remove();
+                    $('.likes-dislikes-comments-box').html(data.result);
 
                 },
             });
@@ -28,27 +28,36 @@ window.onload = function () {
         event.preventDefault();
     });
 
-    $(".ajax_like").on('click', '.btn-likes', function(event){
+    $(".likes-dislikes-comments-box").on('click', '.btn-likes', function(event){
+        if($("nav").hasClass('username')){
             $.ajax({
                 data: {status: "LK"},
                 url: "/article_page/" + event.target.id + '/',
                 success: function(data) {
-                    document.querySelector('.ajax_like').innerHTML = data.result;
+                    document.querySelector('.likes-dislikes-comments-box').innerHTML = data.result;
                     }
             });
+        }else{
+            alert("Вы не авторизированы");
+            }
     })
 
-    $(".ajax_like").on('click', '.btn-dislikes', function(event){
-            $.ajax({
-                data: {status: "DZ"},
-                url: "/article_page/" + event.target.id + '/',
-                success: function(data) {
-                    document.querySelector('.ajax_like').innerHTML = data.result;
-                    }
-            });
+    $(".likes-dislikes-comments-box").on('click', '.btn-dislikes', function(event){
+            if($("nav").hasClass('username')){
+                $.ajax({
+                    data: {status: "DZ"},
+                    url: "/article_page/" + event.target.id + '/',
+                    success: function(data) {
+                        document.querySelector('.likes-dislikes-comments-box').innerHTML = data.result;
+                        }
+                });
+        }else{
+            alert("Вы не авторизированы");
+            }
     })
 
-    $('.ajax_comment').on('click', '.submit_subcomment', function () {
+    $('.likes-dislikes-comments-box').on('click', '.submit_subcomment', function () {
+
         let target_href = event.target;
         if (target_href) {
             $.ajax({
@@ -57,8 +66,9 @@ window.onload = function () {
                          text_subcomment: $('.textarea_subcomment_' + target_href.value).val(),
                       },
                 success: function (data) {
-                    $('.comment-main').remove();
-                    $('.ajax_comment').html(data.result);
+                    console.log(data.result)
+                    $('.ajax_activity').remove();
+                    $('.likes-dislikes-comments-box').html(data.result);
 
                 },
             });
@@ -67,7 +77,7 @@ window.onload = function () {
         event.preventDefault();
     });
 
-    $('.ajax_comment').on('click', '.com_delete', function () {
+    $('.likes-dislikes-comments-box').on('click', '.com_delete', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
@@ -76,8 +86,8 @@ window.onload = function () {
                          com_delete: target_href.value,
                       },
                 success: function (data) {
-                    $('.comment-main').remove();
-                    $('.ajax_comment').html(data.result);
+                    $('.ajax_activity').remove();
+                    $('.likes-dislikes-comments-box').html(data.result);
 
                 },
             });
@@ -85,7 +95,7 @@ window.onload = function () {
         }
         event.preventDefault();
     });
-    $('.ajax_comment').on('click', '.sub_com_delete', function () {
+    $('.likes-dislikes-comments-box').on('click', '.sub_com_delete', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
@@ -94,8 +104,8 @@ window.onload = function () {
                          sub_com_delete: target_href.value,
                       },
                 success: function (data) {
-                    $('.comment-main').remove();
-                    $('.ajax_comment').html(data.result);
+                    $('.ajax_activity').remove();
+                    $('.likes-dislikes-comments-box').html(data.result);
 
                 },
             });

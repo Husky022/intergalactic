@@ -1,0 +1,37 @@
+<button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+        data-target="#archive_{{ art.pk }}" title="Восстановить">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+         fill="currentColor" class="bi bi-arrow-90deg-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+              d="M4.854 1.146a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L4 2.707V12.5A2.5 2.5 0 0 0 6.5 15h8a.5.5 0 0 0 0-1h-8A1.5 1.5 0 0 1 5 12.5V2.707l3.146 3.147a.5.5 0 1 0 .708-.708l-4-4z"/>
+    </svg>
+</button>
+
+<div class="modal fade" id="archive_{{ art.pk }}" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Восстановить статью</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Вы собираетесь восстановить статью:</p>
+                <p>{{ art.name }}</p>
+                <p>После восстановления, статья будет помещена в черновики.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                </button>
+                <form class="form-horizontal" action="{% url 'change_active' art.pk %}"
+                      method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input class="form-control" type="submit" value="Подтвердить">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
