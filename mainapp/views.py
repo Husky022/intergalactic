@@ -3,10 +3,12 @@ from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
 
+
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import SubComment, Hosts, Art_Visits
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
+from authapp.services.notifications import Notification, notifications_not_read_quantity
 from mainapp.models import Article, ArticleStatus, Comment, Likes
 from django.views.decorators.csrf import csrf_exempt
 
@@ -14,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 class Main(ListView):
     """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
-    paginate_by = 5
+    # paginate_by = 5
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
@@ -27,7 +29,7 @@ class Articles(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
-    paginate_by = 5
+    # paginate_by = 5
 
     def get_queryset(self):
         queryset = queryset_activity(self)

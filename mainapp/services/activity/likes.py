@@ -1,6 +1,9 @@
 from django.template.loader import render_to_string
 from mainapp.models import Likes, Article
 
+from authapp.models import IntergalacticUser
+from mainapp.models import Likes, Article
+from authapp.services.notifications import Notification
 
 class LikeDislike(object):
     """Лайки и дизлайки"""
@@ -94,3 +97,13 @@ class LikeDislike(object):
 #     context["likes"] = like
 #     result = render_to_string('mainapp/includes/inc__activity.html', context=context, request=self.request)
 #     return result
+
+def set_like(self, context):
+    new_like(self)
+    like = change_like(self)
+    like = status_like(self, like, self.request.GET.dict()["status"])
+    like.like_count = define_count_like(self, "LK")
+    like.dislike_count = define_count_like(self, "DZ")
+    context["likes"] = like
+    result = render_to_string('mainapp/includes/inc__icon.html', context=context, request=self.request)
+    return result

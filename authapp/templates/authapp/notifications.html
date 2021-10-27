@@ -3,29 +3,53 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-    {% if not notifications %}
+    {% if not notifications_not_read and not notifications_read %}
         <p class="display-heading text-center red">Уведомлений пока что нет...</p>
     {% else %}
-        <p class="display-heading text-center">Последние уведомления</p>
+        <div class="article-box">
+            {% if notifications_not_read %}
+                <h2>Новые уведомления: </h2>
+                {% for item in notifications_not_read %}
+                    <div class="block-article">
+                            {{ item.add_datetime }}
+                            <a href="{% url 'auth:profile' %}">
+                                <span class="font-weight-bold">
+                                    {{item.sender }}
+                                </span>
+                            </a>
+                            {{ item.action }}
+                            <a href="{% url 'article_page' item.article_id %}">
+                                <span class="font-weight-bold">
+                                    {{ item.target }}
+                                </span>
+                            </a>
+                            {% if item.text %}
+                                <hr>
+                                {{ item.text }}
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <hr>
+            {% if notifications_read %}
+                <h2>Ранее прочитанные: </h2>
+                {% for item in notifications_read %}
+                    <div class="block-article">
+                            {{ item.add_datetime }}
+                            <a href="{% url 'auth:profile' %}">
+                                <span class="font-weight-bold">
+                                    {{item.sender }}
+                                </span>
+                            </a>
+                            {{ item.action }}
+                            {{ item.target }}
+                            {% if item.text %}
+                                <hr>
+                                {{ item.text }}
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     {% endif %}
-    <div class="article-box">
-        {% for item in notifications %}
-            <div class="block-article">
-                <p>
-                    {{ item.add_datetime }}
-                    <a href="{% url 'auth:profile' %}">
-                        <span class="font-weight-bold">
-                            {{item.sender }}
-                        </span>
-                    </a>
-                    {{ item.action }}
-                    {{ item.target }}
-                    {% if item.text %}
-                        <hr>
-                        {{ item.text }}
-                    {% endif %}
-                </p>
-            </div>
-        {% endfor %}
-    </div>
 {% endblock %}

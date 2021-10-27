@@ -5,15 +5,14 @@
 {% block content %}
 
 
-    <h1 class="display-heading text-center">Intergalactic Entertainment</h1>
-    <div class="article-box">
-        <div class="details">
-            <div class="related">
-                <div class="related-articles">
-                    {% for item in object_list %}
-                        <div class="block-article">
-                            <div class="box-top">
-                                <a href="{% url 'auth:profile' %}">
+<p class="display-heading text-center">Intergalactic Entertainment</p>
+<div class="article-box">
+    <div class="details">
+        <div class="related">
+            <div class="related-articles">
+                {% for item in object_list.comment_list %}
+                <div class="block-article">
+                    <p><a href="{% url 'auth:profile' %}">
                             <span class="font-weight-bold"><img class="mr-2"
                                                                 src="{{ item.author.avatar|media_folder_users }}"
                                                                 alt="profile_image" height="24">
