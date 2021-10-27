@@ -42,23 +42,6 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        # подсчёт рейтинга (и просмотров):
-        self.object = self.get_object()
-        self.object.views += 1
-        lks = Likes.objects.filter(article_id=int(kwargs["pk"]))
-        like_count = lks.filter(status='LK').count()
-        dislike_count = lks.filter(status='DZ').count()
-        cmnts = Comment.objects.filter(
-            article_id=int(kwargs["pk"])).filter(is_active=True)
-        comment_count = cmnts.count()
-        sub_cmnt_count = 0
-        for cmnt in cmnts:
-            sub_cmnt_count += SubComment.objects.filter(
-                comment=cmnt).filter(is_active=True).count()
-        self.object.rating = dislike_count + self.object.views * 2 + \
-                             like_count * 3 + comment_count * 4 + sub_cmnt_count * 5
-        self.object.save()
-
         return Activity.create("get", self)
 
     def post(self):

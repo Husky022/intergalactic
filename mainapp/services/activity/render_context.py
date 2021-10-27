@@ -50,6 +50,7 @@ class RenderArticle:
 
 
 class Parse:
+    """Фабрика для фильтров"""
     types = {
         'all': RenderArticle.parse_all,
         'filter': RenderArticle.parse_filter
@@ -61,12 +62,25 @@ class Parse:
 
 
 # ArticlePage View
+
+
+def artilce_views(self):
+    """Увеличение просмотров"""
+    article = Article.objects.filter(id=self.kwargs["pk"]).first()
+    article.views += 1
+    article.save()
+
+
 def fill_context(self):
     """Рендер контекста"""
     self.object = self.get_object()
     context = self.get_context_data(object=self.get_object())
+    artilce_views(self)
     context = CommentSubcomment(self.request, self.kwargs).render_context(context)
     context['likes'] = LikeDislike(self.request, self.kwargs).view_like()
+    context["rating"] = context["likes"].dislike_count + self.object.views * 2 + \
+                        context["likes"].like_count * 3 + len(context['comments']) * 4 + len(
+        SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True)) * 5
     return context
 
 

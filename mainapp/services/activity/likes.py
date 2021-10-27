@@ -1,3 +1,4 @@
+"""Модуль лайки и дизлайки"""
 from mainapp.models import Likes
 
 
@@ -40,7 +41,7 @@ class LikeDislike(object):
             self.like.status = "UND"
         else:
             self.like.status = status
-        self.like.save()
+        return self.like.save()
 
     def view_like(self):
         """Показ лайков и дизлайков на страничке"""
