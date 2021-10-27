@@ -85,6 +85,12 @@ class Article(models.Model):
         choices=ARTICLE_STATUS_CHOICES,
         default=ARTICLE_DEFAULT_STATUS
     )
+    article_status_new = models.ForeignKey(
+        ArticleStatus,
+        verbose_name='Статус публикации (новый)',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     views = models.IntegerField(default=0, verbose_name='просмотры')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
     article_status_new = models.ForeignKey(
