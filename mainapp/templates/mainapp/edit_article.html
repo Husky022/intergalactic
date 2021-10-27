@@ -3,6 +3,9 @@
 {% load project_tags %}
 {% block content %}
     <div class="article-box">
+        {% if article.article_status_new.name == 'Опубликована' %}
+            <h1>ВНИМАНИЕ! Опубликованная статья, после редактирования будет отправлена на модерацию!</h1>
+        {% endif %}
         <form class="form-horizontal" action="{% url 'edit_article' article.pk %}" method="post"
               enctype="multipart/form-data">
             {% csrf_token %}

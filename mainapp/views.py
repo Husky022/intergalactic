@@ -87,7 +87,7 @@ class ArticleChangeActiveView(View):
         target_article.is_active = False if target_article.is_active else True
 
         if target_article.article_status_new.name == 'В архиве':
-            target_article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+            target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
         else:
             target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
 
@@ -113,10 +113,28 @@ class ArticleEditView(View):
         article = Article.objects.get(pk=pk)
         article_form = ArticleCreationForm(data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
-            article_form.article_status_new = ArticleStatus.objects.get(name='На модерации')
             article_form.save()
+            if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
+                article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+                article.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
+
+
+class SendToModeration(View):
+    def post(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        article.save()
+        return HttpResponseRedirect(reverse('auth:profile'))
+
+
+class DraftArticle(View):
+    def post(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='Черновик')
+        article.save()
+        return HttpResponseRedirect(reverse('auth:profile'))
 
 
 # class Like(DetailView):

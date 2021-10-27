@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ModeratorConfig(AppConfig):
+class ModerationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'moderator'
+    name = 'moderation'

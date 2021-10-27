@@ -7,19 +7,22 @@
         <div class="flex-block-profile">
             <p class="display-heading">Личный кабинет</p>
             <p>Роль:
-            {% if user.is_superuser %}
-                Администратор
-            {% elif user.is_stuff %}
-                Модератор
-            {% else %}
-                Пользователь
-            {% endif %}
+                {% if user.is_superuser %}
+                    Администратор
+                {% elif user.is_stuff %}
+                    Модератор
+                {% else %}
+                    Пользователь
+                {% endif %}
             </p>
         </div>
         <div class="flex-block-profile">
             <a class="btn btn-primary" href="{% url 'auth:edit' %}">Редактировать профиль</a>
             {% if user.is_superuser %}
-                <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Редактировать пользователей</a>
+                <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Админка</a>
+                <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
+            {% elif user.is_stuff %}
+                <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
             {% endif %}
         </div>
         <div class="profile_info"><img class="profile_image" src="{{ user.avatar|media_folder_users }}"
@@ -69,35 +72,48 @@
 
         {% for status, arts in articles.items %}
             <p class="profile_subheading_2">{{ status.name_plural }}</p>
-
-            <table class="article-table">
-                <tbody>
-                {% for art in arts %}
-                    <tr>
-                        <td class="article-table">
-                            <table>
-                                <tr>
-                                    <td rowspan="2" class="article-name">
-                                        <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+            {% if not arts %}
+                <p>Нет статей</p>
+            {% else %}
+                <table class="article-table">
+                    <tbody>
+                    {% for art in arts %}
+                        <tr>
+                            <td class="article-table">
+                                <table>
+                                    <tr>
+                                        <td rowspan="2" class="article-name">
+                                            {% if art.article_status_new.name == 'Опубликована' %}
+                                            <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+                                                <p>{{ art.name }}</p>
+                                            </a>
+                                            {% elif art.article_status_new.name == 'На модерации' %}
+                                            <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
+                                                <p>{{ art.name }}</p>
+                                            </a>
+                                            {% else %}
                                             <p>{{ art.name }}</p>
-                                        </a>
-                                    </td>
-                                    <td class="hub-name"><p>{{ art.hub.name }}</p></td>
-                                    <td rowspan="2" class="article-edit-buttons">
-                                        {% for button in status.buttons.all %}
-                                        {% include button.include_html_file_name %}
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="hub-name"><p>{{ art.add_datetime }}</p></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                                            {% endif %}
+
+                                        </td>
+                                        <td class="hub-name"><p>{{ art.hub.name }}</p></td>
+                                        <td rowspan="2" class="article-edit-buttons">
+                                            {% for button in status.buttons.all %}
+                                                {% include button.include_html_file_name %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hub-name"><p>{{ art.add_datetime }}</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
         {% endfor %}
     </div>
     <script src="{% static 'js/profile_articles.js' %}"></script>
