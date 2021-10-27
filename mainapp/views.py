@@ -97,7 +97,7 @@ class ArticleChangeActiveView(View):
         target_article.is_active = False if target_article.is_active else True
 
         if target_article.article_status_new.name == 'В архиве':
-            target_article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+            target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
         else:
             target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
 
@@ -124,7 +124,109 @@ class ArticleEditView(View):
         article_form = ArticleCreationForm(
             data=request.POST, files=request.FILES, instance=article)
         if article_form.is_valid():
-            article_form.article_status_new = ArticleStatus.objects.get(name='На модерации')
             article_form.save()
+            if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
+                article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+                article.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
+
+
+class SendToModeration(View):
+    def post(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        article.save()
+        return HttpResponseRedirect(reverse('auth:profile'))
+
+
+class DraftArticle(View):
+    def post(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='Черновик')
+        article.save()
+        return HttpResponseRedirect(reverse('auth:profile'))
+
+
+# class Like(DetailView):
+#     template_name = 'mainapp/article_page.html'
+#     model = Likes
+#     extra_context = {
+#         'LikeForm': LikeForm,
+#     }
+#
+#     def get(self, request, *args, **kwargs):
+#         context = CommentAction.create("like_get", self)
+#         if request.is_ajax():
+#             CommentAction.create("like_ajax", self)
+#             result = render_to_string(
+#                 'mainapp/includes/inc__like.html', context)
+#             return JsonResponse({'result': result})
+#         return self.render_to_response(context)
+#
+#     def post(self, request, *args, **kwargs):
+#         CommentAction.create("like_post", self)
+#         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(kwargs["pk"]),)))
+
+# @login_required
+@csrf_exempt
+def set_like(request, article_pk):
+    like_items_article = Likes.objects.filter(article_id=article_pk)
+    user_like = like_items_article.filter(user_id=request.user.pk)
+    user_like_first = user_like.first()
+    like_count = like_items_article.filter(like_status=True).count()
+    context = {
+        'like_items_article': like_items_article,
+    }
+    if request.is_ajax():
+        if not user_like:
+            Likes.objects.create(
+                article_id=article_pk,
+                user_id=request.user.pk,
+                like_status=True
+            )
+            like_list = loader.render_to_string(
+                'mainapp/includes/inc__like.html',
+                context=context,
+                request=request,
+            )
+            like_count += 1
+            return JsonResponse({
+                'status': 'ok',
+                'like_status': True,
+                'like_list': like_list,
+                'like_count': like_count,
+            })
+
+        elif user_like.filter(like_status=False):
+
+            like_list = loader.render_to_string(
+                'mainapp/includes/inc__like.html',
+                context=context,
+                request=request,
+            )
+            user_like_first.like_status = True
+            user_like_first.save()
+            like_count += 1
+            return JsonResponse({
+                'status': 'ok',
+                'like_status': True,
+                'like_list': like_list,
+                'like_count': like_count,
+            })
+
+        else:
+            like_list = loader.render_to_string(
+                'mainapp/includes/inc__like.html',
+                context=context,
+                request=request,
+            )
+            user_like_first.like_status = False
+            user_like_first.save()
+            like_count -= 1
+            return JsonResponse({
+                'status': 'ok',
+                'like_status': False,
+                'like_list': like_list,
+                'like_count': like_count,
+            })
