@@ -47,6 +47,7 @@ class Notification(models.Model):
     action = models.TextField(verbose_name='Текст')
     text = models.TextField(verbose_name='Текст', blank=True, null=True)
     target = models.TextField(verbose_name='Цель')
+    article_id = models.PositiveIntegerField(verbose_name='ID статьи')
     add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
 
     def __str__(self):

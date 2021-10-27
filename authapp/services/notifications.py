@@ -14,12 +14,13 @@ class NewNotification:
     }
 
     @classmethod
-    def create(cls, type, recipient_user, user, message, target):
+    def create(cls, type, recipient_user, user, message, target, article_id):
         notification = Notification.objects.create(recipient=recipient_user,
                                                    sender_id=user.id,
                                                    action=cls.action[type],
                                                    text=message,
-                                                   target=target)
+                                                   target=target,
+                                                   article_id=article_id)
         notification.save()
 
 

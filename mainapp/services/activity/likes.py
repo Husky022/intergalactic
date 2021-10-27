@@ -8,7 +8,7 @@ from authapp.services.notifications import NewNotification
 def new_like(self):
     article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
     recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
-    NewNotification.create('like_article', recipient, self.request.user, None, article.name)
+    NewNotification.create('like_article', recipient, self.request.user, None, article.name, int(self.kwargs["pk"]))
     if not Likes.objects.filter(article_id=int(self.kwargs["pk"]), user_id=self.request.user.pk):
         Likes.objects.create(article_id=self.kwargs["pk"], user_id=self.request.user.pk)
 
