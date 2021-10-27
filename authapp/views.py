@@ -8,6 +8,7 @@ from django.db import transaction
 
 from mainapp.models import Article
 from mainapp.forms import ArticleCreationForm
+from mainapp.search_filter import ArticleFilter
 
 
 class LoginView(FormView):
@@ -82,9 +83,13 @@ class UserProfileView(View):
     title = 'личный кабинет'
     template_name = 'authapp/profile.html'
 
-    def get_context_data(self):
+    def get_context_data(self, request):
         articles = Article.objects.filter(author=self.request.user)
         articles_with_form = []
+
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
+
         for article in articles:
             # добавляем форму к объектам товаров, нужно для редактирования
             articles_with_form.append({
@@ -98,8 +103,10 @@ class UserProfileView(View):
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_form,
             'role': "Администратор" if self.request.user.is_superuser else "Пользователь",
+            'search_filter': search_filter,
         }
         return context
 
     def get(self, request):
-        return render(request, self.template_name, self.get_context_data())
+        return render(request, self.template_name, self.get_context_data(request))
+

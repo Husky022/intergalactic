@@ -19,9 +19,14 @@ class Main(ListView):
         queryset = queryset_activity(self)
         return queryset
 
-    # def get(self, request, *args, **kwargs):
-    #     article = Article.objects.filter(article_status='PB')
-    #     search_filter = ArticleFilter(request.GET, queryset=article)
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
+        context['search_filter'] = search_filter
+        return self.render_to_response(context)
 
 
 class Articles(ListView):
@@ -33,6 +38,15 @@ class Articles(ListView):
     def get_queryset(self):
         queryset = queryset_activity(self)
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
+        context['search_filter'] = search_filter
+        return self.render_to_response(context)
 
 
 class ArticlePage(DetailView):
