@@ -2,15 +2,17 @@ from django.template.loader import render_to_string
 from mainapp.models import Likes, Article
 
 
-class Like(object):
-    """Лайки"""
+class LikeDislike(object):
+    """Лайки и дизлайки"""
 
     def __init__(self, request, kwargs):
+        """Инициализация лайка для usera, прием реквеста и кваргс"""
         self.request = request
         self.kwargs = kwargs
         self.like = self.change_like()
 
     def change_like(self):
+        """Выбор состояние лайка по отношению зарегистрирован или нет и нахождения usera в этот момент"""
         if self.request.user.is_anonymous:
             self.like = Likes
         elif "article_page" in self.request.META["PATH_INFO"]:
@@ -24,14 +26,17 @@ class Like(object):
         return self.like
 
     def render_like_and_dislike(self):
+        """Рендер количества лайков и дизлайков"""
         like_count = self.define_count_like("LK")
         dislike_count = self.define_count_like("DZ")
         return like_count, dislike_count
 
     def define_count_like(self, status):
+        """Выбор статуса лайков и дизлайков для рендера"""
         return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=status))
 
     def status_like(self, status):
+        """Сохранение статуса лайка и дизлайка"""
         if self.like.status == status:
             self.like.status = "UND"
         else:
@@ -39,10 +44,12 @@ class Like(object):
         self.like.save()
 
     def view_like(self):
+        """Показ лайков и дизлайков на страничке"""
         self.like.like_count, self.like.dislike_count = self.render_like_and_dislike()
         return self.like
 
     def set_like(self, context):
+        """Добавление и удаление лайка и дизлайка"""
         self.status_like(self.request.GET.dict()["status"])
         self.like.like_count, self.like.dislike_count = self.render_like_and_dislike()
         context["likes"] = self.like
