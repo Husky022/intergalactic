@@ -5,8 +5,7 @@ from django.urls import reverse_lazy, reverse
 
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import Article, Comment, Likes, SubComment
-from mainapp.services.activity.parse import queryset_activity
-from mainapp.services.activity.view import Activity
+from mainapp.services.activity.render_context import Activity, RenderArticle
 
 
 class Main(ListView):
@@ -16,7 +15,7 @@ class Main(ListView):
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
-        queryset = queryset_activity(self)
+        queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 
 
@@ -28,7 +27,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = queryset_activity(self)
+        queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 
 
