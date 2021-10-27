@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authapp.urls', namespace='auth')),
     path('blog_admin/', include('adminapp.urls', namespace='adminapp')),
+    path('moderation/', include('moderation.urls', namespace='moderation')),
 ]
 
 if settings.DEBUG:

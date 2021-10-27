@@ -21,6 +21,18 @@ class Hub(models.Model):
         return f'{self.name}'
 
 
+class ButtonsInProfile(models.Model):
+    name = models.CharField(verbose_name='название кнопки', max_length=20)
+    include_html_file_name = models.CharField(verbose_name='html файл', max_length=100)
+
+
+class ArticleStatus(models.Model):
+    short_name = models.CharField(verbose_name='Краткое название', max_length=2)
+    name = models.CharField(verbose_name='Название статуса', max_length=50)
+    name_plural = models.CharField(verbose_name='Название раздела в ЛК (мн.число)', max_length=50)
+    buttons = models.ManyToManyField(ButtonsInProfile, verbose_name='Кнопки для этого статуса в ЛК')
+
+
 class Article(models.Model):
     class Meta:
         verbose_name = 'статья'
@@ -30,12 +42,13 @@ class Article(models.Model):
     ARTICLE_STATUS_CHOICES = [
         ('DR', 'Черновик'),
         ('MD', 'На модерации'),
+        ('RC', 'Требует исправления'),
         ('PB', 'Опубликована'),
         ('AR', 'В архиве'),
     ]
 
     # Пока модерация не включена в настройках - публиковать сразу все написанные статьи
-    ARTICLE_DEFAULT_STATUS = 'MD' if settings.MODERATION_STATUS else 'PB'
+    ARTICLE_DEFAULT_STATUS = 'DR' if settings.MODERATION_STATUS else 'PB'
 
     name = models.CharField(verbose_name='Название статьи', max_length=168)
     image = models.ImageField(
@@ -72,8 +85,20 @@ class Article(models.Model):
         choices=ARTICLE_STATUS_CHOICES,
         default=ARTICLE_DEFAULT_STATUS
     )
+    article_status_new = models.ForeignKey(
+        ArticleStatus,
+        verbose_name='Статус публикации (новый)',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     views = models.IntegerField(default=0, verbose_name='просмотры')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
+    article_status_new = models.ForeignKey(
+        ArticleStatus,
+        verbose_name='Статус публикации (новый)',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

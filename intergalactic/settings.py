@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mainapp',
     'authapp',
     'adminapp',
+    'moderation'
 ]
 
 MIDDLEWARE = [
@@ -165,4 +166,4 @@ SUMMERNOTE_CONFIG = {
 
 
 # Модерация
-MODERATION_STATUS = False
+MODERATION_STATUS = True
