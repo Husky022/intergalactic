@@ -1,7 +1,18 @@
 from authapp.models import Notification
 
 
+
+def notifications_read(self):
+    return Notification.objects.filter(recipient_id=self.request.user.id, is_read=1)
+
+
+def notifications_not_read_quantity(self):
+    print(Notification.objects.filter(recipient_id=self.request.user.id, is_read=0).count())
+    return Notification.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
+
+
 class NewNotification:
+
 
     action = {
         'like_article': 'лайкнул статью: ',
@@ -22,7 +33,6 @@ class NewNotification:
                                                    target=target,
                                                    article_id=article_id)
         notification.save()
-
 
 
 

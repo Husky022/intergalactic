@@ -3,15 +3,17 @@ from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 
+
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
+from authapp.services.notifications import NewNotification, notifications_not_read_quantity
 
 
 class Main(ListView):
     template_name = 'mainapp/index.html'
-    paginate_by = 5
+    # paginate_by = 5
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
@@ -23,7 +25,7 @@ class Articles(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
-    paginate_by = 5
+    # paginate_by = 5
 
     def get_queryset(self):
         queryset = queryset_activity(self)

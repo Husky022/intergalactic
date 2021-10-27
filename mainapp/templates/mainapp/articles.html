@@ -6,7 +6,7 @@
     <div class="details">
         <div class="related">
             <div class="related-articles">
-                {% for item in object_list %}
+                {% for item in object_list.comment_list %}
                 <div class="block-article">
                     <p><a href="{% url 'auth:profile' %}">
                             <span class="font-weight-bold"><img class="mr-2"

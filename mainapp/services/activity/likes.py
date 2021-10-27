@@ -6,9 +6,6 @@ from authapp.services.notifications import NewNotification
 
 
 def new_like(self):
-    article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
-    recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
-    NewNotification.create('like_article', recipient, self.request.user, None, article.name, int(self.kwargs["pk"]))
     if not Likes.objects.filter(article_id=int(self.kwargs["pk"]), user_id=self.request.user.pk):
         Likes.objects.create(article_id=self.kwargs["pk"], user_id=self.request.user.pk)
 
@@ -29,10 +26,13 @@ def define_count_like(self, status):
     return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=status))
 
 
-def status_like(like, status):
+def status_like(self, like, status):
     if like.status == status:
         like.status = "UND"
     else:
+        article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
+        recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
+        NewNotification.create('like_article', recipient, self.request.user, None, article.name, int(self.kwargs["pk"]))
         like.status = status
     like.save()
     return like
@@ -49,7 +49,7 @@ def view_like(self):
 def set_like(self, context):
     new_like(self)
     like = change_like(self)
-    like = status_like(like, self.request.GET.dict()["status"])
+    like = status_like(self, like, self.request.GET.dict()["status"])
     like.like_count = define_count_like(self, "LK")
     like.dislike_count = define_count_like(self, "DZ")
     context["likes"] = like
