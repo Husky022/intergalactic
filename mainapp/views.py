@@ -52,7 +52,7 @@ class Articles(ListView):
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
 
-    # paginate_by = 5
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = RenderArticle(self.kwargs).queryset_activity()

@@ -6,7 +6,7 @@ from authapp.models import NotificationModel
 from mainapp.services.activity.likes import LikeDislike
 from mainapp.services.activity.comment import CommentSubcomment
 
-from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits
+from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits, ArticleStatus
 
 
 # Article View
@@ -47,10 +47,10 @@ class RenderArticle:
         self.comment_list.append(item)
 
     def parse_all(self):
-        return Article.objects.filter(is_active=True)
+        return Article.objects.filter(is_active=True, article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
     def parse_filter(self):
-        return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True)
+        return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True, article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
 
 class Parse:
@@ -70,22 +70,22 @@ class Parse:
 
 def article_views(self):
     """Увеличение просмотров"""
-    article = Article.objects.filter(id=self.kwargs["pk"]).first()
-    article.views += 1
-    article.save()
-    # visitor_IP = self.request.get_host()
-    # print(f'int(kwargs["pk"] = {int(self.kwargs["pk"])}')
-    # Hosts.objects.get_or_create(host=visitor_IP)
-    # self.object = self.get_object()
-    # for v in Art_Visits.objects.filter(host=Hosts.objects.get(host=visitor_IP).pk):
-    #     if v.article_id == int(self.kwargs["pk"]):
-    #         break
-    # else:
-    #     self.object.views += 1
-    #     v = Art_Visits(article=self.object,
-    #                    host=Hosts.objects.get(host=visitor_IP))
-    #     v.save()
-    # self.object.save()
+    # article = Article.objects.filter(id=self.kwargs["pk"]).first()
+    # article.views += 1
+    # article.save()
+    visitor_IP = self.request.get_host()
+    print(f'int(kwargs["pk"] = {int(self.kwargs["pk"])}')
+    Hosts.objects.get_or_create(host=visitor_IP)
+    self.object = self.get_object()
+    for v in Art_Visits.objects.filter(host=Hosts.objects.get(host=visitor_IP).pk):
+        if v.article_id == int(self.kwargs["pk"]):
+            break
+    else:
+        self.object.views += 1
+        v = Art_Visits(article=self.object,
+                       host=Hosts.objects.get(host=visitor_IP))
+        v.save()
+    self.object.save()
 
 
 def fill_context(self):
