@@ -205,7 +205,10 @@ button::-moz-focus-inner {
     flex: none;
 }
 
-
+.text{
+    margin-left:15px;
+    font-size: 18px;
+}
 
 .content-wrapper {
     margin: 0 auto;
@@ -369,10 +372,7 @@ a.article-anchor {
 }
 
 .img-box {
-    margin-top: 2%;
-    width: 50%;
-    margin-left: 32%;
-    margin-right: 25%;
+    text-align:center
 }
 
 .main-pic {

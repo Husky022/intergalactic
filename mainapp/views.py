@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from mainapp.models import Article, ArticleStatus, Hosts, Art_Visits
+
+from authapp.models import NotificationModel
+from mainapp.models import Article, ArticleStatus
 from mainapp.services.activity.render_context import Activity, RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 
@@ -10,19 +12,23 @@ from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 class Main(ListView):
     """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
-    # paginate_by = 5
-    extra_context = {'title': 'Главная'}
+    paginate_by = 5
+    extra_context = {'title': 'Главная',
+                     'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()}
 
     def get_queryset(self):
         queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 
 
+
+
 class Articles(ListView):
     """ CBV хабов страницы """
     model = Article
     template_name = 'mainapp/articles.html'
-    extra_context = {'title': 'Статьи'}
+    extra_context = {'title': 'Статьи',
+                     'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()}
 
     # paginate_by = 5
 
@@ -42,19 +48,6 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        visitor_IP = request.get_host()
-        print(f'int(kwargs["pk"] = {int(kwargs["pk"])}')
-        Hosts.objects.get_or_create(host=visitor_IP)
-        self.object = self.get_object()
-        for v in Art_Visits.objects.filter(host=Hosts.objects.get(host=visitor_IP).pk):
-            if v.article_id == int(kwargs["pk"]):
-                break
-        else:
-            self.object.views += 1
-            v = Art_Visits(article=self.object,
-                           host=Hosts.objects.get(host=visitor_IP))
-            v.save()
-        self.object.save()
         return Activity.create("get", self)
 
     def post(self):

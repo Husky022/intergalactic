@@ -6,7 +6,7 @@ from authapp.models import NotificationModel
 from mainapp.services.activity.likes import LikeDislike
 from mainapp.services.activity.comment import CommentSubcomment
 
-from mainapp.models import Article, Comment, Likes, SubComment
+from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits
 
 
 # Article View
@@ -20,10 +20,8 @@ class RenderArticle:
 
     def queryset_activity(self):
         """Возвращает queryset """
-        object_list = {'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()}
         self.if_article()
-        object_list['comment_list'] = self.comment_list
-        return object_list
+        return self.comment_list
 
     def if_article(self):
         """Определяет фильтр по которому будет готов queryset"""
@@ -75,6 +73,19 @@ def article_views(self):
     article = Article.objects.filter(id=self.kwargs["pk"]).first()
     article.views += 1
     article.save()
+    # visitor_IP = self.request.get_host()
+    # print(f'int(kwargs["pk"] = {int(self.kwargs["pk"])}')
+    # Hosts.objects.get_or_create(host=visitor_IP)
+    # self.object = self.get_object()
+    # for v in Art_Visits.objects.filter(host=Hosts.objects.get(host=visitor_IP).pk):
+    #     if v.article_id == int(self.kwargs["pk"]):
+    #         break
+    # else:
+    #     self.object.views += 1
+    #     v = Art_Visits(article=self.object,
+    #                    host=Hosts.objects.get(host=visitor_IP))
+    #     v.save()
+    # self.object.save()
 
 
 def fill_context(self):
@@ -87,6 +98,7 @@ def fill_context(self):
     context["rating"] = context["likes"].dislike_count + self.object.views * 2 + \
                         context["likes"].like_count * 3 + len(context['comments']) * 4 + len(
         SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True)) * 5
+    context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0).count()
     return context
 
 
