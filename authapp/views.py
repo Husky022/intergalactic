@@ -99,7 +99,6 @@ class UserProfileView(View):
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
-            'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()
         }
         return context
 

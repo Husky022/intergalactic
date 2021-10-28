@@ -98,7 +98,8 @@ def fill_context(self):
     context["rating"] = context["likes"].dislike_count + self.object.views * 2 + \
                         context["likes"].like_count * 3 + len(context['comments']) * 4 + len(
         SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True)) * 5
-    context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0).count()
+    context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                         recipient=self.request.user.id).count()
     return context
 
 
