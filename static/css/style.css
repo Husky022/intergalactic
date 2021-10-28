@@ -133,6 +133,16 @@ button::-moz-focus-inner {
     border-radius: 10px;
 }
 
+.block-notification {
+    background-color: white;
+    width: 50%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+}
+
 
 .user-panel-button {
     color: gainsboro;
