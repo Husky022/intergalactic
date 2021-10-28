@@ -389,7 +389,9 @@ a.article-anchor {
 
 .btn-comments,
 .btn-likes,
+.btn-likess,
 .btn-dislikes,
+.btn-dislikess,
 .btn-comments-answer,
 .submit_comment,
 .submit_subcomment {
@@ -411,16 +413,17 @@ a.article-anchor {
     color: snow;
 }
 
-.btn-likes {
+.btn-likes, .btn-likess {
     color: green !important;
 }
 
-.btn-dislikes {
+.btn-dislikes, .btn-dislikess {
     color: red !important;
 }
 
 .btn-comments {
     color: black !important;
+    padding-top: 2px;
 }
 
 .pagination > li > a {
@@ -769,3 +772,4 @@ textarea {
     color: white;
     background-color: red;
 }
+

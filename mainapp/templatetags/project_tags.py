@@ -1,5 +1,9 @@
+import os
+
 from django import template
 from django.conf import settings
+
+from intergalactic.settings import BASE_DIR
 
 register = template.Library()
 
@@ -22,7 +26,9 @@ def media_folder_article(string):
     Автоматически добавляет относительный URL-путь к медиафайлам пользователей
     users_avatars/user1.jpg --> /media/users_avatars/user1.jpg
     """
-    if not string:
-        return ''
-
+    print(os.path.exists(f'{BASE_DIR}{settings.MEDIA_URL}{string}'))
+    if not os.path.exists(f'{BASE_DIR}{settings.MEDIA_URL}{string}'):
+        return "/media/1634279822.407121.png"
+    elif not string:
+        return "/media/1634279822.407121.png"
     return f'{settings.MEDIA_URL}{string}'
