@@ -11,6 +11,7 @@ from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
 class Main(ListView):
     """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
@@ -24,6 +25,8 @@ class Main(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
 
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -40,12 +43,10 @@ class Main(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
+        context['search_filter'] = search_filter
         return self.render_to_response(context)
 
 
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
-        context['search_filter'] = search_filter
 class Articles(ListView):
     """ CBV хабов страницы """
     model = Article
@@ -61,6 +62,8 @@ class Articles(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
 
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -77,12 +80,9 @@ class Articles(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
+        context['search_filter'] = search_filter
         return self.render_to_response(context)
 
-
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
-        context['search_filter'] = search_filter
 
 class ArticlePage(DetailView):
     """CBV одной статьи"""
