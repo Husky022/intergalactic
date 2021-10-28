@@ -54,6 +54,7 @@ class ArticlePage(DetailView):
             v = Art_Visits(article=self.object,
                            host=Hosts.objects.get(host=visitor_IP))
             v.save()
+        self.object.save()
         return Activity.create("get", self)
 
     def post(self):

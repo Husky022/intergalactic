@@ -18,12 +18,16 @@
             </p>
         </div>
         <div class="flex-block-profile">
+            <div>
             <a class="btn btn-primary" href="{% url 'auth:edit' %}">Редактировать профиль</a>
-            {% if user.is_superuser %}
+            </div>
+                {% if user.is_superuser %}
+            <div>
                 <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Админка</a>
                 <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
+            </div>
             {% elif user.is_stuff %}
-                <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
+                <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a></div>
             {% endif %}
         </div>
         <div class="profile_info">
@@ -46,7 +50,7 @@
         <p class="profile_subheading_1">Мои статьи</p>
 
         <div class="profile-article">
-            <p class="profile_subheading_2">Опубликованные</p>
+            <p class="profile_subheading_2"></p>
             <div>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
                     Создать статью
@@ -125,4 +129,3 @@
     </div>
     <script src="{% static 'js/profile_articles.js' %}"></script>
 {% endblock %}
-

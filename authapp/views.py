@@ -86,21 +86,19 @@ class UserProfileView(View):
     template_name = 'authapp/profile.html'
 
     def get_context_data(self):
-        articles = Article.objects.filter(author=self.request.user)
-        articles_with_form = []
-        for article in articles:
-            # добавляем форму к объектам товаров, нужно для редактирования
-            articles_with_form.append({
-                'article': article,
-                'form': ArticleCreationForm(instance=article)
-            })
+        statuses = ArticleStatus.objects.all()
+        articles_with_status = {}
+        for status in statuses:
+            articles_with_status[status] = Article.objects.filter(
+                author=self.request.user,
+                article_status_new=status
+            )
 
         context = {
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
-            'articles': articles_with_form,
-            'role': "Администратор" if self.request.user.is_superuser else "Пользователь",
+            'articles': articles_with_status,
         }
         return context
 
