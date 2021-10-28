@@ -124,15 +124,18 @@ def reading_notifications(func):
 class NotificationView(ListView):
     title = 'Уведомления'
     template_name = 'authapp/notifications.html'
+    ordering = ['-add_datetime']
+
 
     def get_context_data(self, **kwargs):
         notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
         notifications_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=1)
+
         context = {
             'title': self.title,
             'user': self.request.user,
-            'notifications_not_read': notifications_not_read,
-            'notifications_read': notifications_read
+            'notifications_not_read': notifications_not_read.order_by('-add_datetime'),
+            'notifications_read': notifications_read.order_by('-add_datetime')
         }
         return context
 
