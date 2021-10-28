@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mainapp',
     'authapp',
     'adminapp',
+    'moderation'
     'django_filters',
     'widget_tweaks',
 ]
@@ -167,4 +168,4 @@ SUMMERNOTE_CONFIG = {
 
 
 # Модерация
-MODERATION_STATUS = False
+MODERATION_STATUS = True

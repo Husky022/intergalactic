@@ -8,6 +8,7 @@
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
     <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=10">
@@ -18,9 +19,16 @@
             {% block menu %}
                 {% include 'mainapp/includes/inc__main_menu.html' %}
             {% endblock %}
-            {% block content %}{% endblock %}
         </header>
-        {% block footer %} {% include 'mainapp/includes/inc__footer.html' %} {% endblock %}
+
+        <section class="main-content">
+            {% block content %}{% endblock %}
+        </section>
+
+        {% block footer %}
+            {% include 'mainapp/includes/inc__footer.html' %}
+        {% endblock %}
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

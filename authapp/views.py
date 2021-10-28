@@ -1,12 +1,14 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
-from mainapp.models import Article
+from authapp.models import NotificationModel, IntergalacticUser
+from authapp.services.notifications import Notification
+from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from mainapp.search_filter import ArticleFilter
 
@@ -83,26 +85,22 @@ class UserProfileView(View):
     title = 'личный кабинет'
     template_name = 'authapp/profile.html'
 
-    def get_context_data(self, request):
-        articles = Article.objects.filter(author=self.request.user)
-        articles_with_form = []
-
+    def get_context_data(self):
+        statuses = ArticleStatus.objects.all()
+        articles_with_status = {}
+        for status in statuses:
+            articles_with_status[status] = Article.objects.filter(
+                author=self.request.user,
+                article_status_new=status
+            )
         article = Article.objects.filter(article_status='PB')
         search_filter = ArticleFilter(request.GET, queryset=article)
-
-        for article in articles:
-            # добавляем форму к объектам товаров, нужно для редактирования
-            articles_with_form.append({
-                'article': article,
-                'form': ArticleCreationForm(instance=article)
-            })
 
         context = {
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
-            'articles': articles_with_form,
-            'role': "Администратор" if self.request.user.is_superuser else "Пользователь",
+            'articles': articles_with_status,
             'search_filter': search_filter,
         }
         return context
@@ -110,3 +108,34 @@ class UserProfileView(View):
     def get(self, request):
         return render(request, self.template_name, self.get_context_data(request))
 
+
+def reading_notifications(func):
+    def wrapper(self, request, **kwargs):
+        res = func(self, request, **kwargs)
+        notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
+        for item in notifications_not_read:
+            item.is_read = 1
+            item.save()
+        return res
+
+    return wrapper
+
+
+class NotificationView(ListView):
+    title = 'Уведомления'
+    template_name = 'authapp/notifications.html'
+
+    def get_context_data(self, **kwargs):
+        notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
+        notifications_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=1)
+        context = {
+            'title': self.title,
+            'user': self.request.user,
+            'notifications_not_read': notifications_not_read,
+            'notifications_read': notifications_read
+        }
+        return context
+
+    @reading_notifications
+    def get(self, request, **kwargs):
+        return render(request, self.template_name, self.get_context_data())

@@ -3,19 +3,36 @@
 {% load project_tags %}
 {% block content %}
     <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
-    <div class="article-box">
+    <div class="article-box" style="width:60%; margin:auto; display: block !important">
+
         <div class="flex-block-profile">
             <p class="display-heading">Личный кабинет</p>
-            <p>Роль: {{ role }}</p>
+            <p>Роль:
+                {% if user.is_superuser %}
+                    Администратор
+                {% elif user.is_stuff %}
+                    Модератор
+                {% else %}
+                    Пользователь
+                {% endif %}
+            </p>
         </div>
         <div class="flex-block-profile">
+            <div>
             <a class="btn btn-primary" href="{% url 'auth:edit' %}">Редактировать профиль</a>
-            {% if user.is_superuser %}
-            <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Редактировать пользователей</a>
+            </div>
+                {% if user.is_superuser %}
+            <div>
+                <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Админка</a>
+                <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
+            </div>
+            {% elif user.is_stuff %}
+                <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a></div>
             {% endif %}
         </div>
-        <div class="profile_info"><img class="profile_image" src="{{ user.avatar|media_folder_users }}"
-                                       alt="profile_image">
+        <div class="profile_info">
+            <div><img class="profile_image" src="{{ user.avatar|media_folder_users }}"
+                      alt="profile_image"></div>
             <div class="profile_about">
                 <p>Username: {{ user.username }}</p>
                 <p>Возраст: {{ user.age }}</p>
@@ -28,12 +45,18 @@
                 </p>
             </div>
         </div>
-
+        <br>
+        <br>
         <p class="profile_subheading_1">Мои статьи</p>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
-            Создать статью
-        </button>
+        <div class="profile-article">
+            <p class="profile_subheading_2"></p>
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
+                    Создать статью
+                </button>
+            </div>
+        </div>
 
         <div class="modal fade" id="createArticle" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -58,156 +81,51 @@
             </div>
         </div>
 
-        <p class="profile_subheading_2">Опубликованные</p>
-        <table class="article-table">
-            <tbody>
-            {% for art in articles %}
-                {% if art.article.article_status == 'PB' %}
-                    <tr>
-                        <td class="article-table">
-                            <table>
-                                <tr>
-                                    <td rowspan="2" class="article-name">
-                                        <a href="{% url 'article_page' art.article.pk %}" class="article-anchor">
-                                            <p>{{ art.article.name }}</p>
-                                        </a>
-                                    </td>
-                                    <td class="hub-name"><p>{{ art.article.hub.name }}</p></td>
-                                    <td rowspan="2" class="article-edit-buttons">
-                                        <a class="btn btn-outline-secondary"
-                                           href="{% url 'edit_article' art.article.pk %}"
-                                           title="Редактировать статью">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                 fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                                                <path
-                                                        d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
-                                            </svg>
-                                        </a>
-                                        <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
-                                                data-target="#archive_{{ art.article.pk }}" title="В архив">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                                <path fill-rule="evenodd"
-                                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="hub-name"><p>{{ art.article.add_datetime }}</p></td>
-                                </tr>
-                            </table>
-                        </td>
+        {% for status, arts in articles.items %}
+            <p class="profile_subheading_2">{{ status.name_plural }}</p>
+            {% if not arts %}
+                <p>Нет статей</p>
+            {% else %}
+                <table class="article-table">
+                    <tbody>
+                    {% for art in arts %}
+                        <tr>
+                            <td class="article-table">
+                                <table>
+                                    <tr>
+                                        <td rowspan="2" class="article-name">
+                                            {% if art.article_status_new.name == 'Опубликована' %}
+                                            <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+                                                <p>{{ art.name }}</p>
+                                            </a>
+                                            {% elif art.article_status_new.name == 'На модерации' %}
+                                            <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
+                                                <p>{{ art.name }}</p>
+                                            </a>
+                                            {% else %}
+                                            <p>{{ art.name }}</p>
+                                            {% endif %}
 
-                    </tr>
-                    <div class="modal fade" id="archive_{{ art.article.pk }}" data-backdrop="static"
-                         data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Переместить статью в архив</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Вы собираетесь переместить статью в архив:</p>
-                                    <p>{{ art.article.name }}</p>
-                                    <p>После перемещения в архив, статья будет недоступна пользователям портала.</p>
-                                    <p>Вы сможете восстановить статью из архива в любой момент.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
-                                    </button>
-                                    <form class="form-horizontal" action="{% url 'change_active' art.article.pk %}"
-                                          method="post" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input class="form-control" type="submit" value="Подтвердить">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
-        <p class="profile_subheading_2">Архив</p>
-        <table class="article-table">
-            <tbody>
-            {% for art in articles %}
-                {% if art.article.article_status == 'AR' %}
-                    <tr>
-                        <td class="article-table">
-                            <table>
-                                <tr>
-                                    <td rowspan="2" class="article-name">
-                                        <p>{{ art.article.name }}</p>
-                                    </td>
-                                    <td class="hub-name"><p>{{ art.article.hub.name }}</p></td>
-                                    <td rowspan="2" class="article-edit-buttons">
-                                        <a class="btn btn-outline-secondary"
-                                           href="{% url 'edit_article' art.article.pk %}"
-                                           title="Редактировать статью">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                 fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                                                <path
-                                                        d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
-                                            </svg>
-                                        </a>
-                                        <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
-                                                data-target="#archive_{{ art.article.pk }}" title="Восстановить">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                 fill="currentColor" class="bi bi-arrow-90deg-up" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                      d="M4.854 1.146a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L4 2.707V12.5A2.5 2.5 0 0 0 6.5 15h8a.5.5 0 0 0 0-1h-8A1.5 1.5 0 0 1 5 12.5V2.707l3.146 3.147a.5.5 0 1 0 .708-.708l-4-4z"/>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="hub-name"><p>{{ art.article.add_datetime }}</p></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+                                        </td>
+                                        <td class="hub-name"><p>{{ art.hub.name }}</p></td>
+                                        <td rowspan="2" class="article-edit-buttons">
+                                            {% for button in status.buttons.all %}
+                                                {% include button.include_html_file_name %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hub-name"><p>{{ art.add_datetime }}</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
 
-                    <div class="modal fade" id="archive_{{ art.article.pk }}" data-backdrop="static"
-                         data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Восстановить статью</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Вы собираетесь восстановить статью:</p>
-                                    <p>{{ art.article.name }}</p>
-                                    <p>После восстановления, статья станет доступна пользователям портала.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
-                                    </button>
-                                    <form class="form-horizontal" action="{% url 'change_active' art.article.pk %}"
-                                          method="post" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <input class="form-control" type="submit" value="Подтвердить">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
     </div>
     <script src="{% static 'js/profile_articles.js' %}"></script>
 {% endblock %}
-

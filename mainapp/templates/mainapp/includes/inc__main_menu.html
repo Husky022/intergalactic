@@ -1,6 +1,6 @@
 {% load static %}
 <div class="sticky-top">
-    <nav class="navbar navbar-expand-lg navbar-light ">
+    <nav class="navbar navbar-expand-lg navbar-light {% if request.user.is_authenticated %}username{% endif %} ">
         <a class="navbar-brand" href="{% url 'main' %}">
             <img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
         </a>
@@ -35,12 +35,18 @@
                 <!--                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>-->
                 <!--                </svg>-->
                 <!--            </button>-->
-                <a class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
-                    {% if True %}
+                <a class="user-panel-button" title="Уведомления" href="{% url 'auth:notifications' %}">
+
+                    {% if notifications_not_read %}
                         <div class="menu-icon-box">
                             <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
                             </svg>
+                            {% if request.resolver_match.url_name == 'notifications' %}
+                            <span class="badge notification-icon">{{ notifications_not_read.count }}</span>
+                            {% else %}
+                            <span class="badge notification-icon">{{ notifications_not_read }}</span>
+                            {% endif %}
                         </div>
                     {% else %}
                         <div class="menu-icon-box">

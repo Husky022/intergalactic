@@ -1,0 +1,59 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% load project_tags %}
+{% block title %}{{ title|title }}{% endblock %}
+{% block content %}
+    {% if not notifications_not_read and not notifications_read %}
+        <h3 class="display-heading text-center">Уведомлений пока что нет...</h3>
+    {% else %}
+        <div class="article-box">
+            {% if notifications_not_read %}
+                <h3>Новые уведомления: </h3>
+                {% for item in notifications_not_read %}
+                    <div class="block-article">
+                            {{ item.add_datetime }}
+                            <a href="{% url 'auth:profile' %}">
+                                <span class="font-weight-bold">
+                                    {{item.sender }}
+                                </span>
+                            </a>
+                            {{ item.action }}
+                            <a href="{% url 'article_page' item.article_id %}">
+                                <span class="font-weight-bold">
+                                    {{ item.target }}
+                                </span>
+                            </a>
+                            {% if item.text %}
+                                <hr>
+                                {{ item.text }}
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <hr>
+            {% if notifications_read %}
+                <h3>Ранее прочитанные: </h3>
+                {% for item in notifications_read %}
+                    <div class="block-article">
+                            {{ item.add_datetime }}
+                            <a href="{% url 'auth:profile' %}">
+                                <span class="font-weight-bold">
+                                    {{item.sender }}
+                                </span>
+                            </a>
+                            {{ item.action }}
+                            <a href="{% url 'article_page' item.pk %}">
+                                <span class="font-weight-bold">
+                                    {{ item.target }}
+                                </span>
+                            </a>
+                            {% if item.text %}
+                                <hr>
+                                {{ item.text }}
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

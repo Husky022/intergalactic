@@ -1,7 +1,7 @@
 {% load static %}
 {% if page_obj.has_other_pages %}
-<nav>
-    <ul style="margin-left: 36%;" class="pagination">
+<nav class="nav-page">
+    <ul class="pagination">
         {% if page_obj.has_previous %}
         <li class="page-item ">
             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; Предыдущая</a>
