@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect
@@ -8,7 +9,7 @@ from mainapp.models import Article, Comment, Likes, SubComment
 from mainapp.services.activity.parse import queryset_activity
 from mainapp.services.activity.view import Activity
 from .search_filter import ArticleFilter
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class Main(ListView):
     template_name = 'mainapp/index.html'
@@ -133,9 +134,54 @@ class ArticleEditView(View):
         return HttpResponseRedirect(reverse(self.redirect_to))
 
 
-def search(request):
-    article = Article.objects.filter(article_status='PB')
-    search_filter = ArticleFilter(request.GET, queryset=article)
-    article = search_filter.qs
-    contex = {'page_title': 'Поиск', 'object_list': article, 'search_filter': search_filter}
-    return render(request, 'mainapp/articles.html', contex)
+# def search(request):
+#     article = Article.objects.filter(article_status='PB')
+#     search_filter = ArticleFilter(request.GET, queryset=article)
+#     article = search_filter.qs
+#     paginator = Paginator(article, 2)
+#     page = request.GET.get('page')
+#
+#     try:
+#         article = paginator.page(page)
+#     except PageNotAnInteger:
+#         article = paginator.page(1)
+#     except EmptyPage:
+#         article = paginator.page(paginator.num_pages)
+#
+#     contex = {'page_title': 'Поиск',
+#               'object_list': article,
+#               'search_filter': search_filter,
+#               'page_obj': article
+#               }
+#     return render(request, 'mainapp/articles.html', contex)
+
+class Search(ListView):
+    model = Article
+    template_name = 'mainapp/articles.html'
+    extra_context = {'title': 'Статьи'}
+    paginate_by = 5
+
+    def get(self, request, page_num=1, *args, **kwargs):
+        article = Article.objects.filter(article_status='PB')
+        search_filter = ArticleFilter(request.GET, queryset=article)
+        article = search_filter.qs
+
+        # paginator = Paginator(article, 2)
+        # page = request.GET.get('page')
+        #
+        # try:
+        #     article = paginator.page(page)
+        # except PageNotAnInteger:
+        #     article = paginator.page(1)
+        # except EmptyPage:
+        #     article = paginator.page(paginator.num_pages)
+        contex = {'page_title': 'Поиск',
+                  'object_list': article,
+                  'search_filter': search_filter,
+                  # 'page_obj': article
+                  }
+        return render(request, 'mainapp/articles.html', contex)
+
+
+
+

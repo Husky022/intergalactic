@@ -21,7 +21,6 @@ class ArticleFilter(django_filters.FilterSet):
     start_date = DateFilter(field_name='add_datetime', lookup_expr='gte', widget=DateInput())
     end_date = DateFilter(field_name='add_datetime', lookup_expr='lte', widget=DateInput())
 
-
     class Meta:
         model = Article
         fields = ['author', 'hub']

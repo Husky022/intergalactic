@@ -1,7 +1,7 @@
 from django.urls import path
 
 import mainapp.views as mainapp
-from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, search
+from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, Search
 
 urlpatterns = [
     path('', Main.as_view(), name='main'),
@@ -12,5 +12,5 @@ urlpatterns = [
     path('change_active/<int:article_pk>/', ArticleChangeActiveView.as_view(), name='change_active'),
     path('edit_article/<int:pk>/', ArticleEditView.as_view(), name='edit_article'),
 
-    path('search/', mainapp.search, name='search'),
+    path('search/', Search.as_view(), name='search'),
 ]
