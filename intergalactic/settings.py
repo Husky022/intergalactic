@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'mainapp',
     'authapp',
     'adminapp',
-    'moderation'
+    'moderation',
     'django_filters',
     'widget_tweaks',
 ]

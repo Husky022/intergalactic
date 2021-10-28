@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View, CreateView, ListView, DetailView
 from django.http import HttpResponseRedirect, Http404

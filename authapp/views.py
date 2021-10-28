@@ -85,7 +85,7 @@ class UserProfileView(View):
     title = 'личный кабинет'
     template_name = 'authapp/profile.html'
 
-    def get_context_data(self):
+    def get_context_data(self, request):
         statuses = ArticleStatus.objects.all()
         articles_with_status = {}
         for status in statuses:
