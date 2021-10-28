@@ -14,7 +14,9 @@ def media_folder_users(string):
     Автоматически добавляет относительный URL-путь к медиафайлам пользователей
     users_avatars/user1.jpg --> /media/users_avatars/user1.jpg
     """
-    if not string:
+    if not os.path.exists(f'{BASE_DIR}{settings.MEDIA_URL}{string}'):
+        return '/static/img/default_avatar.jpg'
+    elif not string:
         return '/static/img/default_avatar.jpg'
 
     return f'{settings.MEDIA_URL}{string}'
