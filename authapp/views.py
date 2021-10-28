@@ -1,16 +1,15 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
 from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
-from authapp.models import NotificationModel
-from mainapp.models import Article
-from mainapp.models import Article, ArticleStatus, ButtonsInProfile
+from authapp.models import NotificationModel, IntergalacticUser
+from authapp.services.notifications import Notification
+from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
-from functools import wraps
 
 
 class LoginView(FormView):
@@ -114,9 +113,8 @@ def reading_notifications(func):
             item.is_read = 1
             item.save()
         return res
+
     return wrapper
-
-
 
 
 class NotificationView(ListView):
@@ -137,4 +135,3 @@ class NotificationView(ListView):
     @reading_notifications
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context_data())
-

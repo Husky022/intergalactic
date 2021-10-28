@@ -13,8 +13,7 @@ class Main(ListView):
     """ CBV Главной страницы """
     template_name = 'mainapp/index.html'
     paginate_by = 5
-    extra_context = {'title': 'Главная',
-                     'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()}
+    extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
         queryset = RenderArticle(self.kwargs).queryset_activity()
@@ -46,8 +45,7 @@ class Articles(ListView):
     """ CBV хабов страницы """
     model = Article
     template_name = 'mainapp/articles.html'
-    extra_context = {'title': 'Статьи',
-                     'notifications_not_read': NotificationModel.objects.filter(is_read=0).count()}
+    extra_context = {'title': 'Статьи'}
 
     # paginate_by = 5
 
