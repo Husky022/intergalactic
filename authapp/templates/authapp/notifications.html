@@ -10,7 +10,7 @@
             {% if notifications_not_read %}
                 <h3>Новые уведомления: </h3>
                 {% for item in notifications_not_read %}
-                    <div class="block-article">
+                    <div class="block-comment">
                             {{ item.add_datetime }}
                             <a href="{% url 'auth:profile' %}">
                                 <span class="font-weight-bold">
@@ -34,7 +34,7 @@
             {% if notifications_read %}
                 <h3>Ранее прочитанные: </h3>
                 {% for item in notifications_read %}
-                    <div class="block-article">
+                    <div class="block-comment">
                             {{ item.add_datetime }}
                             <a href="{% url 'auth:profile' %}">
                                 <span class="font-weight-bold">
