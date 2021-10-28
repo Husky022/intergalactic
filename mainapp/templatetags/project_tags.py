@@ -27,7 +27,7 @@ def media_folder_article(string):
     users_avatars/user1.jpg --> /media/users_avatars/user1.jpg
     """
     if not os.path.exists(f'{BASE_DIR}{settings.MEDIA_URL}{string}'):
-        return "/media/1634279822.407121.png"
+        return "/media/1634827090.305732.png"
     elif not string:
-        return "/media/1634279822.407121.png"
+        return "/media/1634827090.305732.png"
     return f'{settings.MEDIA_URL}{string}'
