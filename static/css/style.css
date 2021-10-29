@@ -68,6 +68,23 @@
     border: none !important;
 }
 
+.search-button{
+    border-color: Gainsboro;
+    color: Gainsboro;
+}
+
+.search-button:hover{
+    border-color: maroon;
+    background-color: maroon;
+    color: Gainsboro;
+}
+
+.search-button:checked {
+    border-color: maroon;
+    background-color: maroon;
+    color: Gainsboro;
+}
+
 
 /*Обычные классы*/
 html {
@@ -176,12 +193,6 @@ button::-moz-focus-inner {
     margin-bottom: 5%;
 }
 
-.article-img {
-    margin-bottom: 10px;
-    margin-top: 10px;
-    height: 250px;
-    width: 400px;
-}
 
 .project-menu-name {
     font-size: 30px;
@@ -661,7 +672,7 @@ textarea {
 }
 
 .details {
-    width: 700px;
+    width: 40%;
 }
 
 .likes-dislikes-comments-box {
@@ -737,8 +748,14 @@ textarea {
     display: flex;
 }
 
-.moderation-details-articles {
-    max-width: 1000px;
+.details-articles {
+    background-color: white;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+
 }
 
 .first-line {
