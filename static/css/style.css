@@ -160,6 +160,29 @@ button::-moz-focus-inner {
     border-radius: 10px;
 }
 
+.block-profile{
+    position: relative;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3% 2% 2% 3%;
+
+}
+
+.img-role-redaction-block{
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.info-about-user{
+    width: 60%;
+    display: inline-block;
+    margin-left: 5%;
+    vertical-align: top;
+}
+
 
 .user-panel-button {
     color: gainsboro;
@@ -322,10 +345,21 @@ button::-moz-focus-inner {
 }
 
 .profile_image {
-    height: 200px;
-    width: 200px;
+    width: 100%;
+    height: 100%;
     float: left;
-    margin: 20px 20px 5px 0px;
+    border-radius: 10px;
+}
+
+.first-last-name{
+    color: maroon;
+    font-size: 20px;
+    margin-top: 75%;
+    font-weight: bold;
+}
+
+.profile-role-block{
+    margin-bottom: 5%;
 }
 
 .profile_article_section {
@@ -336,6 +370,25 @@ button::-moz-focus-inner {
 
 .btn-light {
     margin-top: 20px
+}
+
+.btn-profile-admin-block{
+    position: absolute;
+    right: 2%;
+}
+
+.btn-red-profile-block {
+    border: 1px solid maroon;
+    border-radius: 5px;
+    background: white;
+    padding: 5px 5px;
+    text-decoration: none;
+    color: maroon;
+}
+
+.btn-red-profile-block:hover  {
+    background: maroon;
+    color: white;
 }
 
 .article_line {
@@ -647,7 +700,7 @@ a.article-anchor {
     color: rgba(135, 135, 135, 0.68);
 }
 
-.btn-read-article {
+.btn-read-article{
     border: 1px solid maroon;
     border-radius: 5px;
     background: white;
@@ -656,7 +709,7 @@ a.article-anchor {
     color: maroon;
 }
 
-.btn-read-article:hover {
+.btn-read-article:hover{
     background: maroon;
     color: white;
 }
