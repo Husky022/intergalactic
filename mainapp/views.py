@@ -1,14 +1,18 @@
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.views.generic import View, CreateView, ListView, DetailView
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus
-from mainapp.services.activity.render_context import Activity, RenderArticle
+from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from .services.activity.comment import CommentSubcomment
+from .services.activity.likes import LikeDislike
 
 
 class Main(ListView):
@@ -94,10 +98,29 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        return Activity.create("get", self)
+        # Добавление и валидация просмотра
+        article_views(self)
+        # Набор контекста
+        context = fill_context(self)
+        # Валидация на добавление или удаление дизлайков или лайков
+        if self.request.is_ajax():
+            if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
+                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).set(context)
+            elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
+                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete(context)
+            else:
+                context = LikeDislike(self.request, self.kwargs, ).set_like(context)
+            result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
+            # Отправка аяксу результата
+            return JsonResponse({"result": result})
+        # Рендер обычного гет запроса
+        return self.render_to_response(context)
 
     def post(self):
-        return Activity.create("post", self)
+        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
+        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+        return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
+
 
 
 class ArticleCreationView(CreateView):
@@ -215,9 +238,9 @@ class Search(ListView):
         #     article = paginator.page(1)
         # except EmptyPage:
         #     article = paginator.page(paginator.num_pages)
-        contex = {'page_title': 'Поиск',
+        context = {'page_title': 'Поиск',
                   'object_list': article,
                   'search_filter': search_filter,
                   # 'page_obj': article
                   }
-        return render(request, 'mainapp/articles.html', contex)
+        return render(request, 'mainapp/articles.html', context)
