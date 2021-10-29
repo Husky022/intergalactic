@@ -28,8 +28,6 @@ class Main(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
 
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -46,7 +44,6 @@ class Main(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        context['search_filter'] = search_filter
         return self.render_to_response(context)
 
 
@@ -65,8 +62,6 @@ class Articles(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
 
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
@@ -83,7 +78,6 @@ class Articles(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        context['search_filter'] = search_filter
         return self.render_to_response(context)
 
 
@@ -212,7 +206,6 @@ class DraftArticle(View):
 #
 #     contex = {'page_title': 'Поиск',
 #               'object_list': article,
-#               'search_filter': search_filter,
 #               'page_obj': article
 #               }
 #     return render(request, 'mainapp/articles.html', contex)
