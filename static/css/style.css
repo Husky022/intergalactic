@@ -136,13 +136,18 @@ button::-moz-focus-inner {
     border: 0 !important;
 }
 
-.block-article {
+.block-article, .block-moder-article{
     background-color: white;
     margin-top: 5%;
     margin-bottom: 5%;
     padding: 2%;
     box-shadow: 0 0 3px 3px silver;
     border-radius: 5px;
+}
+
+.block-moder-article{
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .block-comment {
@@ -345,7 +350,7 @@ button::-moz-focus-inner {
 
 .profile_subheading_2 {
     font-size: 25px;
-    color: green;
+    color: #666666;
 }
 
 .profile_info {
@@ -378,6 +383,51 @@ button::-moz-focus-inner {
 .user-admin-moder-buttons{
     width: 100%;
 }
+
+.my-articles{
+    position: relative;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3% 2% 2% 3%;
+}
+.my-articles-item{
+    display: inline-block;
+    vertical-align: top;
+
+}
+
+.btn-create-article{
+    margin-left: 50%;
+    margin-right: 50%;
+    vertical-align: center;
+    width: 200%;
+    background-color: maroon;
+    border: 1px solid maroon;
+    border-radius: 5px;
+    padding: 5px 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-create-article:hover{
+    border: 1px solid brown;
+    background-color: brown;
+    border-radius: 5px;
+    padding: 5px 5px;
+    text-decoration: none;
+}
+
+/*.article-edit-buttons{*/
+/*    position: relative;*/
+/*    display: block;*/
+/*    margin: 0 auto;*/
+/*    text-align: center;*/
+/*    padding: 3% 2% 2% 3%;*/
+/*}*/
+
 
 
 .first-last-name-block{
@@ -430,8 +480,13 @@ table.article-table {
 }
 
 td.article-table {
-    border: 1px solid black;
-    border-radius: 15px;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 1% 1% 1% 1%;
 }
 
 .article-table table {
@@ -446,11 +501,26 @@ td.article-table {
 }
 
 .article-name {
-    width: 60%;
+    width: 50%;
 }
+
+/*.btn-red-article-block{*/
+/*    border: 1px solid maroon;*/
+/*    border-radius: 5px;*/
+/*    background: white;*/
+/*    padding: 5px 5px;*/
+/*    text-decoration: none;*/
+/*    color: maroon;*/
+/*}*/
+
+/*.btn-red-article-block:hover{*/
+/*    background: maroon;*/
+/*    color: white;*/
+/*}*/
 
 .hub-name {
     width: 25%;
+    color: #111111;
 }
 
 .hub-name p {
@@ -581,8 +651,9 @@ a.article-anchor {
 }
 
 .users_list {
-    margin-left: 150px;
-    margin-right: 150px;
+    width: 40%;
+    margin-left: 30%;
+    margin-right: 30%;
 }
 
 .users_list a {
@@ -605,7 +676,6 @@ a.article-anchor {
     height: 125px;
     margin: 15px auto;
     position: relative;
-    border: 1px solid #b3b3b3;
     border-radius: 25px;
     display: flex;
     flex-direction: row;

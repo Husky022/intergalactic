@@ -1,4 +1,4 @@
-{% extends 'adminapp/base.html' %}
+{% extends 'mainapp/base.html' %}
 {% load static %}
 {% load project_tags %}
 
@@ -12,7 +12,8 @@
         </div>
 
         {% for object in object_list %}
-            <div class="user_record {% if not object.is_active %}not_active{% endif %}">
+            <div class="block-article">
+                <div class="user_record {% if not object.is_active %}not_active{% endif %}">
                 <img src="{{ object.avatar|media_folder_users }}"
                      alt="{{ object.username }}">
                 <div class="user_role">
@@ -52,6 +53,7 @@
                 <div class="user_lastlogin">
                     Последний вход: {{ object.last_login }}
                 </div>
+            </div>
             </div>
         {% endfor %}
     </div>
