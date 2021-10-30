@@ -190,26 +190,6 @@ class DraftArticle(View):
         return HttpResponseRedirect(reverse('auth:profile'))
 
 
-# def search(request):
-#     article = Article.objects.filter(article_status='PB')
-#     search_filter = ArticleFilter(request.GET, queryset=article)
-#     article = search_filter.qs
-#     paginator = Paginator(article, 2)
-#     page = request.GET.get('page')
-#
-#     try:
-#         article = paginator.page(page)
-#     except PageNotAnInteger:
-#         article = paginator.page(1)
-#     except EmptyPage:
-#         article = paginator.page(paginator.num_pages)
-#
-#     contex = {'page_title': 'Поиск',
-#               'object_list': article,
-#               'page_obj': article
-#               }
-#     return render(request, 'mainapp/articles.html', contex)
-
 class Search(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
