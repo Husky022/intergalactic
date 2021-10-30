@@ -1,5 +1,6 @@
 {% extends "mainapp/base.html" %}
 {% load static %}
+{% block title %}{{ title|title }} {% endblock %}
 {% load project_tags %}
 {% block content %}
     <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
@@ -63,15 +64,21 @@
                     </div>
                 </div>
             </div>
-            <h3 class="profile_subheading_1 text-center">Мои статьи</h3>
+            <div class="my-articles">
+                <div class="my-articles-item">
+                    <h3 class="profile_subheading_1 text-center">
+                        Мои статьи
+                    </h3>
+                </div>
+                <div class="my-articles-item">
+                    <button type="button" class="btn-create-article" data-toggle="modal" data-target="#createArticle">
+                        +
+                    </button>
+                </div>
+            </div>
             <div class="block-article">
                 <div class="profile-article">
                     <p class="profile_subheading_2"></p>
-                    <div>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createArticle">
-                            Создать статью
-                        </button>
-                    </div>
                 </div>
 
                 <div class="modal fade" id="createArticle" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -79,7 +86,7 @@
                     <div class="modal-dialog modal-xl modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Заголовок модального окна</h5>
+                                <h5 class="modal-title" id="staticBackdropLabel">Новая статья</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -111,9 +118,10 @@
                                             <tr>
                                                 <td rowspan="2" class="article-name">
                                                     {% if art.article_status_new.name == 'Опубликована' %}
-                                                    <a href="{% url 'article_page' art.pk %}" class="article-anchor">
-                                                        <p>{{ art.name }}</p>
-                                                    </a>
+
+                                                        <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+                                                            <p>{{ art.name }}</p>
+                                                        </a>
                                                     {% elif art.article_status_new.name == 'На модерации' %}
                                                     <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
                                                         <p>{{ art.name }}</p>
