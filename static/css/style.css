@@ -147,7 +147,6 @@ button::-moz-focus-inner {
 
 .block-comment {
     background-color: white;
-    width: 60%;
     margin-top: 1%;
     margin-bottom: 1%;
     padding: 2%;
@@ -551,6 +550,15 @@ a.article-anchor {
     color: #666666;
 }
 
+.ajax_comment{
+    width: 100%;
+}
+
+.ajax_activity{
+    width: 100%;
+}
+
+
 /* Классы для администрования пользователей */
 
 .user_delete {
@@ -770,6 +778,7 @@ textarea {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
+    margin-bottom: 10%;
 }
 
 .box-footer {
