@@ -13,9 +13,6 @@
                             <img class="profile_image" src="{{ user.avatar|media_folder_users }}"
                                   alt="profile_image">
                         </div>
-                        <div class="first-last-name-block">
-                            <p class="first-last-name">{{ user.first_name|title }} {{ user.last_name|title }}</p>
-                        </div>
                         <div class="profile-role-block">
                             {% if user.is_superuser %}
                                 Администратор
@@ -25,26 +22,36 @@
                                 Пользователь
                             {% endif %}
                         </div>
-                        <a class="btn-red-profile-block" href="{% url 'auth:edit' %}">
-                            Редактировать профиль
-                        </a>
+                        <div class="user-admin-moder-buttons">
+                            <a class="btn-red-profile-block" href="{% url 'auth:edit' %}">
+                                Редактировать профиль
+                            </a>
+                            <div class="admin-moder-buttons">
+                                {% if user.is_superuser %}
+                                    <hr>
+                                    <div class="btn-profile-admin-block">
+                                        <a class="btn-red-profile-block" href="{% url 'adminapp:users' %}">Админка</a>
+                                        <a class="btn-red-profile-block" href="{% url 'moderation:main' %}">Модерация</a>
+                                    </div>
+                                {% elif user.is_staff %}
+                                    <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Модерация</a></div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                     <div class="info-about-user">
-                        <div class="flex-block-profile">
-                            {% if user.is_superuser %}
-                        <div class="btn-profile-admin-block">
-                            <a class="btn btn-secondary" href="{% url 'adminapp:users' %}">Админка</a>
-                            <a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a>
+                        <div class="first-last-name-block">
+                            <p class="first-last-name">{{ user.first_name|title }} {{ user.last_name|title }}</p>
+
                         </div>
-                            {% elif user.is_stuff %}
-                                <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Раздел модератора</a></div>
-                            {% endif %}
-                        </div>
+                        <hr>
                         <div class="profile_info">
                             <div class="profile_about">
-                                <p>Username: {{ user.username }}</p>
-                                <p>Возраст: {{ user.age }}</p>
-                                <p>Обо мне:
+                                <p><span class="about-user-pole">Username:</span> {{ user.username }}</p>
+                                <hr>
+                                <p><span class="about-user-pole">Возраст:</span> {{ user.age }}</p>
+                                <hr>
+                                <p><span class="about-user-pole">Обо мне:</span>
                                     {% if user.about_me %}
                                         {{ user.about_me|safe }}
                                     {% else %}

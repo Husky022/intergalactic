@@ -58,6 +58,11 @@
     border: 1px;
     border-color: white;
     float: left;
+
+}
+
+.margin1{
+    margin-right: 10%;
 }
 
 .article-img {
@@ -323,6 +328,13 @@ button::-moz-focus-inner {
     flex-direction: column;
 }
 
+.admin-moder-panel{
+    margin-right: 5%;
+    width: 5%;
+
+}
+
+
 
 /* Классы для Личного кабинета */
 
@@ -352,13 +364,31 @@ button::-moz-focus-inner {
 }
 
 .first-last-name{
+    text-align: left;
+}
+
+.profile_about{
+    text-align: left;
+}
+
+.about-user-pole{
+    color: maroon;
+    font-weight: bold;
+}
+
+.user-admin-moder-buttons{
+    width: 100%;
+}
+
+
+.first-last-name-block{
     color: maroon;
     font-size: 20px;
-    margin-top: 75%;
     font-weight: bold;
 }
 
 .profile-role-block{
+    margin-top: 70%;
     margin-bottom: 5%;
 }
 
@@ -372,12 +402,10 @@ button::-moz-focus-inner {
     margin-top: 20px
 }
 
-.btn-profile-admin-block{
-    position: absolute;
-    right: 2%;
-}
-
 .btn-red-profile-block {
+    margin-bottom: 2%;
+    display: block;
+    width: 100%;
     border: 1px solid maroon;
     border-radius: 5px;
     background: white;
@@ -388,6 +416,7 @@ button::-moz-focus-inner {
 
 .btn-red-profile-block:hover  {
     background: maroon;
+    border: 1px solid maroon;
     color: white;
 }
 
@@ -687,7 +716,14 @@ a.article-anchor {
     border-bottom: 3px solid #212121;
 }
 
+.admin-moder-buttons{
+    margin-top: 10%;
+    width: 100%;
+}
+
+
 .flex-block-profile {
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -695,6 +731,8 @@ a.article-anchor {
     align-content: center;
     align-items: baseline;
 }
+
+
 
 .like_colour {
     color: rgba(135, 135, 135, 0.68);
@@ -775,9 +813,6 @@ textarea {
     margin-right: 100px;
 }
 
-.profile_about{
-    margin-top: 20px;
-}
 
 .profile-article {
     display: flex;
