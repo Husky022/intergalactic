@@ -117,12 +117,12 @@
     <nav>
     <div>
         <ul class="menu_category nav-pills d-flex justify-content-center">
-            <li {% if request.resolver_match.url_name == "articles" %} class="active" {% endif %}>
-            <a class="nav-link black" href="{% url 'articles' %}">Все хабы</a>
+            <li {% if request.resolver_match.url_name == "hub_category_scroll" %} class="active" {% endif %}>
+            <a class="nav-link black" href="{% url 'hub_category_scroll' 0 %}">Все хабы</a>
             </li>
             {% for item in category_menu %}
-            <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category" == request.resolver_match.url_name  %} class="active" {% endif %}>
-            <a class="nav-link black" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
+            <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category_scroll" == request.resolver_match.url_name  %} class="active" {% endif %}>
+            <a class="nav-link black" href="{% url 'hub_category_scroll' item.pk %}">{{ item.name }}</a>
             </li>
             {% endfor %}
         </ul>

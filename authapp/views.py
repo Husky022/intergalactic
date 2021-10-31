@@ -10,7 +10,6 @@ from authapp.models import NotificationModel, IntergalacticUser
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
-from mainapp.search_filter import ArticleFilter
 
 
 class LoginView(FormView):
@@ -93,15 +92,12 @@ class UserProfileView(View):
                 author=self.request.user,
                 article_status_new=status
             )
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
 
         context = {
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
-            'search_filter': search_filter,
         }
         return context
 
