@@ -13,3 +13,4 @@ django-cleanup==5.2.0
 easy-thumbnails==2.7.1
 django-filter==21.1
 django-widget-tweaks==1.4.9
+django-cors-headers==3.10.0

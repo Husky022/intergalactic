@@ -3,7 +3,7 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-    <h1 class="display-heading text-center">Intergalactic Entertainment</h1>
+    <div id=num_hub style="display:none;">{{ num_hub }}</div>
     <div class=data_articles></div>
     <script src="{% static 'js/infinite_scroll.js' %}"></script>
 {% endblock %}
