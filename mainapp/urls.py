@@ -18,5 +18,8 @@ urlpatterns = [
     path('article_scroll/', ArticlesScroll.as_view(), name='article_scroll'),
     path('article_scroll/<int:pk>/', ArticlesScroll.as_view(), name='hub_category_scroll'),
 
-    path('search/', Search.as_view(), name='search'),
+    path('article_scroll/<int:pk>/', mainapp.articles_scroll, name='hub_category_scroll'),
+    path('search_scroll/', mainapp.articles_scroll, name='search_scroll'),
+
+    # path('search/', Search.as_view(), name='search'),
 ]

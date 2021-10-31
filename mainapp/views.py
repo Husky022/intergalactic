@@ -52,7 +52,8 @@ class Articles(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
-
+    context_object_name = 'articles'
+    ordering = ['add_datetime']
     paginate_by = 5
 
     def get_queryset(self):
@@ -88,6 +89,11 @@ class ArticlesScroll(Articles):
     template_name = 'mainapp/articles_scroll.html'
     context_object_name = 'articles_scroll'
     ordering = ['add_datetime']
+
+
+def articles_scroll(request, pk=0):
+    context = {'num_hub': pk}
+    return render(request, "mainapp/articles_scroll.html", context)
 
 
 class ArticlePage(DetailView):

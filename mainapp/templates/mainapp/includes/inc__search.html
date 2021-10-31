@@ -18,7 +18,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}">
+        <form class="form-inline my-2 my-lg-0" action="{% url 'search_scroll' %}">
             <div class="mb-3">
                 <label for="search_name" class="form-label">Название статьи:</label>
                 {% render_field search_filter.form.name class="form-control" id="search_name" placeholder="название статьи"%}
@@ -51,7 +51,7 @@
                 <label for="rating_end" class="form-label">По рейтингу до:</label>
                 {% render_field search_filter.form.rating_end class="form-control" id="rating_end" placeholder="рейтинг до"%}
             </div>
-            <button action="{% url 'search' %}" class="btn btn-outline-success" type="submit">Search</button>
+            <button action="{% url 'search_scroll' %}" class="btn btn-outline-success" type="submit">Найти</button>
         </form>
     </div>
 </div>
