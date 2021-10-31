@@ -2,14 +2,14 @@ let data_articles = document.querySelector(".data_articles"); // Получае�
 let numPage = 1; // Номер страницы
 let numHub = document.querySelector("#num_hub"); // Номер категории
 let bePages = true; // Есть ли ещё страницы
-let url_page = `http://localhost:8000/article_scroll/?page=`
+let url_page = window.location.origin + `/articles/?page=`
 
-if (numHub){
-    numHub = parseInt(numHub.innerText);
+numHub = numHub ? parseInt(numHub.innerText) : 0
+if (numHub !== 0) {
+    url_page = window.location.origin + `/articles/${numHub}/?page=`;
 }
-
-if (numHub){
-    url_page = `http://localhost:8000/article_scroll/${numHub}/?page=`
+else if (window.location.pathname === '/search_scroll/'){
+    url_page = window.location.origin + `/articles/${numHub}/?page=`
 }
 
 // Делаем GET запрос

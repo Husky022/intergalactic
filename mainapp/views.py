@@ -79,16 +79,7 @@ class Articles(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        context['search_filter'] = search_filter
-        context['num_hub'] = self.kwargs.get('pk', 0)
         return self.render_to_response(context)
-
-
-class ArticlesScroll(Articles):
-    """ CBV хабов страницы """
-    template_name = 'mainapp/articles_scroll.html'
-    context_object_name = 'articles_scroll'
-    ordering = ['add_datetime']
 
 
 def articles_scroll(request, pk=0):
@@ -209,7 +200,6 @@ class Search(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Поиск'}
-    paginate_by = 5
 
     def get(self, request, page_num=1, *args, **kwargs):
         article = Article.objects.filter(article_status='PB')

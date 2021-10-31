@@ -2,7 +2,7 @@ from django.urls import path
 
 import mainapp.views as mainapp
 from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, \
-    SendToModeration, DraftArticle, ArticlesScroll
+    SendToModeration, DraftArticle
 from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, Search
 
 urlpatterns = [
@@ -15,11 +15,8 @@ urlpatterns = [
     path('edit_article/<int:pk>/', ArticleEditView.as_view(), name='edit_article'),
     path('send_to_moderation/<int:pk>/', SendToModeration.as_view(), name='send_to_moderation'),
     path('draft_article/<int:pk>/', DraftArticle.as_view(), name='draft_article'),
-    path('article_scroll/', ArticlesScroll.as_view(), name='article_scroll'),
-    path('article_scroll/<int:pk>/', ArticlesScroll.as_view(), name='hub_category_scroll'),
 
     path('article_scroll/<int:pk>/', mainapp.articles_scroll, name='hub_category_scroll'),
-    path('search_scroll/', mainapp.articles_scroll, name='search_scroll'),
 
-    # path('search/', Search.as_view(), name='search'),
+    path('search/', Search.as_view(), name='search'),
 ]
