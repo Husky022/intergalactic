@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
 from mainapp.models import Article, ArticleStatus
-from moderation.models import ArticleMessage
+from moderation.models import ArticleMessage, Complaint
 
 
 class ModerationMixin(View):
@@ -18,7 +18,8 @@ class ModerationMixin(View):
     @method_decorator(user_passes_test(lambda u: u.is_superuser or u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() in self.http_method_names:
-            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+            handler = getattr(self, request.method.lower(),
+                              self.http_method_not_allowed)
         else:
             handler = self.http_method_not_allowed
         return handler(request, *args, **kwargs)
@@ -31,7 +32,8 @@ class Moderator(ModerationMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='На модерации'))
+        queryset = Article.objects.filter(
+            article_status_new=ArticleStatus.objects.get(name='На модерации'))
         return queryset
 
 
@@ -77,7 +79,8 @@ class RegisterNewMessage(View):
 class ApproveArticle(ModerationMixin):
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='Опубликована')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='Опубликована')
         article.save()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
@@ -85,6 +88,18 @@ class ApproveArticle(ModerationMixin):
 class RejectArticle(ModerationMixin):
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='Требует исправления')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='Требует исправления')
         article.save()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+
+
+class ModerateComplaints(ModerationMixin, ListView):
+    model = Complaint
+    template_name = 'moderation/moderate_complaints.html'
+    extra_context = {'title': 'Модератор'}
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = Complaint.objects.filter(is_active=True)
+        return queryset

@@ -14,43 +14,19 @@
             </script>
 
         <ul class="nav nav-pills mb-3">
-            <li class="nav-item"><a href="{% url 'moderation:main' %}" class="btn btn-primary btn-lg disabled"
+            <li class="nav-item"><a href="{% url 'moderation:main' %}" class="btn btn-primary btn-lg active"
                     role="button" aria-disabled="true">Статьи на
                     проверку</a></li>
-            <li class="nav-item"></li><a href="{% url 'moderation:complaints' %}" class="btn btn-primary btn-lg active"
-                role="button" aria-pressed="true">Жалобы
+            <li class="nav-item"></li><a href="{% url 'moderation:complaints' %}"
+                class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">Жалобы
                 пользователей</a></li>
         </ul>
-        <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-secondary active">
-                <input type="checkbox" checked autocomplete="off"> Статьи на проверку
-            </label>
-            <label class="btn btn-secondary">
-                <input type="checkbox" autocomplete="off"> Жалобы пользователей
-            </label>
-        </div> -->
-
-        <!-- <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
-                    aria-controls="pills-home" aria-selected="true">
-                    Статьи на проверку
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
-                    type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                    Жалобы пользователей
-                </button>
-                <!-- <p class="profile_subheading_2">Статьи на проверку: </p> -->
-        <!-- </li>
-        </ul> -->
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"
                 style="background: none !important;">
-                <table>
+                <!-- <table>
                     <tbody>
-                        {% for article in object_list %}
+                        {% for complaint in object_list %}
                         <tr>
                             <td>
                                 <div class="block-moder-article">
@@ -79,7 +55,7 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
+                </table> -->
             </div>
             <!-- {# <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">...
             </div>#}
