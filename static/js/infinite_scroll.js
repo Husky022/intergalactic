@@ -8,9 +8,6 @@ numHub = numHub ? parseInt(numHub.innerText) : 0
 if (numHub !== 0) {
     url_page = window.location.origin + `/articles/${numHub}/?page=`;
 }
-else if (window.location.pathname === '/search_scroll/'){
-    url_page = window.location.origin + `/articles/${numHub}/?page=`
-}
 
 // Делаем GET запрос
 fetch(url_page + numPage)
