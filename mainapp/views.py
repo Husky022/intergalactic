@@ -78,7 +78,16 @@ class Articles(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
+        context['search_filter'] = search_filter
+        context['num_hub'] = self.kwargs.get('pk', 0)
         return self.render_to_response(context)
+
+
+class ArticlesScroll(Articles):
+    """ CBV хабов страницы """
+    template_name = 'mainapp/articles_scroll.html'
+    context_object_name = 'articles_scroll'
+    ordering = ['add_datetime']
 
 
 class ArticlePage(DetailView):
