@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from authapp.models import IntergalacticUser
 
+from userprofile.models import ButtonsInProfile
 from .utilities import get_timestamp_path
 
 
@@ -21,16 +22,15 @@ class Hub(models.Model):
         return f'{self.name}'
 
 
-class ButtonsInProfile(models.Model):
-    name = models.CharField(verbose_name='название кнопки', max_length=20)
-    include_html_file_name = models.CharField(verbose_name='html файл', max_length=100)
-
-
 class ArticleStatus(models.Model):
     short_name = models.CharField(verbose_name='Краткое название', max_length=2)
     name = models.CharField(verbose_name='Название статуса', max_length=50)
     name_plural = models.CharField(verbose_name='Название раздела в ЛК (мн.число)', max_length=50)
-    buttons = models.ManyToManyField(ButtonsInProfile, verbose_name='Кнопки для этого статуса в ЛК')
+    buttons = models.ManyToManyField(
+        ButtonsInProfile,
+        verbose_name='Кнопки для этого статуса в ЛК',
+        related_name='кнопки'
+    )
 
 
 class Article(models.Model):
@@ -79,12 +79,6 @@ class Article(models.Model):
         verbose_name='Время добавления',
         auto_now_add=True
     )
-    article_status = models.CharField(
-        verbose_name='Статус публикации',
-        max_length=2,
-        choices=ARTICLE_STATUS_CHOICES,
-        default=ARTICLE_DEFAULT_STATUS
-    )
     article_status_new = models.ForeignKey(
         ArticleStatus,
         verbose_name='Статус публикации (новый)',
@@ -93,12 +87,6 @@ class Article(models.Model):
     )
     views = models.IntegerField(default=0, verbose_name='просмотры')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
-    article_status_new = models.ForeignKey(
-        ArticleStatus,
-        verbose_name='Статус публикации (новый)',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
