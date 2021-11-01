@@ -1,5 +1,5 @@
 from authapp.models import NotificationModel, IntergalacticUser
-from mainapp.models import Comment, Article, SubComment
+from mainapp.models import Comment, Article, SubComment, Likes
 
 
 def notifications_read(self):
@@ -36,6 +36,7 @@ class Notification:
         self.article_id = self.get_article_id()
         self.comment_id = self.get_comment_id()
         self.subcomment_id = self.get_subcomment_id()
+        self.like_id = self.get_like_id()
 
 
     def get_sender_id(self):
@@ -43,6 +44,8 @@ class Notification:
             return self.object.author_id
         if  isinstance(self.object, SubComment):
             return self.object.author_id
+        if  isinstance(self.object, Likes):
+            return self.object.user_id
         else:
             return None
 
@@ -53,6 +56,13 @@ class Notification:
         if isinstance(self.object, SubComment):
             action = 'ответил на комментарий: '
             return action
+        if  isinstance(self.object, Likes):
+            if self.object.status == "LK":
+                action = 'поставил лайк статье: '
+                return action
+            elif self.object.status == "DZ":
+                action = 'поставил дизлайк статье: '
+                return action
         else:
             return None
 
@@ -73,6 +83,10 @@ class Notification:
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             target = comment.text
             return target
+        if  isinstance(self.object, Likes):
+            article = Article.objects.filter(id=self.object.article_id).first()
+            target = article.name
+            return target
         else:
             return None
 
@@ -80,6 +94,8 @@ class Notification:
         if isinstance(self.object, Comment):
             return self.object.article_id
         if isinstance(self.object, SubComment):
+            return self.object.article_id
+        if isinstance(self.object, Likes):
             return self.object.article_id
         else:
             return None
@@ -110,6 +126,18 @@ class Notification:
             recepient_id = comment.author_id
             recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
             return recipient
+        if  isinstance(self.object, Likes):
+            article = Article.objects.filter(id=self.object.article_id).first()
+            recepient_id = article.author_id
+            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            return recipient
+
+    def get_like_id(self):
+        if isinstance(self.object, Likes):
+            return self.object.id
+        else:
+            return None
+
 
     def send(self):
         notification = NotificationModel.objects.create(recipient=self.recepient,
@@ -119,7 +147,8 @@ class Notification:
                                                         target=self.target,
                                                         article_id=self.article_id,
                                                         comment_id=self.comment_id,
-                                                        subcomment_id=self.subcomment_id)
+                                                        subcomment_id=self.subcomment_id,
+                                                        like_id=self.like_id)
         notification.save()
 
 

@@ -50,6 +50,7 @@ class NotificationModel(models.Model):
     article_id = models.PositiveIntegerField(verbose_name='ID статьи')
     comment_id = models.PositiveIntegerField(verbose_name='ID комментария', null=True)
     subcomment_id = models.PositiveIntegerField(verbose_name='ID подкомментария', null=True)
+    like_id = models.PositiveIntegerField(verbose_name='ID лайка', null=True)
     add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
 
 
