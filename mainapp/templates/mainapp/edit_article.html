@@ -6,7 +6,7 @@
         {% if article.article_status_new.name == 'Опубликована' %}
             <h1>ВНИМАНИЕ! Опубликованная статья, после редактирования будет отправлена на модерацию!</h1>
         {% endif %}
-        <form class="form-horizontal" action="{% url 'edit_article' article.pk %}" method="post"
+        <form class="form-horizontal" action="{% url 'profile:edit_article' article.pk %}" method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_table }}
@@ -14,6 +14,6 @@
             <input class="form-control btn btn-success btn-lg btn-block" type="submit" value="Сохранить">
         </form>
         <br>
-        <a class="btn btn-secondary btn-lg btn-block" type="button" href="{% url 'auth:profile' %}">Не сохранять</a>
+        <a class="btn btn-secondary btn-lg btn-block" type="button" href="{% url 'profile:main' %}">Не сохранять</a>
     </div>
 {% endblock %}

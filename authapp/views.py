@@ -56,7 +56,7 @@ class RegisterView(FormView):
 class UserEditView(View):
     title = 'редактирование'
     template_name = 'authapp/edit.html'
-    redirect_to = 'auth:profile'
+    redirect_to = 'profile:main'
     account_form = IntergalacticUserEditForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -78,31 +78,6 @@ class UserEditView(View):
 
     def get(self, request):
         return render(request, self.template_name, self.get_context_data())
-
-
-class UserProfileView(View):
-    title = 'личный кабинет'
-    template_name = 'authapp/profile.html'
-
-    def get_context_data(self, request):
-        statuses = ArticleStatus.objects.all()
-        articles_with_status = {}
-        for status in statuses:
-            articles_with_status[status] = Article.objects.filter(
-                author=self.request.user,
-                article_status_new=status
-            )
-
-        context = {
-            'title': self.title,
-            'user': self.request.user,
-            'creation_form': ArticleCreationForm(),
-            'articles': articles_with_status,
-        }
-        return context
-
-    def get(self, request):
-        return render(request, self.template_name, self.get_context_data(request))
 
 
 def reading_notifications(func):
