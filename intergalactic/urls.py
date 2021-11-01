@@ -20,10 +20,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
-
     path('', include('mainapp.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('authapp.urls', namespace='auth')),
+    path('profile/', include('userprofile.urls', namespace='profile')),
     path('blog_admin/', include('adminapp.urls', namespace='adminapp')),
     path('moderation/', include('moderation.urls', namespace='moderation')),
 ]
