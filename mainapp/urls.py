@@ -16,7 +16,5 @@ urlpatterns = [
     path('send_to_moderation/<int:pk>/', SendToModeration.as_view(), name='send_to_moderation'),
     path('draft_article/<int:pk>/', DraftArticle.as_view(), name='draft_article'),
 
-    path('article_scroll/<int:pk>/', mainapp.articles_scroll, name='hub_category_scroll'),
-
     path('search/', Search.as_view(), name='search'),
 ]

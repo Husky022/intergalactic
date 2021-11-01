@@ -1,8 +1,7 @@
-{% block stylesheets %}
-    {% include 'mainapp/includes/inc_stylesheets.html' %}
-{% endblock stylesheets %}
-
+{% extends "mainapp/base.html" %}
+{% load static %}
 {% load project_tags %}
+{% block title %}{{ title|title }}{% endblock %}
 {% block content %}
     <div class="article-box">
         <div class="details">
@@ -102,4 +101,6 @@
             </div>
         </div>
     </div>
+    <div class=data_articles></div>
+    <script src="{% static 'js/infinite_scroll.js' %}"></script>
 {% endblock %}
