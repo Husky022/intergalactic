@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'mainapp',
     'authapp',
+    'userprofile',
     'adminapp',
     'moderation',
     'django_filters',
