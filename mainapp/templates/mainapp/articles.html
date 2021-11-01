@@ -3,13 +3,14 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-<div class="article-box">
-    <div class="details">
-        <div class="related">
-            <div class="related-articles">
-                {% for item in object_list %}
-                <div class="block-article">
-                    <p><a href="{% url 'profile:user' item.author.pk %}">
+    <div class="article-box">
+        <div class="details">
+            <div class="related">
+                {% if object_list %}
+                    <div class="related-articles">
+                        {% for item in object_list %}
+                            <div class="block-article">
+                                <p><a href="{% url 'profile:user' item.author.pk %}">
                             <span class="font-weight-bold"><img class="mr-2"
                                                                 src="{{ item.author.avatar|media_folder_users }}"
                                                                 alt="profile_image" height="24">

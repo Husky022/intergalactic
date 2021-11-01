@@ -3,7 +3,6 @@ from django.views.generic import View, CreateView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
-from authapp.models import IntergalacticUser
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 
@@ -105,20 +104,3 @@ class DraftArticle(View):
         article.article_status_new = ArticleStatus.objects.get(name='Черновик')
         article.save()
         return HttpResponseRedirect(reverse('profile:main'))
-
-
-class OtherUserProfile(View):
-    template_name = 'userprofile/other_user.html'
-    
-    def get(self, request, pk):
-        if request.user == IntergalacticUser.objects.get(pk=pk):
-            return HttpResponseRedirect(reverse('profile:main'))
-
-        context = {
-            'target_user': get_object_or_404(IntergalacticUser, pk=pk),
-            'articles': Article.objects.filter(
-                author=IntergalacticUser.objects.get(pk=pk),
-                article_status_new=ArticleStatus.objects.get(name='Опубликована')
-            )
-        }
-        return render(request, self.template_name, context)
