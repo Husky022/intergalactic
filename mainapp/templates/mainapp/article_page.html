@@ -3,34 +3,40 @@
 {% load static %}
 {% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}
 {% block content %}
-    <div class="article-box">
-        <div class="details">
-            <div class="details-articles">
-                <p> <a href="{% url 'auth:profile' %}">
+<div class="article-box">
+    <div class="details">
+        <div class="details-articles">
+            <p><a href="{% url 'auth:profile' %}">
                             <span class="font-weight-bold"><img class="mr-2"
-                                    src="{{article.author.avatar|media_folder_users }}" alt="profile_image" height="24">
+                                                                src="{{article.author.avatar|media_folder_users }}"
+                                                                alt="profile_image" height="24">
                                 {{article.author }}
                             </span></a>
-                        <span class="font-weight-light">
+                <span class="font-weight-light">
                             {{ article.add_datetime }}
                         </span>
-                </p>
-                <h4 class="text-center">{{ article.name }}</h4>
-                <div class="img-box">
-                    <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
-                </div>
-                <div class="text">
-                    <p>{{ article.add_datatime }}</p>
-                    {{ article.text|safe|linebreaks }}
-                    <hr>
-                    <p>#{{ article.tag }}</p>
-                    <p>{{ article.hub }}</p>
-                </div>
+            </p>
+            <h4 class="text-center">{{ article.name }}</h4>
+            <div class="img-box">
+                <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
             </div>
-            <div class="likes-dislikes-comments-box">
-                {% include 'mainapp/includes/inc__activity.html' %}
+            <div class="text">
+                <audio controls preload="auto">
+                    <source src="{{ audio.audio_file.url }}" type="audio/mp3">
+                </audio>
+            </div>
+            <div id="text" class="text">
+                <p>{{ article.add_datatime }}</p>
+                {{ article.text|safe|linebreaks }}
+                <hr>
+                <p>#{{ article.tag }}</p>
+                <p>{{ article.hub }}</p>
             </div>
         </div>
+        <div class="likes-dislikes-comments-box">
+            {% include 'mainapp/includes/inc__activity.html' %}
+        </div>
     </div>
+</div>
 {% endblock %}
 

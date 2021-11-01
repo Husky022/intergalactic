@@ -1,15 +1,13 @@
-from django.http import JsonResponse, HttpResponseRedirect
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy
 
 from authapp.models import NotificationModel
 from mainapp.services.activity.likes import LikeDislike
 from mainapp.services.activity.comment import CommentSubcomment
 
-from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits, ArticleStatus
+from mainapp.models import Article, Comment, Likes, SubComment, Hosts, Art_Visits, ArticleStatus, VoiceArticle
 
 
 # Article View
+
 class RenderArticle:
     """Рендер контекста Article и Activity в множественном количестве"""
 
@@ -50,7 +48,8 @@ class RenderArticle:
         return Article.objects.filter(is_active=True, article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
     def parse_filter(self):
-        return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True, article_status_new=ArticleStatus.objects.get(name="Опубликована"))
+        return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True,
+                                      article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
 
 class Parse:
@@ -100,4 +99,6 @@ def fill_context(self):
         SubComment.objects.filter(article_id=self.kwargs["pk"], is_active=True)) * 5
     context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                          recipient=self.request.user.id).count()
+    article = Article.objects.filter(id=self.kwargs["pk"]).first()
+    context['audio'] = VoiceArticle.objects.filter(article=article).first()
     return context

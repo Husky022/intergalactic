@@ -5,14 +5,14 @@ from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
-from mainapp.models import Article, ArticleStatus
+from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .services.activity.comment import CommentSubcomment
 from .services.activity.likes import LikeDislike
+from .services.audio import play_text
 
 
 class Main(ListView):
@@ -184,6 +184,8 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        unique_file = play_text(article)
+        VoiceArticle.objects.create(audio_file=f"audio/{unique_file}", article=article)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
 
