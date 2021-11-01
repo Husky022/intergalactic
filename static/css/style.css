@@ -851,6 +851,14 @@ textarea {
     margin-bottom: 10%;
 }
 
+.likes-dislikes-comments-box-article {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+
+
 .box-footer {
     display: flex;
     flex-direction: row;
