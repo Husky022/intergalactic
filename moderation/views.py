@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
+from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from moderation.models import ArticleMessage
 
@@ -65,7 +66,8 @@ class RegisterNewMessage(View):
                 text=ajax.get('text')
             )
             message.save()
-            print(type(message.datetime))
+            notification = Notification(message)
+            notification.send()
             result = {
                 'author': message.message_from.username,
                 'datetime': message.datetime.strftime('%d-%m-%Y %H:%M'),
@@ -79,6 +81,8 @@ class ApproveArticle(ModerationMixin):
         article = get_object_or_404(Article, pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='Опубликована')
         article.save()
+        notification = Notification(article, context='published')
+        notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
@@ -87,4 +91,6 @@ class RejectArticle(ModerationMixin):
         article = get_object_or_404(Article, pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='Требует исправления')
         article.save()
+        notification = Notification(article, context='rejected')
+        notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))

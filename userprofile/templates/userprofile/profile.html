@@ -41,6 +41,12 @@
                         </div>
                     </div>
                     <div class="info-about-user">
+                        <form action="" method="post">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="1">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Получать уведомления на {{ user.email  }}</label>
+                            </div>
+                        </form>
                         <div class="first-last-name-block">
                             <p class="first-last-name">{{ user.first_name|title }} {{ user.last_name|title }}</p>
 
@@ -59,6 +65,7 @@
                                         Тут могла бы быть информация о вас, но вы не заполнили профиль =(
                                     {% endif %}
                                 </p>
+
                             </div>
                         </div>
                     </div>

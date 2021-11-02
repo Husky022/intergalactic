@@ -1,5 +1,6 @@
 from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Comment, Article, SubComment, Likes
+from moderation.models import ArticleMessage
 
 
 def notifications_read(self):
@@ -10,21 +11,12 @@ def notifications_not_read_quantity(self):
     print(NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count())
     return NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
 
-action = {
-    'like_article': 'лайкнул статью: ',
-    'dislike_article': 'лайкнул комментарий: ',
-    'like_comment': 'дизлайкнул статью: ',
-    'dislike_comment': 'дизлайкнул комментарий: ',
-    'comment': 'оставил комментарий к статье: ',
-    'subcomment': 'ответил на комментарий: ',
-    'message': 'прислал сообщение: '
-}
-
 
 class Notification:
 
-    def __init__(self, target_object, target_recepient=None):
+    def __init__(self, target_object, target_recepient=None, context=None):
         self.object = target_object
+        self.context = context
         if target_recepient:
             self.recepient = target_recepient
         else:
@@ -46,23 +38,37 @@ class Notification:
             return self.object.author_id
         if  isinstance(self.object, Likes):
             return self.object.user_id
+        if  isinstance(self.object, Article):
+            return None
+        if  isinstance(self.object, ArticleMessage):
+            return self.object.message_from.id
         else:
             return None
 
     def get_action(self):
         if isinstance(self.object, Comment):
-            action = 'оставил комментарий к статье: '
+            action = 'оставил комментарий к статье '
             return action
         if isinstance(self.object, SubComment):
-            action = 'ответил на комментарий: '
+            action = 'ответил на комментарий '
             return action
         if  isinstance(self.object, Likes):
             if self.object.status == "LK":
-                action = 'поставил лайк статье: '
+                action = 'поставил лайк статье '
                 return action
             elif self.object.status == "DZ":
-                action = 'поставил дизлайк статье: '
+                action = 'поставил дизлайк статье '
                 return action
+        if  isinstance(self.object, Article):
+            if self.context == 'published':
+                action = 'после рассмотрения опубликована Ваша статья '
+                return action
+            elif self.context == 'rejected':
+                action = 'для публикации требуется иправить(доработать) статью '
+                return action
+        if  isinstance(self.object, ArticleMessage):
+            action = 'оставил сообщение при модерации статьи '
+            return action
         else:
             return None
 
@@ -70,6 +76,10 @@ class Notification:
         if isinstance(self.object, Comment):
             return self.object.text
         if isinstance(self.object, SubComment):
+            return self.object.text
+        if  isinstance(self.object, Article):
+            return None
+        if  isinstance(self.object, ArticleMessage):
             return self.object.text
         else:
             return None
@@ -87,6 +97,10 @@ class Notification:
             article = Article.objects.filter(id=self.object.article_id).first()
             target = article.name
             return target
+        if  isinstance(self.object, Article):
+            return self.object.name
+        if  isinstance(self.object, ArticleMessage):
+            return self.object.article.name
         else:
             return None
 
@@ -97,23 +111,12 @@ class Notification:
             return self.object.article_id
         if isinstance(self.object, Likes):
             return self.object.article_id
-        else:
-            return None
-
-    def get_comment_id(self):
-        if isinstance(self.object, Comment):
+        if  isinstance(self.object, Article):
             return self.object.id
+        if  isinstance(self.object, ArticleMessage):
+            return self.object.article.id
         else:
             return None
-
-    def get_subcomment_id(self):
-        if isinstance(self.object, SubComment):
-            return self.object.id
-        else:
-            return None
-
-    def get_type_object(self):
-        pass
 
     def get_recepient(self):
         if  isinstance(self.object, Comment):
@@ -131,12 +134,36 @@ class Notification:
             recepient_id = article.author_id
             recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
             return recipient
+        if  isinstance(self.object, Article):
+            recepient_id = self.object.author_id
+            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            return recipient
+        if  isinstance(self.object, ArticleMessage):
+            recepient_id = self.object.article.author_id
+            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            return recipient
+
+    def get_comment_id(self):
+        if isinstance(self.object, Comment):
+            return self.object.id
+        else:
+            return None
+
+    def get_subcomment_id(self):
+        if isinstance(self.object, SubComment):
+            return self.object.id
+        else:
+            return None
 
     def get_like_id(self):
         if isinstance(self.object, Likes):
             return self.object.id
         else:
             return None
+
+    def get_type_object(self):
+        pass
+
 
 
     def send(self):

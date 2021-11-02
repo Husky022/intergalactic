@@ -857,6 +857,24 @@ textarea {
     align-items: flex-end;
 }
 
+.form-check-input{
+    cursor: pointer;
+}
+
+.form-check-input:focus{
+    box-shadow: none;
+    border-color: lightgray;
+    background-color: white;
+    color: lightgray;
+
+}
+
+
+.form-check-input:checked{
+    background-color: maroon;
+    border-color: maroon;
+    box-shadow: none;
+}
 
 
 .box-footer {
