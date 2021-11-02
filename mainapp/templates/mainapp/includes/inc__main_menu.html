@@ -117,7 +117,7 @@
     <nav>
     <div>
         <ul class="menu_category nav-pills d-flex justify-content-center">
-            <li {% if request.resolver_match.url_name == "hub_category" %} class="active" {% endif %}>
+            <li {% if request.resolver_match.url_name == "hub_category" and not request.resolver_match.kwargs.pk %} class="active" {% endif %}>
             <a class="nav-link black" href="{% url 'hub_category' 0 %}">Все хабы</a>
             </li>
             {% for item in category_menu %}

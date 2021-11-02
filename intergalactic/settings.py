@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     'widget_tweaks',
     'corsheaders',
+    'background_task',
 ]
 
 MIDDLEWARE = [
