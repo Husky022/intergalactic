@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Comment, Article, SubComment, Likes
 from moderation.models import ArticleMessage
@@ -202,37 +204,6 @@ class Notification:
                                                         subcomment_id=self.subcomment_id,
                                                         like_id=self.like_id)
         notification.save()
+        send_mail('Тема', 'Тело письма', settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
 
 
-    # @classmethod
-    # def create_notification(cls, type, recipient_user, user, message, target, article_id, comment_id, subcomment_id):
-    # # def create(cls, target_object):
-    #     notification = NotificationModel.objects.create(recipient=recipient_user,
-    #                                                     sender_id=user.id,
-    #                                                     action=cls.action[type],
-    #                                                     text=message,
-    #                                                     target=target,
-    #                                                     article_id=article_id,
-    #                                                     comment_id=comment_id,
-    #                                                     subcomment_id=subcomment_id)
-    #     notification.save()
-
-
-    # @classmethod
-    # def delete(cls, comment_id):
-    #     notification = NotificationModel.objects.filter(comment_id=comment_id)
-    #     notification.delete()
-
-
-# class Notification:
-#     """Фабрика для фильтров"""
-#     types = {
-#         'add_comment': TypeNotifications.parse_all,
-#         # 'add_subcomment': RenderArticle.parse_filter,
-#         # 'add_like': RenderArticle.parse_filter,
-#         # 'add_dislike': RenderArticle.parse_filter,
-#     }
-#
-#     @classmethod
-#     def create(cls, type_, *args):
-#         return cls.types[type_](*args)

@@ -168,6 +168,16 @@ SUMMERNOTE_CONFIG = {
     'attachment_filesize_limit': 20000000
 }
 
+# отправление уведомлений на почту
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "test-intergalactic@mail.ru"
+EMAIL_HOST_PASSWORD = "jthgp5GC2L4Bx99WDJdx"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Модерация
 MODERATION_STATUS = True

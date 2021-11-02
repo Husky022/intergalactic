@@ -29,6 +29,11 @@ class UserProfileView(View):
         }
         return context
 
+    def post(self, request):
+        print('1')
+        values = request.POST.getlist('chk')
+        print(values)
+
     def get(self, request):
         return render(request, self.template_name, self.get_context_data(request))
 

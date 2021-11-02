@@ -31,6 +31,10 @@ class IntergalacticUser(AbstractUser):
         default=True,
         verbose_name='Оповещать о новых комментариях'
     )
+    send_to_email = models.BooleanField(
+        default=True,
+        verbose_name='Уведомления на почту'
+    )
     about_me = models.TextField(verbose_name='О себе', blank=True, null=True)
 
     def __str__(self):
