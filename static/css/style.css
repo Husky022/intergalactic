@@ -546,7 +546,8 @@ a.article-anchor {
 }
 
 .img-box {
-    text-align:center
+    text-align:center;
+    padding-bottom: 10px;
 }
 
 .main-pic {

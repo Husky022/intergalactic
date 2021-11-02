@@ -93,7 +93,6 @@ class Article(models.Model):
         on_delete=models.SET_NULL,
     )
     views = models.IntegerField(default=0, verbose_name='просмотры')
-    rating = models.IntegerField(default=0, verbose_name='рейтинг')
     article_status_new = models.ForeignKey(
         ArticleStatus,
         verbose_name='Статус публикации (новый)',
@@ -176,17 +175,30 @@ class SubComment(models.Model):
         verbose_name_plural = 'Подкомментарии'
 
 
-class Hosts(models.Model):
-    host = models.CharField(max_length=22, verbose_name='АйПи посетителя')
-
-
-class Art_Visits(models.Model):
-    article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, verbose_name='Статья')
-    host = models.ForeignKey(
-        Hosts, on_delete=models.CASCADE, verbose_name='адрес посетителя')
+class Visits(models.Model):
+    """Визиты пользователей для просмотра"""
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
+    user = models.CharField(max_length=32, verbose_name='Имя посетителя')
+    host = models.CharField(max_length=32, verbose_name='IP посетителя')
 
 
 class VoiceArticle(models.Model):
+    """Аудио текст"""
     audio_file = models.FileField(upload_to="audio")
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+
+class Rating(models.Model):
+    """Рейтинг"""
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+    @property
+    def total_rating(self):
+        """Подсчет рейтинга"""
+        _article = self.article
+        _likes = Likes.objects.filter(article=_article, status="LK").count()
+        _dislikes = Likes.objects.filter(article=_article, status="DZ").count()
+        _comment = Comment.objects.filter(article=_article, is_active=True).count()
+        _sub_comment = SubComment.objects.filter(article=_article, is_active=True).count()
+        total_rating = (int(_article.views) * 2) + (_likes * 3) + _dislikes + (_comment * 4) + (_sub_comment * 5)
+        return total_rating

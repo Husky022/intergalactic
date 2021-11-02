@@ -6,12 +6,13 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus, VoiceArticle
-from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
+from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
 from .services.activity.comment import CommentSubcomment
 from .services.activity.likes import LikeDislike
+from .services.activity.other import view_views, rating
 from .services.audio import play_text
 
 
@@ -99,17 +100,24 @@ class ArticlePage(DetailView):
 
     def get(self, request, *args, **kwargs):
         # Добавление и валидация просмотра
-        article_views(self)
-        # Набор контекста
-        context = fill_context(self)
+        view_views(self)
         # Валидация на добавление или удаление дизлайков или лайков
+        if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
+            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).add_get_or_post()
+        elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
+            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete_get_or_post()
+        elif self.request.GET.dict().get("status"):
+            LikeDislike(self.request, self.kwargs, ).status_like()
+        # Набор контекста
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.get_object())
+        context = CommentSubcomment(self.request, self.kwargs).render_context(context)
+        context['likes'] = LikeDislike(self.request, self.kwargs).view_like()
+        context["rating"] = rating(self.object)
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                             recipient=self.request.user.id).count()
+        context['audio'] = VoiceArticle.objects.filter(article=self.object).first()
         if self.request.is_ajax():
-            if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).set(context)
-            elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete(context)
-            else:
-                context = LikeDislike(self.request, self.kwargs, ).set_like(context)
             result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
             # Отправка аяксу результата
             return JsonResponse({"result": result})

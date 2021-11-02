@@ -88,15 +88,3 @@ class CommentSubcomment:
         context['comments_count'] = len(context['comments']) + len(
             SubComment.objects.filter(article_id=self.pk, is_active=True))
         return context
-
-    def set(self, context):
-        """Показ комментариев и лайков"""
-        self.add_get_or_post()
-        context = self.render_context(context)
-        return context
-
-    def delete(self, context):
-        """Показ комментариев и лайков"""
-        self.delete_get_or_post()
-        context = self.render_context(context)
-        return context

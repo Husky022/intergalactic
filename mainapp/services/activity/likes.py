@@ -37,8 +37,9 @@ class LikeDislike(object):
         """Выбор статуса лайков и дизлайков для рендера"""
         return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=status))
 
-    def status_like(self, status):
+    def status_like(self):
         """Сохранение статуса лайка и дизлайка"""
+        status=self.request.GET.get("status")
         if self.like.status == status:
             self.like.status = "UND"
         else:
@@ -53,10 +54,3 @@ class LikeDislike(object):
         """Показ лайков и дизлайков на страничке"""
         self.like.like_count, self.like.dislike_count = self.render_like_and_dislike()
         return self.like
-
-    def set_like(self, context):
-        """Добавление и удаление лайка и дизлайка"""
-        self.status_like(self.request.GET.dict()["status"])
-        self.like = self.view_like()
-        context["likes"] = self.like
-        return context
