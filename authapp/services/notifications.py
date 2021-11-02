@@ -35,16 +35,13 @@ class Notification:
 
 
     def get_sender_id(self):
-        if  isinstance(self.object, Comment):
-            return self.object.author_id
-        if  isinstance(self.object, SubComment):
-            return self.object.author_id
+        for instance in (Comment, SubComment, Article):
+            if isinstance(self.object, instance):
+                return self.object.author_id
         if  isinstance(self.object, Likes):
             return self.object.user_id
         if  isinstance(self.object, Article):
-            if self.context == 'moderation':
-                return self.object.author_id
-            if self.context == 'moderate_after_edit':
+            if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 return self.object.author_id
             else:
                 return None
@@ -100,14 +97,9 @@ class Notification:
             return None
 
     def get_text(self):
-        if isinstance(self.object, Comment):
-            return self.object.text
-        if isinstance(self.object, SubComment):
-            return self.object.text
-        if  isinstance(self.object, Article):
-            return None
-        if  isinstance(self.object, ArticleMessage):
-            return self.object.text
+        for instance in (Comment, SubComment, ArticleMessage):
+            if isinstance(self.object, instance):
+                return self.object.text
         else:
             return None
 
