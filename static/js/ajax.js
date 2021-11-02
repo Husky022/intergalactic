@@ -9,6 +9,22 @@ function show(id){
 
 window.onload = function () {
 
+    $('#send_email').change(function() {
+        checkbox = document.getElementById('send_email')
+        $.ajax({
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': csrf_token,
+                value_checkbox: checkbox.checked,
+            },
+            url: "/profile/",
+        // если успешно, то
+        success: function (data) {
+            console.log(data)
+            },
+        });
+    });
+
 
 
     $('.likes-dislikes-comments-box').on('click', '.submit_comment', function () {

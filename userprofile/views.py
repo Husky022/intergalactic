@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import View, CreateView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
+from authapp.models import IntergalacticUser
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
@@ -30,9 +31,13 @@ class UserProfileView(View):
         return context
 
     def post(self, request):
-        print('1')
-        values = request.POST.getlist('chk')
-        print(values)
+        data = request.POST
+        send_to_email_value = True if data.dict()['value_checkbox'] == "true" else False
+        current_user = IntergalacticUser.objects.filter(id=request.user.id).first()
+        current_user.send_to_email = send_to_email_value
+        current_user.save()
+        return JsonResponse({'status': 'success'})
+
 
     def get(self, request):
         return render(request, self.template_name, self.get_context_data(request))

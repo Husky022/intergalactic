@@ -33,6 +33,7 @@ class Notification:
         self.like_id = self.get_like_id()
 
 
+
     def get_sender_id(self):
         if  isinstance(self.object, Comment):
             return self.object.author_id
@@ -55,35 +56,45 @@ class Notification:
     def get_action(self):
         if isinstance(self.object, Comment):
             action = 'оставил комментарий к статье '
+            self.theme = 'Комментарий'
             return action
         if isinstance(self.object, SubComment):
             action = 'ответил на комментарий '
+            self.theme = 'Ответ на комментарий'
             return action
         if  isinstance(self.object, Likes):
             if self.object.status == "LK":
                 action = 'поставил лайк статье '
+                self.theme = 'Уведомление о лайке'
                 return action
             elif self.object.status == "DZ":
                 action = 'поставил дизлайк статье '
+                self.theme = 'Уведомление о дизлайке'
                 return action
         if  isinstance(self.object, Article):
             if self.context == 'published':
                 action = 'после рассмотрения опубликована Ваша статья '
+                self.theme = 'Публикация статьи'
                 return action
             elif self.context == 'rejected':
                 action = 'для публикации требуется иправить(доработать) статью '
+                self.theme = 'Модерация'
                 return action
             elif self.context == 'moderation':
                 action = 'отправил на модерацию статью '
+                self.theme = 'Модерация'
                 return action
             elif self.context == 'moderate_after_edit':
                 action = 'отредактировал и отправил на модерацию статью '
+                self.theme = 'Модерация'
                 return action
             elif self.context == 'archive':
                 action = 'отправлена в архив статья: '
+                self.theme = 'Архив'
                 return action
         if  isinstance(self.object, ArticleMessage):
             action = 'оставил сообщение при модерации статьи '
+            self.theme = 'Модерация'
             return action
         else:
             return None
@@ -188,8 +199,8 @@ class Notification:
         else:
             return None
 
-    def get_type_object(self):
-        pass
+    def get_theme(self):
+        return None
 
 
 
@@ -204,6 +215,18 @@ class Notification:
                                                         subcomment_id=self.subcomment_id,
                                                         like_id=self.like_id)
         notification.save()
-        send_mail('Тема', 'Тело письма', settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
+        if self.recipient.send_to_email:
+            if self.sender_id:
+                user = IntergalacticUser.objects.filter(id=self.sender_id).first()
+                username = user.username
+            else:
+                username = ''
+            article = Article.objects.filter(id=self.article_id).first()
+            if self.text:
+                text = self.text
+            else:
+                text = ''
+            mail_text = f'{username} {self.action} {article.name} {text}'
+            send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
 
 
