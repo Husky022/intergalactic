@@ -187,8 +187,7 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
-        unique_file = play_text(article)
-        VoiceArticle.objects.create(audio_file=f"audio/{unique_file}", article=article)
+        play_text(pk, schedule=1)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
 
