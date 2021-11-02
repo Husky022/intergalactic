@@ -1,0 +1,22 @@
+
+<div class="dropdown">
+    сортировать по:
+    <form action="{% url 'sorted' %}" method="get">
+        <label for="sorting_date" class="form-label">По дате:</label>
+        <select class="btn btn-secondary dropdown-menu-dark" name="by_date" id="sorting_date">
+            <option value="first_new" class="dropdown-item">Сначала новые</option>
+            <option value="first_old" class="dropdown-item">Сначала старые</option>
+        </select>
+        <label for="sorting_like" class="form-label">По лайкам:</label>
+        <select class="btn btn-secondary dropdown-menu-dark" name="by_like" id="sorting_like">
+            <option value="first_more" class="dropdown-item">Сначала больше</option>
+            <option value="first_less" class="dropdown-item">Сначала меньше</option>
+        </select>
+        <label for="sorting_comments" class="form-label">По комментариям:</label>
+        <select class="btn btn-secondary dropdown-menu-dark" name="by_comments" id="sorting_comments">
+            <option value="first_more" class="dropdown-item">Сначала больше</option>
+            <option value="first_less" class="dropdown-item">Сначала меньше</option>
+        </select>
+        <button action="{% url 'articles' %}" class="btn btn-outline-success" type="submit">Отсортировать</button>
+    </form>
+</div>

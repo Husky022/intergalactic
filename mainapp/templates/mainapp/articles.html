@@ -2,7 +2,13 @@
 {% load static %}
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
+
 {% block content %}
+    <div class="sorting_filter text-center">
+        {% block sorting_filter %}
+            {% include 'mainapp/includes/inc__sorting_filter.html' %}
+        {% endblock %}
+    </div>
     <div class="article-box">
         <div class="details">
             <div class="related">
