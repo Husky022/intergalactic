@@ -14,8 +14,12 @@
             {% block menu %}
                 {% include 'mainapp/includes/inc__main_menu.html' %}
             {% endblock %}
+            {% block sorting_filter %}
+                <div class="sorting_filter text-center">
+                    {% include 'mainapp/includes/inc__sorting_filter.html' %}
+                </div>
+            {% endblock %}
         </header>
-
         <section class="main-content">
             {% block content %}{% endblock %}
         </section>
