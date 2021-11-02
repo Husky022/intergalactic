@@ -14,13 +14,13 @@ def notifications_not_read_quantity(self):
 
 class Notification:
 
-    def __init__(self, target_object, target_recepient=None, context=None):
+    def __init__(self, target_object, target_recipient=None, context=None):
         self.object = target_object
         self.context = context
-        if target_recepient:
-            self.recepient = target_recepient
+        if target_recipient:
+            self.recipient = target_recipient
         else:
-            self.recepient = self.get_recepient()
+            self.recipient = self.get_recipient()
         self.sender_id = self.get_sender_id()
         self.action = self.get_action()
         self.text = self.get_text()
@@ -39,7 +39,12 @@ class Notification:
         if  isinstance(self.object, Likes):
             return self.object.user_id
         if  isinstance(self.object, Article):
-            return None
+            if self.context == 'moderation':
+                return self.object.author_id
+            if self.context == 'moderate_after_edit':
+                return self.object.author_id
+            else:
+                return None
         if  isinstance(self.object, ArticleMessage):
             return self.object.message_from.id
         else:
@@ -65,6 +70,15 @@ class Notification:
                 return action
             elif self.context == 'rejected':
                 action = 'для публикации требуется иправить(доработать) статью '
+                return action
+            elif self.context == 'moderation':
+                action = 'отправил на модерацию статью '
+                return action
+            elif self.context == 'moderate_after_edit':
+                action = 'отредактировал и отправил на модерацию статью '
+                return action
+            elif self.context == 'archive':
+                action = 'отправлена в архив статья: '
                 return action
         if  isinstance(self.object, ArticleMessage):
             action = 'оставил сообщение при модерации статьи '
@@ -118,29 +132,40 @@ class Notification:
         else:
             return None
 
-    def get_recepient(self):
+    def get_recipient(self):
         if  isinstance(self.object, Comment):
             article = Article.objects.filter(id=self.object.article_id).first()
-            recepient_id = article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            recipient_id = article.author_id
+            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
             return recipient
         if  isinstance(self.object, SubComment):
             comment = Comment.objects.filter(id=self.object.comment_id).first()
-            recepient_id = comment.author_id
-            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            recipient_id = comment.author_id
+            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
             return recipient
         if  isinstance(self.object, Likes):
             article = Article.objects.filter(id=self.object.article_id).first()
-            recepient_id = article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            recipient_id = article.author_id
+            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
             return recipient
         if  isinstance(self.object, Article):
-            recepient_id = self.object.author_id
-            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
-            return recipient
+            if self.context == 'moderation':
+                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
+                return recipient
+            if self.context == 'moderate_after_edit':
+                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
+                return recipient
+            if self.context == 'archive':
+                recipient_id = self.object.author_id
+                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                return recipient
+            else:
+                recepient_id = self.object.author_id
+                recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+                return recipient
         if  isinstance(self.object, ArticleMessage):
-            recepient_id = self.object.article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
+            recipient_id = self.object.article.author_id
+            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
             return recipient
 
     def get_comment_id(self):
@@ -167,7 +192,7 @@ class Notification:
 
 
     def send(self):
-        notification = NotificationModel.objects.create(recipient=self.recepient,
+        notification = NotificationModel.objects.create(recipient=self.recipient,
                                                         sender_id=self.sender_id,
                                                         action=self.action,
                                                         text=self.text,

@@ -3,6 +3,7 @@ from django.views.generic import View, CreateView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
+from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 
@@ -58,6 +59,10 @@ class ArticleChangeActiveView(View):
             target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
         else:
             target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
+            notification = Notification(target_article, context='archive')
+            notification.send()
+
+
 
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -68,6 +73,8 @@ class SendToModeration(View):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
         article.save()
+        notification = Notification(article, context='moderation')
+        notification.send()
         return HttpResponseRedirect(reverse('profile:main'))
 
 
@@ -94,6 +101,8 @@ class ArticleEditView(View):
             if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
                 article.article_status_new = ArticleStatus.objects.get(name='На модерации')
                 article.save()
+                notification = Notification(article, context='moderate_after_edit')
+                notification.send()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
 
