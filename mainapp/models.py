@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from authapp.models import IntergalacticUser
 
+from userprofile.models import ButtonsInProfile
 from .utilities import get_timestamp_path
 
 

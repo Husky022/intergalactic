@@ -8,7 +8,7 @@ from authapp.models import NotificationModel
 from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
 from mainapp.models import Article, ArticleStatus,
 from mainapp.services.activity.parse import RenderArticle
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+from mainapp.forms import CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
 from .services.activity.comment import CommentSubcomment
