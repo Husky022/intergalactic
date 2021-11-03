@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit_article/<int:pk>/', profile.ArticleEditView.as_view(), name='edit_article'),
     path('send_to_moderation/<int:pk>/', profile.SendToModeration.as_view(), name='send_to_moderation'),
     path('draft_article/<int:pk>/', profile.DraftArticle.as_view(), name='draft_article'),
+    path('user/<int:pk>/', profile.OtherUserProfile.as_view(), name='user'),
 ]
