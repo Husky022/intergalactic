@@ -29,9 +29,13 @@ class Complaint(models.Model):
     )
     text = models.TextField(verbose_name='Текст жалобы')
     datetime = models.DateTimeField(
-        verbose_name='Дата и время жалобы', auto_now_add=True)
+        verbose_name='Дата и время жалобы')
     is_active = models.BooleanField(
         verbose_name='Актуальность жалобы',
         default=True,
         db_index=True,
     )
+
+    class Meta:
+        verbose_name = 'жалоба'
+        verbose_name_plural = 'жалобы'

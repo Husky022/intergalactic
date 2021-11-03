@@ -12,6 +12,6 @@ urlpatterns = [
     path('reject_article/<int:pk>/',
          RejectArticle.as_view(), name='reject_article'),
     path('complaints', ModerateComplaints.as_view(), name='complaints'),
-    path('complaintarticle/<int:pk>/',
-         ModerationArticleComplaintView.as_view(), name='article_complaint'),
+    path('contested_article/<int:pk>/',
+         ModerationArticleComplaintView.as_view(), name='complainted'),
 ]

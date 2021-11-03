@@ -32,21 +32,26 @@
                                 <div class="block-moder-article">
                                     <table>
                                         <tr>
-                                            <td class="hub-name">
-                                                <p>ПОДАЛ: {{ complaint.author|title }}</p>
-                                            </td>
-                                            <td class="hub-name">
-                                                <p>ЖАЛОБА: {{ complaint.text }}</p>
+                                            <!-- <td class="hub-name">
+                                                <p>ПОДАЛ: {{ complaint.complainant|title }}</p>
+                                            </td> -->
+                                            <td colspan="2">
+                                                <a href="{% url 'moderation:complainted' complaint.article.pk %}"
+                                                    class="article-anchor">
+                                                    <p><b><i>ЖАЛОБА:</i></b> &nbsp &nbsp {{ complaint.text }}</p>
+                                                </a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="hub-name">
-                                                <p>{{ complaint.add_datetime }}</p>
+                                                <p><i>ПОДАЛ:</i> &nbsp &nbsp {{ complaint.complainant|title }}<br>
+                                                    {{ complaint.datetime }}
+                                                </p>
                                             </td>
                                             <td class="article-name">
-                                                <a href="{% url 'moderation:article' complaint.article.pk %}"
+                                                <a href="{% url 'moderation:complainted' complaint.article.pk %}"
                                                     class="article-anchor">
-                                                    <p>СТАТЬЯ: {{ complaint.article.name }}</p>
+                                                    <p><i>НА СТАТЬЮ:</i> &nbsp &nbsp {{ complaint.article.name }}</p>
                                                 </a>
                                             </td>
                                         </tr>

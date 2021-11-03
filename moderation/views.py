@@ -9,7 +9,9 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
 from mainapp.models import Article, ArticleStatus, Comment
+from authapp.models import IntergalacticUser
 from moderation.models import ArticleMessage, Complaint
+from .utilities import check_complaints
 
 
 class ModerationMixin(View):
@@ -95,32 +97,35 @@ class RejectArticle(ModerationMixin):
 
 
 class ModerateComplaints(ModerationMixin, ListView):
-    model = Comment
+    model = Complaint
     template_name = 'moderation/moderate_complaints.html'
     extra_context = {'title': 'Модератор'}
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Comment.objects.filter(
-            is_active=True, text__startswith='@moderator')
+        check_complaints()
+        queryset = Complaint.objects.filter(
+            is_active=True).order_by('-datetime')
         return queryset
 
 
 class ModerationArticleComplaintView(View):
-    template_name = 'moderation/article_page.html'
+    template_name = 'moderation/article_complaint_page.html'
 
     def get_context_data(self, pk):
+        article = get_object_or_404(Article, pk=pk)
         context = {
             'title': 'Статья',
             'user': self.request.user,
-            'article': get_object_or_404(Article, pk=pk),
+            'article': article,
+            'complainant': Complaint.objects.get(article=article.pk).complainant,
             'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
         }
         return context
 
-    # def get(self, request, pk):
-    #     if self.request.user.is_authenticated and (self.request.user == Article.objects.get(
-    #             pk=pk).author or self.request.user.is_superuser or self.request.user.is_stuff):
-    #         return render(request, self.template_name, self.get_context_data(pk))
+    def get(self, request, pk):
+        if self.request.user.is_authenticated and (self.request.user == Article.objects.get(
+                pk=pk).author or self.request.user.is_superuser or self.request.user.is_stuff):
+            return render(request, self.template_name, self.get_context_data(pk))
 
-    #     return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))
+        return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))

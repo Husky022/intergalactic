@@ -23,7 +23,7 @@
     <div class="card mb-3 moderation-chat">
         <div class="card-header">
             {% if user.is_stuff or user.is_superuser %}
-            <p>Общение с подателем жалобы ({{ article.author.username }})</p>
+            <p>Общение с подателем жалобы ({{ complainant|title }})</p>
             {% else %}
             <p>Общение с Модератором</p>
             {% endif %}
