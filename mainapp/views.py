@@ -233,37 +233,3 @@ class Search(ListView):
         context['search_filter'] = search_filter
         context['filter'] = request.GET.dict()
         return render(request, 'mainapp/articles.html', context)
-
-
-class Sorted(ListView):
-    model = Article
-    template_name = 'mainapp/articles.html'
-    extra_context = {'title': 'Статьи'}
-    paginate_by = 5
-
-    def get(self, request, *args, **kwargs):
-        article = Article.objects.filter(article_status='PB')
-        context = self.get_context_data()
-
-        if request.GET.dict().get("sorting_by_date") == 'first_new':
-            self.object_list =  article.order_by('-add_datetime')
-        else:
-            self.object_list = article.order_by('add_datetime')
-
-        return render(request, 'mainapp/articles.html', context)
-
-
-
-# class Sorted(ListView):
-#     """Поиск статей"""
-#     # paginate_by = 5
-#     model = Article
-#     template_name = 'mainapp/articles.html'
-#
-#     def get_queryset(self):
-#         return Article.objects.filter(name__contains=self.request.GET.get("q", ''))
-#
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)
-#         context["by_date"] = self.request.GET.get("by_date", '')
-#         return context

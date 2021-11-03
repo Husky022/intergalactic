@@ -2,8 +2,7 @@ from django.urls import path
 
 import mainapp.views as mainapp
 
-from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, Search, \
-    Sorted
+from .views import Main, Articles, ArticlePage, ArticleCreationView, ArticleChangeActiveView, ArticleEditView, Search
 
 urlpatterns = [
     path('', Main.as_view(), name='main'),
@@ -17,5 +16,4 @@ urlpatterns = [
     path('draft_article/<int:pk>/', mainapp.DraftArticle.as_view(), name='draft_article'),
 
     path('search/', Search.as_view(), name='search'),
-    path('sorted/', Sorted.as_view(), name='sorted'),
 ]
