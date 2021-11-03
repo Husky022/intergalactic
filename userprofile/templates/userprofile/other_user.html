@@ -1,0 +1,104 @@
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% block title %}{{ title|title }} {% endblock %}
+{% load project_tags %}
+{% block content %}
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <div class="article-box">
+        <div class="details">
+            <h3 class="text-center profile_subheading_1">Личный кабинет</h3>
+            <div class="block-article">
+                <div class="block-profile">
+                    <div class="img-role-redaction-block">
+                        <div class="profile-img-block">
+                            <img class="profile_image" src="{{ user.avatar|media_folder_users }}"
+                                  alt="profile_image">
+                        </div>
+                        <div class="profile-role-block">
+                            {% if target_user.is_superuser %}
+                                Администратор
+                            {% elif target_user.is_staff %}
+                                Модератор
+                            {% else %}
+                                Пользователь
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-about-user">
+                        <div class="first-last-name-block">
+                            <p class="first-last-name">{{ target_user.first_name|title }} {{ target_user.last_name|title }}</p>
+                        </div>
+                        <hr>
+                        <div class="profile_info">
+                            <div class="profile_about">
+                                <p><span class="about-user-pole">Username:</span> {{ target_user.username }}</p>
+                                <hr>
+                                <p><span class="about-user-pole">Возраст:</span> {{ target_user.age }}</p>
+                                <hr>
+                                {% if target_user.about_me %}
+                                    <p><span class="about-user-pole">Обо мне:</span>
+                                        {{ target_user.about_me|safe }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-articles">
+                <div class="my-articles-item">
+                    <h3 class="profile_subheading_1 text-center">
+                        Статьи пользователя
+                    </h3>
+                </div>
+            </div>
+            <div class="block-article">
+                <div class="profile-article">
+                    <p class="profile_subheading_2"></p>
+                </div>
+
+                <p class="profile_subheading_2">Опубликованные</p>
+                {% if not articles %}
+                    <p>Нет статей</p>
+                {% else %}
+                    <table class="article-table">
+                        <tbody>
+                        {% for art in articles %}
+                            <tr>
+                                <td class="article-table">
+                                    <table>
+                                        <tr>
+                                            <td rowspan="2" class="article-name">
+                                                {% if art.article_status_new.name == 'Опубликована' %}
+
+                                                    <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+                                                        <p>{{ art.name }}</p>
+                                                    </a>
+                                                {% elif art.article_status_new.name == 'На модерации' %}
+                                                <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
+                                                    <p>{{ art.name }}</p>
+                                                </a>
+                                                {% else %}
+                                                <p>{{ art.name }}</p>
+                                                {% endif %}
+
+                                            </td>
+                                            <td class="hub-name"><p>{{ art.hub.name }}</p></td>
+                                            <td rowspan="2" class="article-edit-buttons">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hub-name"><p>{{ art.add_datetime }}</p></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/profile_articles.js' %}"></script>
+{% endblock %}
