@@ -39,7 +39,7 @@
                     <button class="btn btn-outline-secondary" type="button" id="send_message" name="{{ article.pk }}">Отправить</button>
                 </div>
                 {% if not messages %}
-                <p class="card-text">
+                <p class="card-text" id="no_message">
                     Пока нет ни одного сообщения.
                 </p>
                 {% endif %}
