@@ -3,10 +3,10 @@
 {% load static %}
 {% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}
 {% block content %}
-<div class="article-box">
-    <div class="details">
-        <div class="details-articles">
-            <p><a href="{% url 'auth:profile' %}">
+    <div class="article-box">
+        <div class="details">
+            <div class="details-articles">
+                <p> <a href="{% url 'profile:user' article.author.pk %}">
                             <span class="font-weight-bold"><img class="mr-2"
                                                                 src="{{article.author.avatar|media_folder_users }}"
                                                                 alt="profile_image" height="24">

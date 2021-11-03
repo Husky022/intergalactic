@@ -1,13 +1,13 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.views.generic import View, CreateView, ListView, DetailView
+from django.views.generic import ListView, DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.services.activity.parse import RenderArticle
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+from mainapp.forms import CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
 from .services.activity.comment import CommentSubcomment
@@ -125,81 +125,6 @@ class ArticlePage(DetailView):
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
-class ArticleCreationView(CreateView):
-    """CBV для создание статьи"""
-    model = Article
-    form_class = ArticleCreationForm
-    success_url = reverse_lazy('auth:profile')
-
-    def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.article_status_new = ArticleStatus.objects.get(name='Черновик')
-        self.object.save()
-        return super().form_valid(form)
-
-
-class ArticleChangeActiveView(View):
-    """CBV для активации статьи"""
-
-    def post(self, request, article_pk):
-        target_article = get_object_or_404(Article, pk=article_pk)
-        target_article.is_active = False if target_article.is_active else True
-
-        if target_article.article_status_new.name == 'В архиве':
-            target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
-        else:
-            target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
-
-        target_article.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-class ArticleEditView(View):
-    """Контроллер для изменения статьи"""
-    title = 'Редактирование статьи'
-    template_name = 'mainapp/edit_article.html'
-    form_class = ArticleCreationForm
-    redirect_to = 'auth:profile'
-
-    def get(self, request, pk):
-        context = {
-            'form': self.form_class(instance=Article.objects.get(pk=pk)),
-            'article': Article.objects.get(pk=pk)
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, pk):
-        article = Article.objects.get(pk=pk)
-        article_form = ArticleCreationForm(
-            data=request.POST, files=request.FILES, instance=article)
-        if article_form.is_valid():
-            article_form.save()
-            if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
-                article.article_status_new = ArticleStatus.objects.get(name='На модерации')
-                article.save()
-
-        return HttpResponseRedirect(reverse(self.redirect_to))
-
-
-class SendToModeration(View):
-    def post(self, request, pk):
-        article = Article.objects.get(pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='На модерации')
-        play_text(pk)
-        article.save()
-        return HttpResponseRedirect(reverse('auth:profile'))
-
-
-class DraftArticle(View):
-    def post(self, request, pk):
-        article = Article.objects.get(pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='Черновик')
-        article.save()
-        return HttpResponseRedirect(reverse('auth:profile'))
-
-
 class Search(ListView):
     model = Article
     template_name = 'mainapp/articles.html'
@@ -207,7 +132,7 @@ class Search(ListView):
     paginate_by = 5
 
     def get(self, request, page_num=1, *args, **kwargs):
-        article = Article.objects.filter(article_status='PB')
+        article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
         self.object_list = article
