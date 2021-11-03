@@ -22,7 +22,7 @@ class Notification:
         if target_recipient:
             self.recipient = target_recipient
         else:
-            self.recipient = self.get_recipient()
+            self.recipients = self.get_recipient()
         self.sender_id = self.get_sender_id()
         self.action = self.get_action()
         self.text = self.get_text()
@@ -131,29 +131,27 @@ class Notification:
             return None
 
     def get_recipient(self):
+        recipients = []
         for instance in (Comment, Likes):
             if isinstance(self.object, instance):
                 article = Article.objects.filter(id=self.object.article_id).first()
                 recipient_id = article.author_id
                 recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-                return recipient
         if isinstance(self.object, SubComment):
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             recipient_id = comment.author_id
             recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-            return recipient
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
-                return recipient
             else:
                 recepient_id = self.object.author_id
                 recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
-                return recipient
         if  isinstance(self.object, ArticleMessage):
             recipient_id = self.object.article.author_id
             recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-            return recipient
+        recipients.append(recipient)
+        return recipients
 
     def get_comment_id(self):
         if isinstance(self.object, Comment):
@@ -179,28 +177,30 @@ class Notification:
 
 
     def send(self):
-        notification = NotificationModel.objects.create(recipient=self.recipient,
-                                                        sender_id=self.sender_id,
-                                                        action=self.action,
-                                                        text=self.text,
-                                                        target=self.target,
-                                                        article_id=self.article_id,
-                                                        comment_id=self.comment_id,
-                                                        subcomment_id=self.subcomment_id,
-                                                        like_id=self.like_id)
-        notification.save()
-        if self.recipient.send_to_email:
-            if self.sender_id:
-                user = IntergalacticUser.objects.filter(id=self.sender_id).first()
-                username = user.username
-            else:
-                username = ''
-            article = Article.objects.filter(id=self.article_id).first()
-            if self.text:
-                text = self.text
-            else:
-                text = ''
-            mail_text = f'{username} {self.action} {article.name} {text}'
-            send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
+
+        for recipient in self.recipients:
+            notification = NotificationModel.objects.create(recipient=recipient,
+                                                            sender_id=self.sender_id,
+                                                            action=self.action,
+                                                            text=self.text,
+                                                            target=self.target,
+                                                            article_id=self.article_id,
+                                                            comment_id=self.comment_id,
+                                                            subcomment_id=self.subcomment_id,
+                                                            like_id=self.like_id)
+            notification.save()
+            if recipient.send_to_email:
+                if self.sender_id:
+                    user = IntergalacticUser.objects.filter(id=self.sender_id).first()
+                    username = user.username
+                else:
+                    username = ''
+                article = Article.objects.filter(id=self.article_id).first()
+                if self.text:
+                    text = self.text
+                else:
+                    text = ''
+                mail_text = f'{username} {self.action} {article.name} {text}'
+                send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
 
 
