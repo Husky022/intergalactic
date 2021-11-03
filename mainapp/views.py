@@ -60,7 +60,7 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self, request):
-        self.kwargs.update(get_sorted(request))
+        self.kwargs.update(get_sorted(self.kwargs, request))
         queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 

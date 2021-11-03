@@ -19,7 +19,7 @@ class RenderArticle:
 
     def if_article(self):
         """Определяет фильтр по которому будет готов queryset"""
-        if self.kwargs.get("pk", None):
+        if self.kwargs.get("pk", None) and len(self.kwargs.keys()) == 1:
             self.for_parse("filter")
 
         elif self.kwargs.get("by_date") == 'first_old':
@@ -57,19 +57,36 @@ class RenderArticle:
         return Article.objects.filter(is_active=True, article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
     def parse_filter(self):
-        return Article.objects.filter(hub__id=self.kwargs['pk'], is_active=True,
+        return Article.objects.filter(hub__id=self.kwargs.get("pk"), is_active=True,
+                                      article_status_new=ArticleStatus.objects.get(name="Опубликована"))
+
+    def parse_filter_by_hub(self, pk):
+        return Article.objects.filter(hub__id=pk, is_active=True,
                                       article_status_new=ArticleStatus.objects.get(name="Опубликована"))
 
     def sorting_by_date_first_old(self):
-        return self.parse_all().order_by('add_datetime')
+        hub_pk = self.kwargs.get("pk")
+        if hub_pk == 0:
+            return self.parse_all().order_by('add_datetime')
+        else:
+            return self.parse_filter_by_hub(hub_pk).order_by('add_datetime')
 
     def sorting_by_date_first_new(self):
-        return self.parse_all().order_by('-add_datetime')
+        hub_pk = self.kwargs.get("pk")
+        if hub_pk == 0:
+            return self.parse_all().order_by('-add_datetime')
+        else:
+            return self.parse_filter_by_hub(hub_pk).order_by('-add_datetime')
 
     def sorting_by_like_first_more(self, sort_order=True):
+        hub_pk = self.kwargs.get("pk")
         likes_id = []
         result_list = []
-        for item in self.parse_all():
+        if hub_pk == 0:
+            parse_func = self.parse_all()
+        else:
+            parse_func = self.parse_filter_by_hub(hub_pk)
+        for item in parse_func:
             count_like = len(Likes.objects.filter(article_id=item.id, status='LK'))
             likes_id.append((count_like, item.name, item))
         sorted_list = sorted(likes_id, key=lambda count: count[0], reverse=sort_order)
@@ -80,20 +97,32 @@ class RenderArticle:
         return result_list
 
     def sorting_by_like_first_less(self, sort_order=False):
-        touple_list = []
+        hub_pk = self.kwargs.get("pk")
+        likes_id = []
         result_list = []
-        for item in self.parse_all():
+        if hub_pk == 0:
+            parse_func = self.parse_all()
+        else:
+            parse_func = self.parse_filter_by_hub(hub_pk)
+        for item in parse_func:
             count_like = len(Likes.objects.filter(article_id=item.id, status='LK'))
-            touple_list.append((count_like, item.name, item))
-        sorted_list = sorted(touple_list, key=lambda count: count[0], reverse=sort_order)
+            likes_id.append((count_like, item.name, item))
+        sorted_list = sorted(likes_id, key=lambda count: count[0], reverse=sort_order)
         for i in sorted_list:
             result_list.append(i[2])
+        for i in result_list:
+            print(i)
         return result_list
 
     def sorting_by_comment_first_more(self, sort_order=True):
+        hub_pk = self.kwargs.get("pk")
         touple_list = []
         result_list = []
-        for item in self.parse_all():
+        if hub_pk == 0:
+            parse_func = self.parse_all()
+        else:
+            parse_func = self.parse_filter_by_hub(hub_pk)
+        for item in parse_func:
             count_comment = len(Comment.objects.filter(article_id=item.id))
             touple_list.append((count_comment, item.name, item))
         sorted_list = sorted(touple_list, key=lambda count: count[0], reverse=sort_order)
@@ -102,9 +131,14 @@ class RenderArticle:
         return result_list
 
     def sorting_by_comment_first_less(self, sort_order=False):
+        hub_pk = self.kwargs.get("pk")
         touple_list = []
         result_list = []
-        for item in self.parse_all():
+        if hub_pk == 0:
+            parse_func = self.parse_all()
+        else:
+            parse_func = self.parse_filter_by_hub(hub_pk)
+        for item in parse_func:
             count_comment = len(Comment.objects.filter(article_id=item.id))
             touple_list.append((count_comment, item.name, item))
         sorted_list = sorted(touple_list, key=lambda count: count[0], reverse=sort_order)
@@ -134,8 +168,12 @@ class Parse:
         return cls.types[type_](*args, **kwargs)
 
 
-def get_sorted(request):
-    kwargs = {}
+def get_sorted(kwargs, request):
+    if request.resolver_match.kwargs.get('pk'):
+        kwargs['pk'] = request.resolver_match.kwargs.get('pk')
+    else:
+        kwargs['pk'] = 0
+
     if request.GET.dict().get('by_date') == 'first_old':
         kwargs['by_date'] = 'first_old'
     elif request.GET.dict().get('by_date') == 'first_new':
