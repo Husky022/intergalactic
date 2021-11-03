@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.views.generic import View, ListView, DetailView
+from django.views.generic import ListView, DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
-from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
-from mainapp.models import Article, ArticleStatus,
+from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
