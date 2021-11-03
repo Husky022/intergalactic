@@ -111,6 +111,9 @@ class OtherUserProfile(View):
     template_name = 'userprofile/other_user.html'
     
     def get(self, request, pk):
+        if request.user == IntergalacticUser.objects.get(pk=pk):
+            return HttpResponseRedirect(reverse('profile:main'))
+
         context = {
             'target_user': get_object_or_404(IntergalacticUser, pk=pk),
             'articles': Article.objects.filter(
