@@ -30,6 +30,10 @@ $(document).ready(function (){
           )
           let last_msg = $('.moderation-message')[0]
           message.insertBefore(last_msg)
+          let title_no_message = $('p#no_message')
+          if (title_no_message) {
+            title_no_message.remove()
+          }
         }
       }
     })
