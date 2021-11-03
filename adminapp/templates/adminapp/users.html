@@ -1,7 +1,7 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
 {% load project_tags %}
-
+{% block title %}{{ title|title }}{% endblock %}
 {% block content %}
     <div class="users_list">
         <div class="flex-block-profile">

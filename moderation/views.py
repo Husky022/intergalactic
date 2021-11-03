@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
+from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from moderation.models import ArticleMessage
@@ -28,12 +29,16 @@ class ModerationMixin(View):
 class Moderator(ModerationMixin, ListView):
     model = Article
     template_name = 'moderation/moderator.html'
-    extra_context = {'title': 'Модератор'}
     paginate_by = 5
 
-    def get_queryset(self):
-        queryset = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='На модерации'))
-        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(Moderator, self).get_context_data(**kwargs)
+        context['title'] = 'модератор'
+        context['objects_list'] = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='На модерации'))
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
+        return context
 
 
 class ModerationArticleView(View):
@@ -44,7 +49,9 @@ class ModerationArticleView(View):
             'title': 'Статья',
             'user': self.request.user,
             'article': get_object_or_404(Article, pk=pk),
-            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
+            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime'),
+            'notifications_not_read': NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
         }
         return context
 

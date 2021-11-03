@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 
 from adminapp.forms import IntergalacticUserAdminEditForm
 from authapp.forms import IntergalacticUserRegisterForm
-from authapp.models import IntergalacticUser
+from authapp.models import IntergalacticUser, NotificationModel
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -19,6 +19,14 @@ def admin_main(request):
 class UsersListView(LoginRequiredMixin, ListView):
     model = IntergalacticUser
     template_name = "adminapp/users.html"
+
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersListView, self).get_context_data(**kwargs)
+        context['title'] = 'пользователи'
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
+        return context
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -33,7 +41,11 @@ def user_create(request):
     else:
         user_form = IntergalacticUserRegisterForm()
 
-    content = {"title": title, "update_form": user_form, "media_url": settings.MEDIA_URL}
+    content = {
+        "title": title,
+        "update_form": user_form,
+        "media_url": settings.MEDIA_URL
+    }
 
     return render(request, "adminapp/user_update.html", content)
 

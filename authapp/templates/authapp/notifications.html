@@ -12,11 +12,13 @@
                 {% for item in notifications_not_read %}
                     <div class="block-notification">
                             {{ item.add_datetime }}
-                            <a href="{% url 'profile:main' %}">
-                                <span class="font-weight-bold">
-                                    {{item.sender }}
-                                </span>
-                            </a>
+                            {% if item.sender %}
+                                <a href="{% url 'profile:main' %}">
+                                    <span class="font-weight-bold">
+                                        {{ item.sender }}
+                                    </span>
+                                </a>
+                            {% endif %}
                             {{ item.action }}
                             <a href="{% url 'article_page' item.article_id %}">
                                 <span class="font-weight-bold">

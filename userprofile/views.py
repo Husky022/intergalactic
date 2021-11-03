@@ -3,7 +3,7 @@ from django.views.generic import View, CreateView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
-from authapp.models import IntergalacticUser
+from authapp.models import IntergalacticUser, NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
@@ -27,6 +27,8 @@ class UserProfileView(View):
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
+            'notifications_not_read': NotificationModel.objects.filter(is_read=0,
+                                                                         recipient=self.request.user.id).count()
         }
         return context
 
@@ -98,7 +100,9 @@ class ArticleEditView(View):
     def get(self, request, pk):
         context = {
             'form': self.form_class(instance=Article.objects.get(pk=pk)),
-            'article': Article.objects.get(pk=pk)
+            'article': Article.objects.get(pk=pk),
+            'notifications_not_read': NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
         }
         return render(request, self.template_name, context)
 

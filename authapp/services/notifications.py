@@ -35,7 +35,7 @@ class Notification:
 
 
     def get_sender_id(self):
-        for instance in (Comment, SubComment, Article):
+        for instance in (Comment, SubComment):
             if isinstance(self.object, instance):
                 return self.object.author_id
         if  isinstance(self.object, Likes):
@@ -104,65 +104,47 @@ class Notification:
             return None
 
     def get_target(self):
-        if isinstance(self.object, Comment):
+        if isinstance(self.object, Comment) or isinstance(self.object, Likes):
             article = Article.objects.filter(id=self.object.article_id).first()
             target = article.name
             return target
-        if isinstance(self.object, SubComment):
+        elif isinstance(self.object, SubComment):
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             target = comment.text
             return target
-        if  isinstance(self.object, Likes):
-            article = Article.objects.filter(id=self.object.article_id).first()
-            target = article.name
-            return target
-        if  isinstance(self.object, Article):
+        elif  isinstance(self.object, Article):
             return self.object.name
-        if  isinstance(self.object, ArticleMessage):
+        elif  isinstance(self.object, ArticleMessage):
             return self.object.article.name
         else:
             return None
 
     def get_article_id(self):
-        if isinstance(self.object, Comment):
-            return self.object.article_id
-        if isinstance(self.object, SubComment):
-            return self.object.article_id
-        if isinstance(self.object, Likes):
-            return self.object.article_id
-        if  isinstance(self.object, Article):
+        for instance in (Comment, SubComment, Likes):
+            if isinstance(self.object, instance):
+                return self.object.article_id
+        if isinstance(self.object, Article):
             return self.object.id
-        if  isinstance(self.object, ArticleMessage):
+        elif isinstance(self.object, ArticleMessage):
             return self.object.article.id
         else:
             return None
 
     def get_recipient(self):
-        if  isinstance(self.object, Comment):
-            article = Article.objects.filter(id=self.object.article_id).first()
-            recipient_id = article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-            return recipient
-        if  isinstance(self.object, SubComment):
+        for instance in (Comment, Likes):
+            if isinstance(self.object, instance):
+                article = Article.objects.filter(id=self.object.article_id).first()
+                recipient_id = article.author_id
+                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                return recipient
+        if isinstance(self.object, SubComment):
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             recipient_id = comment.author_id
             recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
             return recipient
-        if  isinstance(self.object, Likes):
-            article = Article.objects.filter(id=self.object.article_id).first()
-            recipient_id = article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-            return recipient
-        if  isinstance(self.object, Article):
-            if self.context == 'moderation':
+        if isinstance(self.object, Article):
+            if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
-                return recipient
-            if self.context == 'moderate_after_edit':
-                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
-                return recipient
-            if self.context == 'archive':
-                recipient_id = self.object.author_id
-                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
                 return recipient
             else:
                 recepient_id = self.object.author_id
