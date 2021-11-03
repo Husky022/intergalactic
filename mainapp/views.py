@@ -189,7 +189,7 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
-        play_text(pk, schedule=1)
+        play_text(pk)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
 
