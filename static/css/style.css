@@ -852,6 +852,32 @@ textarea {
     margin-bottom: 10%;
 }
 
+.likes-dislikes-comments-box-article {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.form-check-input{
+    cursor: pointer;
+}
+
+.form-check-input:focus{
+    box-shadow: none;
+    border-color: lightgray;
+    background-color: white;
+    color: lightgray;
+
+}
+
+
+.form-check-input:checked{
+    background-color: maroon;
+    border-color: maroon;
+    box-shadow: none;
+}
+
+
 .box-footer {
     display: flex;
     flex-direction: row;

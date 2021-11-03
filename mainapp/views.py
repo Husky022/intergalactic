@@ -1,6 +1,6 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.views.generic import View, CreateView, ListView, DetailView
+from django.views.generic import View, ListView, DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
@@ -207,7 +207,7 @@ class Search(ListView):
     paginate_by = 5
 
     def get(self, request, page_num=1, *args, **kwargs):
-        article = Article.objects.filter(article_status='PB')
+        article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
         self.object_list = article

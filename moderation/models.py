@@ -13,4 +13,11 @@ class ArticleMessage(models.Model):
         on_delete=models.SET_NULL
     )
     text = models.TextField(verbose_name='Текст сообщения')
+    moderator = models.ForeignKey(
+        IntergalacticUser,
+        verbose_name='Модератор',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='moderator'
+    )
     datetime = models.DateTimeField(verbose_name='Дата и время сообщения', auto_now_add=True)

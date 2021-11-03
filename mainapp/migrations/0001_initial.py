@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('userprofile', '0001_initial'),
     ]
 
     operations = [
@@ -27,7 +28,6 @@ class Migration(migrations.Migration):
                 ('tag', models.CharField(blank=True, max_length=64, verbose_name='Тэг статьи')),
                 ('is_active', models.BooleanField(db_index=True, default=True, verbose_name='Актуальность статьи')),
                 ('add_datetime', models.DateTimeField(auto_now_add=True, verbose_name='Время добавления')),
-                ('article_status', models.CharField(choices=[('DR', 'Черновик'), ('MD', 'На модерации'), ('RC', 'Требует исправления'), ('PB', 'Опубликована'), ('AR', 'В архиве')], default='DR', max_length=2, verbose_name='Статус публикации')),
                 ('views', models.IntegerField(default=0, verbose_name='просмотры')),
             ],
             options={
@@ -35,14 +35,6 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'статьи',
                 'ordering': ['-add_datetime'],
             },
-        ),
-        migrations.CreateModel(
-            name='ButtonsInProfile',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, verbose_name='название кнопки')),
-                ('include_html_file_name', models.CharField(max_length=100, verbose_name='html файл')),
-            ],
         ),
         migrations.CreateModel(
             name='Comment',
@@ -133,7 +125,7 @@ class Migration(migrations.Migration):
                 ('short_name', models.CharField(max_length=2, verbose_name='Краткое название')),
                 ('name', models.CharField(max_length=50, verbose_name='Название статуса')),
                 ('name_plural', models.CharField(max_length=50, verbose_name='Название раздела в ЛК (мн.число)')),
-                ('buttons', models.ManyToManyField(to='mainapp.ButtonsInProfile', verbose_name='Кнопки для этого статуса в ЛК')),
+                ('buttons', models.ManyToManyField(related_name='кнопки', to='userprofile.ButtonsInProfile', verbose_name='Кнопки для этого статуса в ЛК')),
             ],
         ),
         migrations.AddField(

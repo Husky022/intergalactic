@@ -34,17 +34,15 @@ class CommentSubcomment:
 
     def add_get_or_post(self):
         """Сохранение комментарий и их комментарий"""
-        article = Article.objects.filter(id=int(self.pk)).first()
-        recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
         if 'text_comment' in self.get_post:
             comment = self.add_comment()
-            Notification.create('comment', recipient, self.request.user, self.get_post['text_comment'], article.name,
-                                int(self.pk), comment.id, None)
+            notification = Notification(comment)
+            notification.send()
         elif 'text_subcomment' in self.get_post:
             subcomment = self.add_sub_comment()
-            comment = Comment.objects.filter(id=self.get_post['comment_id']).first()
-            Notification.create('subcomment', recipient, self.request.user, self.get_post['text_subcomment'],
-                                comment.text, int(self.pk), None, subcomment.id)
+            notification = Notification(subcomment)
+            notification.send()
+
 
     def delete_comment(self):
         """Удаление комментария"""
@@ -53,6 +51,8 @@ class CommentSubcomment:
         for item in sub_comment:
             item.is_active = False
             item.save()
+            notification_sub = NotificationModel.objects.filter(subcomment_id=item.id)
+            notification_sub.delete()
         notification = NotificationModel.objects.filter(comment_id=comment.id)
         notification.delete()
         return comment
@@ -66,6 +66,7 @@ class CommentSubcomment:
         """Сохранение удаление комментариев и их комментариев"""
         if 'com_delete' in self.get_post:
             comment = self.delete_comment()
+
         elif 'sub_com_delete' in self.get_post:
             comment = self.delete_sub_comment()
         comment.is_active = False
