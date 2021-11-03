@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
-from mainapp.models import Article, ArticleStatus
+from mainapp.models import Article, ArticleStatus, Comment
 from moderation.models import ArticleMessage, Complaint
 
 
@@ -95,11 +95,32 @@ class RejectArticle(ModerationMixin):
 
 
 class ModerateComplaints(ModerationMixin, ListView):
-    model = Complaint
+    model = Comment
     template_name = 'moderation/moderate_complaints.html'
     extra_context = {'title': 'Модератор'}
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Complaint.objects.filter(is_active=True)
+        queryset = Comment.objects.filter(
+            is_active=True, text__startswith='@moderator')
         return queryset
+
+
+class ModerationArticleComplaintView(View):
+    template_name = 'moderation/article_page.html'
+
+    def get_context_data(self, pk):
+        context = {
+            'title': 'Статья',
+            'user': self.request.user,
+            'article': get_object_or_404(Article, pk=pk),
+            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
+        }
+        return context
+
+    # def get(self, request, pk):
+    #     if self.request.user.is_authenticated and (self.request.user == Article.objects.get(
+    #             pk=pk).author or self.request.user.is_superuser or self.request.user.is_stuff):
+    #         return render(request, self.template_name, self.get_context_data(pk))
+
+    #     return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))

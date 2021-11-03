@@ -1,5 +1,5 @@
 from django.urls import path
-from moderation.views import Moderator, ModerationArticleView, RegisterNewMessage, ApproveArticle, RejectArticle, ModerateComplaints
+from moderation.views import Moderator, ModerationArticleView, RegisterNewMessage, ApproveArticle, RejectArticle, ModerateComplaints, ModerationArticleComplaintView
 
 app_name = 'moderation'
 
@@ -12,4 +12,6 @@ urlpatterns = [
     path('reject_article/<int:pk>/',
          RejectArticle.as_view(), name='reject_article'),
     path('complaints', ModerateComplaints.as_view(), name='complaints'),
+    path('complaintarticle/<int:pk>/',
+         ModerationArticleComplaintView.as_view(), name='article_complaint'),
 ]
