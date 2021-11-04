@@ -17,6 +17,7 @@ from moderation.models import ArticleMessage
 class ModerationMixin(View):
     """Это проверка, что пользователь является админимстратором или модератором.
     Все классы отнаследованные от него, наследуют эту проверку."""
+
     @method_decorator(user_passes_test(lambda u: u.is_superuser or u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() in self.http_method_names:
@@ -101,3 +102,12 @@ class RejectArticle(ModerationMixin):
         notification = Notification(article, context='rejected')
         notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+
+
+# class BlockedArticle(ModerationMixin):
+#     def get(self, request, pk):
+#         article = get_object_or_404(Article, pk=pk)
+#         article.article_status_new = ArticleStatus.objects.get(name='Заблокированна')
+#         article.is_active = False
+#         article.save()
+#         return HttpResponseRedirect(reverse_lazy('moderation:main'))

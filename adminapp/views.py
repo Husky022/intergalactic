@@ -7,6 +7,8 @@ from django.views.generic.list import ListView
 
 from adminapp.forms import IntergalacticUserAdminEditForm
 from authapp.forms import IntergalacticUserRegisterForm
+from authapp.models import IntergalacticUser
+from moderation.models import BlockedUser
 from authapp.models import IntergalacticUser, NotificationModel
 
 
@@ -82,6 +84,19 @@ def user_delete(request, pk):
     content = {"title": title, "user_to_delete": user, "media_url": settings.MEDIA_URL}
 
     return render(request, "adminapp/user_delete.html", content)
+
+@user_passes_test(lambda u: u.is_superuser)
+def user_blocked(request, pk):
+    title = "пользователи/блокировка"
+
+    user = get_object_or_404(IntergalacticUser, pk=pk)
+
+
+
+    blockedusers = BlockedUser.objects.create(user = user, text = 'text')
+    blockedusers.save()
+    return HttpResponseRedirect(reverse("adminapp:users"))
+
 
 
 def db_profile_by_type(prefix, type, queries):

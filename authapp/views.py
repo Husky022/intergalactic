@@ -1,5 +1,5 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
 from django.views.generic import FormView, ListView
@@ -10,6 +10,7 @@ from authapp.models import NotificationModel, IntergalacticUser
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
+from moderation.models import BlockedUser
 
 
 class LoginView(FormView):
@@ -23,9 +24,21 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            auth.login(self.request, user)
+            for blocked in BlockedUser.objects.all():
+                if blocked.user == user:
+                    return redirect('auth:blocked')
+                else:
+                    auth.login(self.request, user)
 
         return super().form_valid(form)
+
+
+class BlockedView(View):
+    template_name = 'authapp/blocked.html'
+    model = BlockedUser
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 
 class LogoutView(View):
@@ -96,7 +109,6 @@ class NotificationView(ListView):
     title = 'Уведомления'
     template_name = 'authapp/notifications.html'
     ordering = ['-add_datetime']
-
 
     def get_context_data(self, **kwargs):
         notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
