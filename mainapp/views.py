@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.views.generic import View, ListView, DetailView
+from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _

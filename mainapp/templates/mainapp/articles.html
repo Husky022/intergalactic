@@ -3,53 +3,28 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-<div class="article-box">
-    <div class="details">
-        <div class="related">
-            <div class="related-articles">
-                {% for item in object_list %}
-                <div class="block-article">
-                    <p><a href="{% url 'profile:main' %}">
-                            <span class="font-weight-bold"><img class="mr-2"
-                                                                src="{{ item.author.avatar|media_folder_users }}"
-                                                                alt="profile_image" height="24">
-                                {{ item.author }}
-                            </span></a>
+    <div class="article-box">
+        <div class="details">
+            <div class="related">
+                <div class="related-articles">
+                    {% if object_list %}
+                        {% for item in object_list %}
+                            <div class="block-article">
+                                <p>
+                                    <a href="{% url 'profile:main' %}">
+                                        <span class="font-weight-bold">
+                                            <img class="mr-2" src="{{ item.author.avatar|media_folder_users }}" alt="profile_image" height="24">
+                                            {{ item.author }}
+                                        </span>
+                                    </a>
                                     <span class="font-weight-light">
-                            {{ item.add_datetime }}</span>
-                    </p>
-                    <a class="a_link_article" href="{% url 'article_page' item.pk %}">
-                        <h4 class="text-center">{{ item.name }}</h4>
-                    </a>
-                    <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}" alt="">
-                    <div class="articles-text">
-                        <p>
-                            {{ item.preview }}
-                        </p>
-                        <div class="box-btn-read">
-                            <a class="btn-read-article" href="{% url 'article_page' item.pk %}">
-                                Читать полностью
-                            </a>
-
-                        </div>
-                        <hr>
-                        <p>#{{ item.tag }}</p>
-                        <div class="box-footer">
-                            <div>{{ item.hub }}</div>
-                            <div class="likes-dislikes-comments-box-article">
-                                <a class="btn-comments" href="{% url 'article_page' item.pk %}">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16"
-                                         class="bi bi-chat-left-text"
-                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                              d="M14 1H2a1 1 0 0 0-1 1v11.586l2-2A2 2 0 0 1 4.414 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                        <path fill-rule="evenodd"
-                                              d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-                                    </svg>
-                                    ({{ item.item_comment }})
+                                        {{ item.add_datetime }}
+                                    </span>
+                                </p>
+                                <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                                    <h4 class="text-center">{{ item.name }}</h4>
                                 </a>
-                                <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}"
-                                     alt="">
+                                <img class="img-thumbnail article-img" src="{{ item.image|media_folder_article }}" alt="">
                                 <div class="articles-text">
                                     <p>
                                         {{ item.preview }}
@@ -58,13 +33,12 @@
                                         <a class="btn-read-article" href="{% url 'article_page' item.pk %}">
                                             Читать полностью
                                         </a>
-
                                     </div>
                                     <hr>
                                     <p>#{{ item.tag }}</p>
                                     <div class="box-footer">
                                         <div>{{ item.hub }}</div>
-                                        <div class="likes-dislikes-comments-box">
+                                        <div class="likes-dislikes-comments-box-article">
                                             <a class="btn-comments" href="{% url 'article_page' item.pk %}">
                                                 <svg width="1em" height="1em" viewBox="0 0 16 16"
                                                      class="bi bi-chat-left-text"
@@ -72,7 +46,7 @@
                                                     <path fill-rule="evenodd"
                                                           d="M14 1H2a1 1 0 0 0-1 1v11.586l2-2A2 2 0 0 1 4.414 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                                                     <path fill-rule="evenodd"
-                                                          d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                                    d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                                                 </svg>
                                                 ({{ item.item_comment }})
                                             </a>
@@ -112,7 +86,6 @@
                                                     ({{ item.views }})&nbsp&nbsp
                                                     <span class="badge badge-pill badge-primary"
                                                           title='рейтинг'> {{ item.rating }}</span>
-
                                                 </a>
                                             </button>
                                         </div>
@@ -120,13 +93,14 @@
                                 </div>
                             </div>
                         {% endfor %}
-                    </div>
-                {% else %}
-                    <p>Нет опубликованных статей</p>
-                {% endif %}
-            </div>
+                    {% else %}
+                        <p>Нет опубликованных статей</p>#}
+                    {% endif %}
+                </div>
+           </div>
         </div>
     </div>
     <div class=data_articles></div>
     <script src="{% static 'js/infinite_scroll.js' %}"></script>
+
 {% endblock %}
