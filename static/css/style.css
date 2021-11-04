@@ -999,3 +999,16 @@ textarea {
 .blockedtext{
     margin: 10px auto 5px;
     }
+
+.user_blocked_card {
+    opacity: 0.5;
+}
+
+.card-cat-block{
+    color: #9b3838;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+
