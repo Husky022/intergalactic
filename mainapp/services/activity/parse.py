@@ -92,8 +92,6 @@ class RenderArticle:
         sorted_list = sorted(likes_id, key=lambda count: count[0], reverse=sort_order)
         for i in sorted_list:
             result_list.append(i[2])
-        for i in result_list:
-            print(i)
         return result_list
 
     def sorting_by_like_first_less(self, sort_order=False):
@@ -110,8 +108,6 @@ class RenderArticle:
         sorted_list = sorted(likes_id, key=lambda count: count[0], reverse=sort_order)
         for i in sorted_list:
             result_list.append(i[2])
-        for i in result_list:
-            print(i)
         return result_list
 
     def sorting_by_comment_first_more(self, sort_order=True):
