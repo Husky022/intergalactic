@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus, VoiceArticle
@@ -46,11 +46,8 @@ class Main(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        # return self.render_to_response(context)
-        return HttpResponseRedirect(reverse(
-            'hub_category',
-            kwargs={'pk': 0}
-        ))
+        return self.render_to_response(context)
+    
 
 class Articles(ListView):
     """ CBV хабов страницы """

@@ -1,7 +1,7 @@
 <div class="dropdown">
     сортировать по:
     <div>{{ request.resolver_match.kwargs.pk}}</div>
-    <form action="{% url 'hub_category' request.resolver_match.kwargs.pk %}" method="get">
+    <form action="{% url 'hub_category' request.resolver_match.kwargs.pk|default:0 %}" method="get">
         <select class="btn btn-secondary dropdown-menu-dark" name="by_date" id="sorting_by_date">
             <option class="dropdown-item">дате</option>
             <option value="first_new" class="dropdown-item">Сначала новые</option>
@@ -20,6 +20,6 @@
             <option value="first_less" class="dropdown-item">Сначала меньше</option>
         </select>
 
-        <button action="{% url 'hub_category' request.resolver_match.kwargs.pk %}" class="btn btn-outline-success" type="submit">Сортировать</button>
+        <button action="{% url 'hub_category' request.resolver_match.kwargs.pk|default:0 %}" class="btn btn-outline-success" type="submit">Сортировать</button>
     </form>
 </div>
