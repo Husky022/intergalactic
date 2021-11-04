@@ -39,3 +39,19 @@ class Complaint(models.Model):
     class Meta:
         verbose_name = 'жалоба'
         verbose_name_plural = 'жалобы'
+
+
+class ComplaintMessage(models.Model):
+    complaint = models.ForeignKey(
+        Complaint, verbose_name='Жалоба', on_delete=models.CASCADE)
+    article = models.ForeignKey(
+        Article, verbose_name='Статья', on_delete=models.CASCADE)
+    message_from = models.ForeignKey(
+        IntergalacticUser,
+        verbose_name='Сообщение от',
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    text = models.TextField(verbose_name='Текст сообщения')
+    datetime = models.DateTimeField(
+        verbose_name='Дата и время сообщения', auto_now_add=True)

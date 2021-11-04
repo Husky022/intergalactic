@@ -28,10 +28,12 @@
             <p>Общение с Модератором</p>
             {% endif %}
             {% if user.is_stuff or user.is_superuser %}
-            <a class="btn btn-primary btn-sm" href="{% url 'moderation:approve_article' article.pk %}"
-                role="button">Разрешить публикацию</a>
+            {% if article.article_status_new.short_name == 'PB' %}
             <a class="btn btn-primary btn-sm" href="{% url 'moderation:reject_article' article.pk %}"
-                role="button">Вернуть на доработку</a>
+                role="button">Снять с публикации</a>
+            {% else %}
+            <p style="color:red"><i> Статья снята с публикации</i></p>
+            {% endif %}
             {% endif %}
         </div>
         <div class="card-body">
@@ -41,21 +43,13 @@
                 <button class="btn btn-outline-secondary" type="button" id="send_message"
                     name="{{ article.pk }}">Отправить</button>
             </div>
-            {% if not messages %}
-            <p class="card-text">
-                Пока нет ни одного сообщения.
-            </p>
-            {% endif %}
-
             <div class="moderation-messages">
-                {% if not messages %}
-                <div class="moderation-message"></div>
-                {% else %}
+
                 {% for message in messages %}
                 <div class="moderation-message">
                     <div class="first-line">
                         <div class="author">
-                            <p>{{ message.message_from.username }}</p>
+                            <p>{{ message.message_from.username|title }}</p>
                         </div>
                         <div class="datetime">
                             <p>{{ message.datetime | date:"d-m-Y H:i" }}</p>
@@ -67,11 +61,10 @@
                 </div>
                 {% endfor %}
 
-                {% endif %}
             </div>
         </div>
     </div>
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/moderation.js' %}"></script>
+<script src="{% static 'js/moderate_complaints.js' %}"></script>
 {% endblock %}

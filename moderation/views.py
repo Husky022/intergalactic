@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
@@ -10,7 +11,7 @@ from django.utils.decorators import method_decorator
 
 from mainapp.models import Article, ArticleStatus, Comment
 from authapp.models import IntergalacticUser
-from moderation.models import ArticleMessage, Complaint
+from moderation.models import ArticleMessage, Complaint, ComplaintMessage
 from .utilities import check_complaints
 
 
@@ -119,13 +120,43 @@ class ModerationArticleComplaintView(View):
             'user': self.request.user,
             'article': article,
             'complainant': Complaint.objects.get(article=article.pk).complainant,
-            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
+            'messages': ComplaintMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
         }
         return context
 
     def get(self, request, pk):
-        if self.request.user.is_authenticated and (self.request.user == Article.objects.get(
-                pk=pk).author or self.request.user.is_superuser or self.request.user.is_stuff):
+        article = Article.objects.get(pk=pk)
+        # if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user.is_stuff or self.request.user == Complaint.objects.get(article=article).last().complainant):
+        if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user == Complaint.objects.get(article=article).complainant):
             return render(request, self.template_name, self.get_context_data(pk))
 
         return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))
+
+
+class RegisterNewComplaintMessage(View):
+    def post(self, request):
+        print('RegisterNewComplaintMessage RUN')
+        if request.is_ajax():
+            ajax = json.loads(request.body.decode('utf-8'))
+            article = Article.objects.get(pk=ajax.get('article'))
+            print(f'article:  {article}')
+            complaint = Complaint.objects.filter(article=article).last()
+            print(f'complaint:  {complaint}')
+            print(f'request.user   {request.user}')
+            message = ComplaintMessage(
+                complaint=complaint,
+                article=article,
+                message_from=request.user,
+                text=ajax.get('text')
+                # datetime=datetime
+            )
+            message.save()
+            print(f'MESSAGE:  {message}')
+            print(f'MESSAGE_OBJ:  {ComplaintMessage.objects.last()}')
+
+            result = {
+                'author': message.message_from.username,
+                'datetime': message.datetime.strftime('%d-%m-%Y %H:%M'),
+                'text': message.text
+            }
+            return JsonResponse(result)
