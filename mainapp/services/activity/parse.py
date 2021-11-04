@@ -165,9 +165,9 @@ class Parse:
 
 
 def get_sorted(kwargs, request):
-    if request.resolver_match.kwargs.get('pk'):
+    try:
         kwargs['pk'] = request.resolver_match.kwargs.get('pk')
-    else:
+    except:
         kwargs['pk'] = 0
 
     if request.GET.dict().get('by_date') == 'first_old':

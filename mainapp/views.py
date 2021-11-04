@@ -46,8 +46,11 @@ class Main(ListView):
         context = self.get_context_data()
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        return self.render_to_response(context)
-
+        # return self.render_to_response(context)
+        return HttpResponseRedirect(reverse(
+            'hub_category',
+            kwargs={'pk': 0}
+        ))
 
 class Articles(ListView):
     """ CBV хабов страницы """

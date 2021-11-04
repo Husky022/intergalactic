@@ -1,5 +1,6 @@
 <div class="dropdown">
     сортировать по:
+    <div>{{ request.resolver_match.kwargs.pk}}</div>
     <form action="{% url 'hub_category' request.resolver_match.kwargs.pk %}" method="get">
         <select class="btn btn-secondary dropdown-menu-dark" name="by_date" id="sorting_by_date">
             <option class="dropdown-item">дате</option>

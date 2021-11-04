@@ -3,6 +3,9 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
+        <div class="text-center" id="sorting_filter">
+            {% include 'mainapp/includes/inc__sorting_filter.html' %}
+        </div>
     <div class="article-box">
         <div class="details">
             <div class="related">

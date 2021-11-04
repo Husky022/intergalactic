@@ -47,6 +47,8 @@ document.addEventListener('scroll', async (e) => {
 
             let header = data_articles.querySelector('header');
             if (header){header.remove()}
+            // let sorted = data_articles.getElementById('sorting_filter');
+            // if (sorted){sorted.remove()}
 
             let footer = data_articles.querySelector('.footer');
             if (footer){footer.remove()}
