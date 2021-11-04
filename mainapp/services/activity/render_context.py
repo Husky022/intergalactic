@@ -92,7 +92,7 @@ def fill_context(self):
     """Рендер контекста"""
     self.object = self.get_object()
     context = self.get_context_data(object=self.get_object())
-    article_views(self)
+
     context = CommentSubcomment(self.request, self.kwargs).render_context(context)
     context['likes'] = LikeDislike(self.request, self.kwargs).view_like()
     context["rating"] = context["likes"].dislike_count + self.object.views * 2 + \
@@ -101,36 +101,3 @@ def fill_context(self):
     context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                          recipient=self.request.user.id).count()
     return context
-
-
-def article_page_get(self):
-    """Get запрос для article_page"""
-    context = fill_context(self)
-    if self.request.is_ajax():
-        if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-            context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).set(context)
-        elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-            context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete(context)
-        else:
-            context = LikeDislike(self.request, self.kwargs, ).set_like(context)
-        result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
-        return JsonResponse({"result": result})
-    return self.render_to_response(context)
-
-
-def article_page_post(self):
-    """Post запрос для article page"""
-    CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-    CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
-    return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
-
-
-class Activity:
-    types = {
-        'get': article_page_get,
-        'post': article_page_post,
-    }
-
-    @classmethod
-    def create(cls, type_, *args, **kwargs):
-        return cls.types[type_](*args, **kwargs)

@@ -16,10 +16,11 @@
 
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
-                        type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                    Статьи на проверку
-                </button>
+{#                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"#}
+{#                        type="button" role="tab" aria-controls="pills-home" aria-selected="true">#}
+{#                    Статьи на проверку#}
+{#                </button>#}
+                <p class="profile_subheading_2">Статьи на проверку: </p>
             </li>
             {#            <li class="nav-item" role="presentation">#}
             {#                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"#}
@@ -35,27 +36,28 @@
 
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" style="background: none !important;">
-                <table class="article-table">
+                <table  >
                     <tbody>
                     {% for article in object_list %}
                         <tr>
-                            <td class="article-table">
-                                <table>
-                                    <tr>
-                                        <td rowspan="2" class="article-name">
-                                            <a href="{% url 'moderation:article' article.pk %}" class="article-anchor">
-                                                <p>{{ article.name }}</p>
-                                            </a>
-                                        </td>
-                                        <td class="hub-name"><p>{{ article.hub.name }}</p></td>
-                                        <td rowspan="2" class="article-edit-buttons">
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="hub-name"><p>{{ article.add_datetime }}</p></td>
-                                    </tr>
-                                </table>
+                            <td>
+                                <div class="block-moder-article">
+                                    <table>
+                                        <tr>
+                                            <td rowspan="2" class="article-name">
+                                                <a href="{% url 'moderation:article' article.pk %}" class="article-anchor">
+                                                    <p>{{ article.name }}</p>
+                                                </a>
+                                            </td>
+                                            <td class="hub-name"><p>{{ article.hub.name }}</p></td>
+{#                                            <td rowspan="2" class="article-edit-buttons">#}
+{#                                            </td>#}
+                                        </tr>
+                                        <tr>
+                                            <td class="hub-name"><p>{{ article.add_datetime }}</p></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}

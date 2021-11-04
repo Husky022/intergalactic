@@ -58,6 +58,11 @@
     border: 1px;
     border-color: white;
     float: left;
+
+}
+
+.margin1{
+    margin-right: 10%;
 }
 
 .article-img {
@@ -66,6 +71,23 @@
     margin-left: 15%;
     width: 70% !important;
     border: none !important;
+}
+
+.search-button{
+    border-color: Gainsboro;
+    color: Gainsboro;
+}
+
+.search-button:hover{
+    border-color: maroon;
+    background-color: maroon;
+    color: Gainsboro;
+}
+
+.search-button:checked {
+    border-color: maroon;
+    background-color: maroon;
+    color: Gainsboro;
 }
 
 
@@ -114,7 +136,7 @@ button::-moz-focus-inner {
     border: 0 !important;
 }
 
-.block-article {
+.block-article, .block-moder-article{
     background-color: white;
     margin-top: 5%;
     margin-bottom: 5%;
@@ -123,12 +145,51 @@ button::-moz-focus-inner {
     border-radius: 5px;
 }
 
+.block-moder-article{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
 .block-comment {
-    margin-top: 5%;
-    margin-bottom: 5%;
-    padding: 5%;
-    box-shadow: 0 0 5px 5px rgba(221, 221, 221, 1);
+    background-color: white;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
     border-radius: 10px;
+}
+
+.block-notification {
+    background-color: white;
+    width: 50%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+}
+
+.block-profile{
+    position: relative;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3% 2% 2% 3%;
+
+}
+
+.img-role-redaction-block{
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.info-about-user{
+    width: 60%;
+    display: inline-block;
+    margin-left: 5%;
+    vertical-align: top;
 }
 
 
@@ -158,18 +219,12 @@ button::-moz-focus-inner {
 
 .article-list-box {
     margin-top: 2%;
-    margin-left: 25%;
-    margin-right: 25%;
-    width: 50%;
+    margin-left: 20%;
+    margin-right: 20%;
+    width: 60%;
     margin-bottom: 5%;
 }
 
-.article-img {
-    margin-bottom: 10px;
-    margin-top: 10px;
-    height: 250px;
-    width: 400px;
-}
 
 .project-menu-name {
     font-size: 30px;
@@ -277,6 +332,13 @@ button::-moz-focus-inner {
     flex-direction: column;
 }
 
+.admin-moder-panel{
+    margin-right: 5%;
+    width: 5%;
+
+}
+
+
 
 /* Классы для Личного кабинета */
 
@@ -288,7 +350,7 @@ button::-moz-focus-inner {
 
 .profile_subheading_2 {
     font-size: 25px;
-    color: green;
+    color: #666666;
 }
 
 .profile_info {
@@ -299,10 +361,84 @@ button::-moz-focus-inner {
 }
 
 .profile_image {
-    height: 200px;
-    width: 200px;
+    width: 100%;
+    height: 100%;
     float: left;
-    margin: 20px 20px 5px 0px;
+    border-radius: 10px;
+}
+
+.first-last-name{
+    text-align: left;
+}
+
+.profile_about{
+    text-align: left;
+}
+
+.about-user-pole{
+    color: maroon;
+    font-weight: bold;
+}
+
+.user-admin-moder-buttons{
+    width: 100%;
+}
+
+.my-articles{
+    position: relative;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3% 2% 2% 3%;
+}
+.my-articles-item{
+    display: inline-block;
+    vertical-align: top;
+
+}
+
+.btn-create-article{
+    margin-left: 50%;
+    margin-right: 50%;
+    vertical-align: center;
+    width: 200%;
+    background-color: maroon;
+    border: 1px solid maroon;
+    border-radius: 5px;
+    padding: 5px 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-create-article:hover{
+    border: 1px solid brown;
+    background-color: brown;
+    border-radius: 5px;
+    padding: 5px 5px;
+    text-decoration: none;
+}
+
+/*.article-edit-buttons{*/
+/*    position: relative;*/
+/*    display: block;*/
+/*    margin: 0 auto;*/
+/*    text-align: center;*/
+/*    padding: 3% 2% 2% 3%;*/
+/*}*/
+
+
+
+.first-last-name-block{
+    color: maroon;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.profile-role-block{
+    margin-top: 70%;
+    margin-bottom: 5%;
 }
 
 .profile_article_section {
@@ -313,6 +449,24 @@ button::-moz-focus-inner {
 
 .btn-light {
     margin-top: 20px
+}
+
+.btn-red-profile-block {
+    margin-bottom: 2%;
+    display: block;
+    width: 100%;
+    border: 1px solid maroon;
+    border-radius: 5px;
+    background: white;
+    padding: 5px 5px;
+    text-decoration: none;
+    color: maroon;
+}
+
+.btn-red-profile-block:hover  {
+    background: maroon;
+    border: 1px solid maroon;
+    color: white;
 }
 
 .article_line {
@@ -326,8 +480,13 @@ table.article-table {
 }
 
 td.article-table {
-    border: 1px solid black;
-    border-radius: 15px;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 1% 1% 1% 1%;
 }
 
 .article-table table {
@@ -342,11 +501,26 @@ td.article-table {
 }
 
 .article-name {
-    width: 60%;
+    width: 50%;
 }
+
+/*.btn-red-article-block{*/
+/*    border: 1px solid maroon;*/
+/*    border-radius: 5px;*/
+/*    background: white;*/
+/*    padding: 5px 5px;*/
+/*    text-decoration: none;*/
+/*    color: maroon;*/
+/*}*/
+
+/*.btn-red-article-block:hover{*/
+/*    background: maroon;*/
+/*    color: white;*/
+/*}*/
 
 .hub-name {
     width: 25%;
+    color: #111111;
 }
 
 .hub-name p {
@@ -446,6 +620,15 @@ a.article-anchor {
     color: #666666;
 }
 
+.ajax_comment{
+    width: 100%;
+}
+
+.ajax_activity{
+    width: 100%;
+}
+
+
 /* Классы для администрования пользователей */
 
 .user_delete {
@@ -468,8 +651,9 @@ a.article-anchor {
 }
 
 .users_list {
-    margin-left: 150px;
-    margin-right: 150px;
+    width: 40%;
+    margin-left: 30%;
+    margin-right: 30%;
 }
 
 .users_list a {
@@ -492,7 +676,6 @@ a.article-anchor {
     height: 125px;
     margin: 15px auto;
     position: relative;
-    border: 1px solid #b3b3b3;
     border-radius: 25px;
     display: flex;
     flex-direction: row;
@@ -611,7 +794,14 @@ a.article-anchor {
     border-bottom: 3px solid #212121;
 }
 
+.admin-moder-buttons{
+    margin-top: 10%;
+    width: 100%;
+}
+
+
 .flex-block-profile {
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -620,11 +810,13 @@ a.article-anchor {
     align-items: baseline;
 }
 
+
+
 .like_colour {
     color: rgba(135, 135, 135, 0.68);
 }
 
-.btn-read-article {
+.btn-read-article{
     border: 1px solid maroon;
     border-radius: 5px;
     background: white;
@@ -633,7 +825,7 @@ a.article-anchor {
     color: maroon;
 }
 
-.btn-read-article:hover {
+.btn-read-article:hover{
     background: maroon;
     color: white;
 }
@@ -649,13 +841,14 @@ textarea {
 }
 
 .details {
-    width: 700px;
+    width: 40%;
 }
 
 .likes-dislikes-comments-box {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
+    margin-bottom: 10%;
 }
 
 .box-footer {
@@ -699,9 +892,6 @@ textarea {
     margin-right: 100px;
 }
 
-.profile_about{
-    margin-top: 20px;
-}
 
 .profile-article {
     display: flex;
@@ -725,8 +915,14 @@ textarea {
     display: flex;
 }
 
-.moderation-details-articles {
-    max-width: 1000px;
+.details-articles {
+    background-color: white;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+
 }
 
 .first-line {

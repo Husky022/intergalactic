@@ -3,7 +3,7 @@
     <div class="container-lg">
         <div class="row g-4 justify-content-center align-items-center">
             <div class="col-md-5 text-center text-md-start">
-                <a href="#sidebar" class="btn btn-outline-success" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
+                <a href="#sidebar" class="btn btn-outline-success search-button" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
                 Поиск
                 </a>
             </div>
@@ -51,7 +51,7 @@
                 <label for="rating_end" class="form-label">По рейтингу до:</label>
                 {% render_field search_filter.form.rating_end class="form-control" id="rating_end" placeholder="рейтинг до"%}
             </div>
-            <button action="{% url 'search' %}" class="btn btn-outline-success" type="submit">Search</button>
+            <button action="{% url 'search' %}" class="btn btn-outline-success" type="submit">Найти</button>
         </form>
     </div>
 </div>

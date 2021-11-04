@@ -10,7 +10,6 @@ from authapp.models import NotificationModel, IntergalacticUser
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
-from mainapp.search_filter import ArticleFilter
 
 
 class LoginView(FormView):
@@ -93,15 +92,12 @@ class UserProfileView(View):
                 author=self.request.user,
                 article_status_new=status
             )
-        article = Article.objects.filter(article_status='PB')
-        search_filter = ArticleFilter(request.GET, queryset=article)
 
         context = {
             'title': self.title,
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
-            'search_filter': search_filter,
         }
         return context
 
@@ -124,15 +120,18 @@ def reading_notifications(func):
 class NotificationView(ListView):
     title = 'Уведомления'
     template_name = 'authapp/notifications.html'
+    ordering = ['-add_datetime']
+
 
     def get_context_data(self, **kwargs):
         notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)
         notifications_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=1)
+
         context = {
             'title': self.title,
             'user': self.request.user,
-            'notifications_not_read': notifications_not_read,
-            'notifications_read': notifications_read
+            'notifications_not_read': notifications_not_read.order_by('-add_datetime'),
+            'notifications_read': notifications_read.order_by('-add_datetime')
         }
         return context
 
