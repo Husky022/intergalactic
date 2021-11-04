@@ -189,6 +189,7 @@ class Notification:
                                                             subcomment_id=self.subcomment_id,
                                                             like_id=self.like_id)
             notification.save()
+
             if recipient.send_to_email:
                 if self.sender_id:
                     user = IntergalacticUser.objects.filter(id=self.sender_id).first()
