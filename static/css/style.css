@@ -995,3 +995,7 @@ textarea {
 #rating_end{
     width: 220px !Important;
 }
+
+.blockedtext{
+    margin: 10px auto 5px;
+    }

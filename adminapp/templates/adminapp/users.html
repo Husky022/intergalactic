@@ -30,6 +30,14 @@
                             ">
                         <a href={% url 'adminapp:user_delete' object.pk %}>удалить</a>
                     </button>
+                    </button>
+                    <button style="
+                                margin-top: 5px;
+                                margin-bottom: 0px;
+                                margin-left: 0px;
+                            ">
+                        <a href={% url 'adminapp:user_blocked' object.pk %}>заблокировать</a>
+                    </button>
                 </div>
                 <div class="user_name">
                     <p>
