@@ -6,10 +6,7 @@ from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
-from authapp.models import NotificationModel, IntergalacticUser
-from authapp.services.notifications import Notification
-from mainapp.models import Article, ArticleStatus
-from mainapp.forms import ArticleCreationForm
+from authapp.models import NotificationModel
 from moderation.models import BlockedUser
 
 
@@ -24,11 +21,15 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            for blocked in BlockedUser.objects.all():
-                if blocked.user == user:
-                    return redirect('auth:blocked')
-                else:
-                    auth.login(self.request, user)
+            block = BlockedUser.objects.all()
+            if not block:
+                for blocked in BlockedUser.objects.all():
+                    print(user)
+                    if blocked.user == user:
+                        return redirect('auth:blocked')
+                    else:
+                        auth.login(self.request, user)
+                auth.login(self.request, user)
 
         return super().form_valid(form)
 
