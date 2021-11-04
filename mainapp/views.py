@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.services.activity.parse import RenderArticle
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+from mainapp.forms import CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
 from .services.activity.comment import CommentSubcomment
