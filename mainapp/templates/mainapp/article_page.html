@@ -20,11 +20,13 @@
             <div class="img-box">
                 <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
             </div>
+            {% if audio %}
             <div class="text">
                 <audio controls preload="auto">
                     <source src="{{ audio.audio_file.url }}" type="audio/mp3">
                 </audio>
             </div>
+            {% endif %}
             <div id="text" class="text">
                 <p>{{ article.add_datatime }}</p>
                 {{ article.text|safe|linebreaks }}

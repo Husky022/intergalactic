@@ -7,6 +7,7 @@ from authapp.models import IntergalacticUser, NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
+from mainapp.services.audio import play_text
 
 
 class UserProfileView(View):
@@ -39,7 +40,6 @@ class UserProfileView(View):
         current_user.send_to_email = send_to_email_value
         current_user.save()
         return JsonResponse({'status': 'success'})
-
 
     def get(self, request):
         return render(request, self.template_name, self.get_context_data(request))
@@ -84,6 +84,7 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        play_text(pk)
         article.save()
         notification = Notification(article, context='moderation')
         notification.send()
