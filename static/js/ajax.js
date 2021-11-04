@@ -130,6 +130,23 @@ window.onload = function () {
         event.preventDefault();
     });
 
+    $('#sorting_date').change(function (event) {
+        $.ajax({
+            // url: "/sorted/",
+            data: {  sorting_by_date: event.target.value,
+
+        },
+        success: function (data) {
+            console.log(data);
+            // document.querySelector('body').innerHTML = data.result;
+            },
+        });
+
+    });
+    $('#sorting_like').click(function (event) {
+        console.log(event)
+
+    });
 
 
 };

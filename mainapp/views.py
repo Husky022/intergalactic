@@ -13,6 +13,7 @@ from .search_filter import ArticleFilter
 from .services.activity.comment import CommentSubcomment
 from .services.activity.likes import LikeDislike
 from .services.activity.other import view_views, rating
+from .services.activity.parse import get_sorted
 from .services.audio import play_text
 
 
@@ -46,7 +47,7 @@ class Main(ListView):
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
         return self.render_to_response(context)
-
+    
 
 class Articles(ListView):
     """ CBV хабов страницы """
@@ -54,15 +55,16 @@ class Articles(ListView):
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
     context_object_name = 'articles'
-    ordering = ['add_datetime']
+    # ordering = ['add_datetime']
     paginate_by = 5
 
-    def get_queryset(self):
+    def get_queryset(self, request):
+        self.kwargs.update(get_sorted(self.kwargs, request))
         queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
+        self.object_list = self.get_queryset(request)
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
