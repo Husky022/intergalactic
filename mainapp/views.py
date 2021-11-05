@@ -1,23 +1,25 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.views.generic import View, CreateView, ListView, DetailView
+from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel
-from mainapp.models import Article, ArticleStatus
-from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
+from mainapp.models import Article, ArticleStatus, VoiceArticle
+from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .services.activity.comment import CommentSubcomment
 from .services.activity.likes import LikeDislike
+from .services.activity.other import view_views, rating
+from .services.activity.parse import get_sorted
+from .services.audio import play_text
 
 
 class Main(ListView):
     """ CBV Главной страницы """
-    template_name = 'mainapp/index.html'
+    template_name = 'mainapp/articles.html'
     paginate_by = 5
     extra_context = {'title': 'Главная'}
 
@@ -45,22 +47,24 @@ class Main(ListView):
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
         return self.render_to_response(context)
-
+    
 
 class Articles(ListView):
     """ CBV хабов страницы """
     model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
-
+    context_object_name = 'articles'
+    # ordering = ['add_datetime']
     paginate_by = 5
 
-    def get_queryset(self):
+    def get_queryset(self, request):
+        self.kwargs.update(get_sorted(self.kwargs, request))
         queryset = RenderArticle(self.kwargs).queryset_activity()
         return queryset
 
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
+        self.object_list = self.get_queryset(request)
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
@@ -93,17 +97,24 @@ class ArticlePage(DetailView):
 
     def get(self, request, *args, **kwargs):
         # Добавление и валидация просмотра
-        article_views(self)
-        # Набор контекста
-        context = fill_context(self)
+        view_views(self)
         # Валидация на добавление или удаление дизлайков или лайков
+        if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
+            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).add_get_or_post()
+        elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
+            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete_get_or_post()
+        elif self.request.GET.dict().get("status"):
+            LikeDislike(self.request, self.kwargs, ).status_like()
+        # Набор контекста
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.get_object())
+        context = CommentSubcomment(self.request, self.kwargs).render_context(context)
+        context['likes'] = LikeDislike(self.request, self.kwargs).view_like()
+        context["rating"] = rating(self.object)
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                             recipient=self.request.user.id).count()
+        context['audio'] = VoiceArticle.objects.filter(article=self.object).first()
         if self.request.is_ajax():
-            if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).set(context)
-            elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete(context)
-            else:
-                context = LikeDislike(self.request, self.kwargs, ).set_like(context)
             result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
             # Отправка аяксу результата
             return JsonResponse({"result": result})
@@ -178,6 +189,7 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        play_text(pk)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
 
@@ -197,7 +209,7 @@ class Search(ListView):
     paginate_by = 5
 
     def get(self, request, page_num=1, *args, **kwargs):
-        article = Article.objects.filter(article_status='PB')
+        article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
         self.object_list = article

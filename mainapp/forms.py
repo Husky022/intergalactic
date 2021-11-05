@@ -7,10 +7,9 @@ from django import forms
 
 
 class ArticleCreationForm(ModelForm):
-
     class Meta:
         model = Article
-        fields = ['name', 'preview', 'text', 'tag', 'hub', 'image']
+        fields = ['name', 'preview', 'text', 'text_audio', 'tag', 'hub', 'image']
         widgets = {
             'text': SummernoteWidget(),
         }
@@ -27,6 +26,7 @@ class ArticleCreationForm(ModelForm):
 
 class CommentForm(forms.Form):
     comment = forms.CharField(label='comment', max_length=1000)
+
 
 class SubCommentForm(forms.Form):
     comment = forms.CharField(label='subcomment', max_length=1000)

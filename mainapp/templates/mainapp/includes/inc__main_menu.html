@@ -91,7 +91,7 @@
                     {% endif %}
                 </a>
                     <div class="menu-icon-box">
-                        <a id="menu-icon" class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
+                        <a id="menu-icon" class="user-panel-button" title="Личный кабинет" href="{% url 'profile:main' %}">
                         <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -117,8 +117,8 @@
     <nav>
     <div>
         <ul class="menu_category nav-pills d-flex justify-content-center">
-            <li {% if request.resolver_match.url_name == "articles" %} class="active" {% endif %}>
-            <a class="nav-link black" href="{% url 'articles' %}">Все хабы</a>
+            <li {% if request.resolver_match.url_name == "hub_category" and not request.resolver_match.kwargs.pk %} class="active" {% endif %}>
+            <a class="nav-link black" href="{% url 'hub_category' 0 %}">Все хабы</a>
             </li>
             {% for item in category_menu %}
             <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category" == request.resolver_match.url_name  %} class="active" {% endif %}>

@@ -92,7 +92,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-horizontal" action="{% url 'create_article' %}" method="post"
+                                <form class="form-horizontal" action="{% url 'profile:create_article' %}" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     {{ creation_form.as_table }}

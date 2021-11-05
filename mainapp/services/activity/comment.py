@@ -39,14 +39,20 @@ class CommentSubcomment:
             id=article.author_id).first()
         if 'text_comment' in self.get_post:
             comment = self.add_comment()
-            Notification.create('comment', recipient, self.request.user, self.get_post['text_comment'], article.name,
-                                int(self.pk), comment.id, None)
+            notification = Notification(comment)
+            notification.send()
         elif 'text_subcomment' in self.get_post:
             subcomment = self.add_sub_comment()
-            comment = Comment.objects.filter(
-                id=self.get_post['comment_id']).first()
-            Notification.create('subcomment', recipient, self.request.user, self.get_post['text_subcomment'],
-                                comment.text, int(self.pk), None, subcomment.id)
+
+#            comment = Comment.objects.filter(
+#                id=self.get_post['comment_id']).first()
+#            Notification.create('subcomment', recipient, self.request.user, self.get_post['text_subcomment'],
+#                                comment.text, int(self.pk), None, subcomment.id)  # ie-178 Dmitrij
+
+            notification = Notification(subcomment)
+            notification.send()
+
+
 
     def delete_comment(self):
         """Удаление комментария"""
@@ -56,6 +62,8 @@ class CommentSubcomment:
         for item in sub_comment:
             item.is_active = False
             item.save()
+            notification_sub = NotificationModel.objects.filter(subcomment_id=item.id)
+            notification_sub.delete()
         notification = NotificationModel.objects.filter(comment_id=comment.id)
         notification.delete()
         return comment
@@ -70,6 +78,7 @@ class CommentSubcomment:
         """Сохранение удаление комментариев и их комментариев"""
         if 'com_delete' in self.get_post:
             comment = self.delete_comment()
+
         elif 'sub_com_delete' in self.get_post:
             comment = self.delete_sub_comment()
         comment.is_active = False
@@ -94,16 +103,4 @@ class CommentSubcomment:
         context['subcomments'] = self.parse_sub_comment()
         context['comments_count'] = len(context['comments']) + len(
             SubComment.objects.filter(article_id=self.pk, is_active=True))
-        return context
-
-    def set(self, context):
-        """Показ комментариев и лайков"""
-        self.add_get_or_post()
-        context = self.render_context(context)
-        return context
-
-    def delete(self, context):
-        """Показ комментариев и лайков"""
-        self.delete_get_or_post()
-        context = self.render_context(context)
         return context

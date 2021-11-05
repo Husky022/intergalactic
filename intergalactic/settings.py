@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -40,15 +40,19 @@ INSTALLED_APPS = [
     'django_summernote',
     'mainapp',
     'authapp',
+    'userprofile',
     'adminapp',
     'moderation',
     'django_filters',
     'widget_tweaks',
+    'corsheaders',
+    'background_task',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -114,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow' #UTC +3
 
 USE_I18N = True
 
@@ -167,6 +171,16 @@ SUMMERNOTE_CONFIG = {
     'attachment_filesize_limit': 20000000
 }
 
+# отправление уведомлений на почту
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "test-intergalactic@mail.ru"
+EMAIL_HOST_PASSWORD = "jthgp5GC2L4Bx99WDJdx"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Модерация
 MODERATION_STATUS = True

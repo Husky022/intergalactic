@@ -69,10 +69,19 @@
                         {% for element in subitem %}
                         {% if item.id == element.comment_id %}
                         <p style="color: maroon">
-                            <span class="font-weight-bold">
-                                {{ element.author }}
-                            </span>
-                            ответил {{ element.add_datetime }}:
+
+#                            <span class="font-weight-bold">
+#                                {{ element.author }}
+#                            </span>
+#                            ответил {{ element.add_datetime }}: #ie-178 Dmitrij
+
+                            <a href="{% url 'profile:user' item.author.pk %}">
+                                <span class="font-weight-bold">
+                                    {{ item.author }}
+                                </span>
+                            </a>
+                            оставил комментарий {{ item.add_datetime }}:
+
                         </p>
                         <p> {{ element.text }}</p>
                         {% if request.user.username == element.author.username or request.user.is_superuser %}

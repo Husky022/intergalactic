@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from authapp.models import IntergalacticUser
 
+from userprofile.models import ButtonsInProfile
 from .utilities import get_timestamp_path
 
 
@@ -21,16 +22,15 @@ class Hub(models.Model):
         return f'{self.name}'
 
 
-class ButtonsInProfile(models.Model):
-    name = models.CharField(verbose_name='название кнопки', max_length=20)
-    include_html_file_name = models.CharField(verbose_name='html файл', max_length=100)
-
-
 class ArticleStatus(models.Model):
     short_name = models.CharField(verbose_name='Краткое название', max_length=2)
     name = models.CharField(verbose_name='Название статуса', max_length=50)
     name_plural = models.CharField(verbose_name='Название раздела в ЛК (мн.число)', max_length=50)
-    buttons = models.ManyToManyField(ButtonsInProfile, verbose_name='Кнопки для этого статуса в ЛК')
+    buttons = models.ManyToManyField(
+        ButtonsInProfile,
+        verbose_name='Кнопки для этого статуса в ЛК',
+        related_name='кнопки'
+    )
 
 
 class Article(models.Model):
@@ -45,6 +45,7 @@ class Article(models.Model):
         ('RC', 'Требует исправления'),
         ('PB', 'Опубликована'),
         ('AR', 'В архиве'),
+        ('AB', 'Заблокированна')
     ]
 
     # Пока модерация не включена в настройках - публиковать сразу все написанные статьи
@@ -55,6 +56,7 @@ class Article(models.Model):
         verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
     preview = models.TextField(verbose_name='Предпросмотр', max_length=250)
     text = models.TextField(verbose_name='Текст статьи')
+    text_audio = models.TextField(blank=True, verbose_name='Текст аудио')
     tag = models.CharField(verbose_name='Тэг статьи',
                            max_length=64, blank=True)
     hub = models.ForeignKey(
@@ -79,12 +81,6 @@ class Article(models.Model):
         verbose_name='Время добавления',
         auto_now_add=True
     )
-    article_status = models.CharField(
-        verbose_name='Статус публикации',
-        max_length=2,
-        choices=ARTICLE_STATUS_CHOICES,
-        default=ARTICLE_DEFAULT_STATUS
-    )
     article_status_new = models.ForeignKey(
         ArticleStatus,
         verbose_name='Статус публикации (новый)',
@@ -93,12 +89,6 @@ class Article(models.Model):
     )
     views = models.IntegerField(default=0, verbose_name='просмотры')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
-    article_status_new = models.ForeignKey(
-        ArticleStatus,
-        verbose_name='Статус публикации (новый)',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -175,12 +165,30 @@ class SubComment(models.Model):
         verbose_name_plural = 'Подкомментарии'
 
 
-class Hosts(models.Model):
-    host = models.CharField(max_length=22, verbose_name='АйПи посетителя')
+class Visits(models.Model):
+    """Визиты пользователей для просмотра"""
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
+    user = models.CharField(max_length=32, verbose_name='Имя посетителя')
+    host = models.CharField(max_length=32, verbose_name='IP посетителя')
 
 
-class Art_Visits(models.Model):
-    article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, verbose_name='Статья')
-    host = models.ForeignKey(
-        Hosts, on_delete=models.CASCADE, verbose_name='адрес посетителя')
+class VoiceArticle(models.Model):
+    """Аудио текст"""
+    audio_file = models.FileField(upload_to="audio")
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+
+class Rating(models.Model):
+    """Рейтинг"""
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article')
+
+    @property
+    def total_rating(self):
+        """Подсчет рейтинга"""
+        _article = self.article
+        _likes = Likes.objects.filter(article=_article, status="LK").count()
+        _dislikes = Likes.objects.filter(article=_article, status="DZ").count()
+        _comment = Comment.objects.filter(article=_article, is_active=True).count()
+        _sub_comment = SubComment.objects.filter(article=_article, is_active=True).count()
+        total_rating = (int(_article.views) * 2) + (_likes * 3) + _dislikes + (_comment * 4) + (_sub_comment * 5)
+        return total_rating

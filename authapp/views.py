@@ -1,15 +1,13 @@
 from django.contrib import auth
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
 from authapp.forms import IntergalacticUserLoginForm, IntergalacticUserRegisterForm, IntergalacticUserEditForm
 from django.views.generic import FormView, ListView
 from django.views.generic.base import View
 from django.db import transaction
 
-from authapp.models import NotificationModel, IntergalacticUser
-from authapp.services.notifications import Notification
-from mainapp.models import Article, ArticleStatus
-from mainapp.forms import ArticleCreationForm
+from authapp.models import NotificationModel
+from moderation.models import BlockedUser
 
 
 class LoginView(FormView):
@@ -23,9 +21,25 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            auth.login(self.request, user)
+            block = BlockedUser.objects.all()
+            if not block:
+                for blocked in BlockedUser.objects.all():
+                    print(user)
+                    if blocked.user == user:
+                        return redirect('auth:blocked')
+                    else:
+                        auth.login(self.request, user)
+                auth.login(self.request, user)
 
         return super().form_valid(form)
+
+
+class BlockedView(View):
+    template_name = 'authapp/blocked.html'
+    model = BlockedUser
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 
 class LogoutView(View):
@@ -56,7 +70,7 @@ class RegisterView(FormView):
 class UserEditView(View):
     title = 'редактирование'
     template_name = 'authapp/edit.html'
-    redirect_to = 'auth:profile'
+    redirect_to = 'profile:main'
     account_form = IntergalacticUserEditForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -80,31 +94,6 @@ class UserEditView(View):
         return render(request, self.template_name, self.get_context_data())
 
 
-class UserProfileView(View):
-    title = 'личный кабинет'
-    template_name = 'authapp/profile.html'
-
-    def get_context_data(self, request):
-        statuses = ArticleStatus.objects.all()
-        articles_with_status = {}
-        for status in statuses:
-            articles_with_status[status] = Article.objects.filter(
-                author=self.request.user,
-                article_status_new=status
-            )
-
-        context = {
-            'title': self.title,
-            'user': self.request.user,
-            'creation_form': ArticleCreationForm(),
-            'articles': articles_with_status,
-        }
-        return context
-
-    def get(self, request):
-        return render(request, self.template_name, self.get_context_data(request))
-
-
 def reading_notifications(func):
     def wrapper(self, request, **kwargs):
         res = func(self, request, **kwargs)
@@ -121,7 +110,6 @@ class NotificationView(ListView):
     title = 'Уведомления'
     template_name = 'authapp/notifications.html'
     ordering = ['-add_datetime']
-
 
     def get_context_data(self, **kwargs):
         notifications_not_read = NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0)

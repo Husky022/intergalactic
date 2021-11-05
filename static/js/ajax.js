@@ -9,6 +9,22 @@ function show(id){
 
 window.onload = function () {
 
+    $('#send_email').change(function() {
+        checkbox = document.getElementById('send_email')
+        $.ajax({
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': csrf_token,
+                value_checkbox: checkbox.checked,
+            },
+            url: "/profile/",
+        // если успешно, то
+        success: function (data) {
+            console.log(data)
+            },
+        });
+    });
+
 
 
     $('.likes-dislikes-comments-box').on('click', '.submit_comment', function () {
@@ -114,6 +130,23 @@ window.onload = function () {
         event.preventDefault();
     });
 
+    $('#sorting_date').change(function (event) {
+        $.ajax({
+            // url: "/sorted/",
+            data: {  sorting_by_date: event.target.value,
+
+        },
+        success: function (data) {
+            console.log(data);
+            // document.querySelector('body').innerHTML = data.result;
+            },
+        });
+
+    });
+    $('#sorting_like').click(function (event) {
+        console.log(event)
+
+    });
 
 
 };

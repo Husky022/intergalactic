@@ -9,8 +9,9 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
-from mainapp.models import Article, ArticleStatus, Comment
-from authapp.models import IntergalacticUser
+from authapp.models import NotificationModel
+from authapp.services.notifications import Notification
+from mainapp.models import Article, ArticleStatus
 from moderation.models import ArticleMessage, Complaint, ComplaintMessage
 from .utilities import check_complaints
 
@@ -18,6 +19,7 @@ from .utilities import check_complaints
 class ModerationMixin(View):
     """Это проверка, что пользователь является админимстратором или модератором.
     Все классы отнаследованные от него, наследуют эту проверку."""
+
     @method_decorator(user_passes_test(lambda u: u.is_superuser or u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() in self.http_method_names:
@@ -31,13 +33,20 @@ class ModerationMixin(View):
 class Moderator(ModerationMixin, ListView):
     model = Article
     template_name = 'moderation/moderator.html'
-    extra_context = {'title': 'Модератор'}
     paginate_by = 5
 
-    def get_queryset(self):
-        queryset = Article.objects.filter(
-            article_status_new=ArticleStatus.objects.get(name='На модерации'))
-        return queryset
+#    def get_queryset(self):
+#        queryset = Article.objects.filter(
+#            article_status_new=ArticleStatus.objects.get(name='На модерации'))
+#        return queryset # ie-178 Dmitrij
+
+    def get_context_data(self, **kwargs):
+        context = super(Moderator, self).get_context_data(**kwargs)
+        context['title'] = 'модератор'
+        context['objects_list'] = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='На модерации'))
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
+        return context
 
 
 class ModerationArticleView(View):
@@ -48,7 +57,9 @@ class ModerationArticleView(View):
             'title': 'Статья',
             'user': self.request.user,
             'article': get_object_or_404(Article, pk=pk),
-            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
+            'messages': ArticleMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime'),
+            'notifications_not_read': NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
         }
         return context
 
@@ -70,7 +81,8 @@ class RegisterNewMessage(View):
                 text=ajax.get('text')
             )
             message.save()
-            print(type(message.datetime))
+            notification = Notification(message)
+            notification.send()
             result = {
                 'author': message.message_from.username,
                 'datetime': message.datetime.strftime('%d-%m-%Y %H:%M'),
@@ -85,6 +97,8 @@ class ApproveArticle(ModerationMixin):
         article.article_status_new = ArticleStatus.objects.get(
             name='Опубликована')
         article.save()
+        notification = Notification(article, context='published')
+        notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
@@ -94,7 +108,18 @@ class RejectArticle(ModerationMixin):
         article.article_status_new = ArticleStatus.objects.get(
             name='Требует исправления')
         article.save()
+        notification = Notification(article, context='rejected')
+        notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+
+      
+# class BlockedArticle(ModerationMixin):
+#     def get(self, request, pk):
+#         article = get_object_or_404(Article, pk=pk)
+#         article.article_status_new = ArticleStatus.objects.get(name='Заблокированна')
+#         article.is_active = False
+#         article.save()
+#         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
 class ModerateComplaints(ModerationMixin, ListView):

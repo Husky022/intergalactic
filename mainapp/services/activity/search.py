@@ -1,13 +1,9 @@
-from django.shortcuts import render
-
-from mainapp.services.activity.view import Activity
-
-from ...models import Article
+from ...models import Article, ArticleStatus
 from ...search_filter import ArticleFilter
 
 
 def search_pb(request):
-    article = Article.objects.filter(article_status='PB')
+    article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
     search_filter = ArticleFilter(request.GET, queryset=article)
     # article = search_filter.qs
     return search_filter

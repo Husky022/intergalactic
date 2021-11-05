@@ -8,6 +8,8 @@ from django.views.generic.list import ListView
 from adminapp.forms import IntergalacticUserAdminEditForm
 from authapp.forms import IntergalacticUserRegisterForm
 from authapp.models import IntergalacticUser
+from moderation.models import BlockedUser
+from authapp.models import IntergalacticUser, NotificationModel
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -19,6 +21,14 @@ def admin_main(request):
 class UsersListView(LoginRequiredMixin, ListView):
     model = IntergalacticUser
     template_name = "adminapp/users.html"
+
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersListView, self).get_context_data(**kwargs)
+        context['title'] = 'пользователи'
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                       recipient=self.request.user.id).count()
+        return context
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -33,7 +43,11 @@ def user_create(request):
     else:
         user_form = IntergalacticUserRegisterForm()
 
-    content = {"title": title, "update_form": user_form, "media_url": settings.MEDIA_URL}
+    content = {
+        "title": title,
+        "update_form": user_form,
+        "media_url": settings.MEDIA_URL
+    }
 
     return render(request, "adminapp/user_update.html", content)
 
@@ -70,6 +84,19 @@ def user_delete(request, pk):
     content = {"title": title, "user_to_delete": user, "media_url": settings.MEDIA_URL}
 
     return render(request, "adminapp/user_delete.html", content)
+
+@user_passes_test(lambda u: u.is_superuser)
+def user_blocked(request, pk):
+    title = "пользователи/блокировка"
+
+    user = get_object_or_404(IntergalacticUser, pk=pk)
+
+
+
+    blockedusers = BlockedUser.objects.create(user = user, text = 'text')
+    blockedusers.save()
+    return HttpResponseRedirect(reverse("adminapp:users"))
+
 
 
 def db_profile_by_type(prefix, type, queries):

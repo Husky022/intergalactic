@@ -12,13 +12,19 @@
                 {% for item in notifications_not_read %}
                     <div class="block-notification">
                             {{ item.add_datetime }}
-                            <a href="{% url 'auth:profile' %}">
-                                <span class="font-weight-bold">
-                                    {{item.sender }}
-                                </span>
-                            </a>
+                            {% if item.sender %}
+                                <a href="{% url 'profile:main' %}">
+                                    <span class="font-weight-bold">
+                                        {{ item.sender }}
+                                    </span>
+                                </a>
+                            {% endif %}
                             {{ item.action }}
-                            <a href="{% url 'article_page' item.article_id %}">
+                            {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
+                                <a href="{% url 'moderation:article' item.article_id %}">
+                            {% else %}
+                                <a href="{% url 'article_page' item.article_id %}">
+                            {% endif %}
                                 <span class="font-weight-bold">
                                     {{ item.target }}
                                 </span>
@@ -36,7 +42,7 @@
                 {% for item in notifications_read %}
                     <div class="block-notification">
                             {{ item.add_datetime }}
-                            <a href="{% url 'auth:profile' %}">
+                            <a href="{% url 'profile:main' %}">
                                 <span class="font-weight-bold">
                                     {{item.sender }}
                                 </span>

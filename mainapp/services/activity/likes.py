@@ -1,5 +1,5 @@
 """Модуль лайки и дизлайки"""
-from authapp.models import IntergalacticUser
+from authapp.models import IntergalacticUser, NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Likes, Article
 
@@ -24,7 +24,6 @@ class LikeDislike(object):
                 self.like = Likes.objects.create(article_id=self.kwargs["pk"], user_id=self.request.user.pk)
         else:
             self.like = Likes.objects.filter(user=self.request.user)
-        print(self.like)
         return self.like
 
     def render_like_and_dislike(self):
@@ -37,26 +36,22 @@ class LikeDislike(object):
         """Выбор статуса лайков и дизлайков для рендера"""
         return len(Likes.objects.filter(article_id=int(self.kwargs["pk"]), status=status))
 
-    def status_like(self, status):
+    def status_like(self):
         """Сохранение статуса лайка и дизлайка"""
+        status=self.request.GET.get("status")
         if self.like.status == status:
+            notification = NotificationModel.objects.filter(like_id=self.like.id)
+            notification.delete()
             self.like.status = "UND"
         else:
+            notification = NotificationModel.objects.filter(like_id=self.like.id)
+            notification.delete()
             self.like.status = status
-            article = Article.objects.filter(id=int(self.kwargs["pk"])).first()
-            recipient = IntergalacticUser.objects.filter(id=article.author_id).first()
-            Notification.create('like_article', recipient, self.request.user, None, article.name,
-                                int(self.kwargs["pk"]), None, None)
+            notification = Notification(self.like)
+            notification.send()
         return self.like.save()
 
     def view_like(self):
         """Показ лайков и дизлайков на страничке"""
         self.like.like_count, self.like.dislike_count = self.render_like_and_dislike()
         return self.like
-
-    def set_like(self, context):
-        """Добавление и удаление лайка и дизлайка"""
-        self.status_like(self.request.GET.dict()["status"])
-        self.like = self.view_like()
-        context["likes"] = self.like
-        return context

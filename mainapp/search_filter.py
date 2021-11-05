@@ -9,10 +9,6 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
-
-
 class ArticleFilter(django_filters.FilterSet):
     name = CharFilter(field_name='name', lookup_expr='contains')
     text = CharFilter(field_name='text', lookup_expr='contains')
