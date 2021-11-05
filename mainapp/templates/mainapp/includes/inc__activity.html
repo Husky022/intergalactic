@@ -50,7 +50,7 @@
             <div class="block-comment">
                 <div class="text" name="{{item.id}}">
                     <p style="color: maroon">
-                        <a href="{% url 'auth:profile' %}">
+                        <a href="{% url 'profile:user' item.author.pk %}">
                             <span class="font-weight-bold">
                                 {{ item.author }}
                             </span>
@@ -70,10 +70,10 @@
                         {% if item.id == element.comment_id %}
                         <p style="color: maroon">
 
-#                            <span class="font-weight-bold">
-#                                {{ element.author }}
-#                            </span>
-#                            ответил {{ element.add_datetime }}: #ie-178 Dmitrij
+                            # <span class="font-weight-bold">
+                                # {{ element.author }}
+                                # </span>
+                            # ответил {{ element.add_datetime }}: #ie-178 Dmitrij
 
                             <a href="{% url 'profile:user' item.author.pk %}">
                                 <span class="font-weight-bold">
