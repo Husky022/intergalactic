@@ -36,7 +36,7 @@
                                                 <p>ПОДАЛ: {{ complaint.complainant|title }}</p>
                                             </td> -->
                                             <td colspan="2">
-                                                <a href="{% url 'moderation:complainted' complaint.article.pk %}"
+                                                <a href="{% url 'moderation:complaint' complaint.pk %}"
                                                     class="article-anchor">
                                                     <p><b><i>ЖАЛОБА:</i></b> &nbsp &nbsp {{ complaint.text }}</p>
                                                 </a>
@@ -49,7 +49,7 @@
                                                 </p>
                                             </td>
                                             <td class="article-name">
-                                                <a href="{% url 'moderation:complainted' complaint.article.pk %}"
+                                                <a href="{% url 'moderation:complaint' complaint.pk %}"
                                                     class="article-anchor">
                                                     <p><i>НА СТАТЬЮ:</i><br> {{ complaint.article.name }}</p>
                                                 </a>
