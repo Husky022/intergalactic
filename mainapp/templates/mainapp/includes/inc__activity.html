@@ -70,11 +70,6 @@
                         {% if item.id == element.comment_id %}
                         <p style="color: maroon">
 
-                            # <span class="font-weight-bold">
-                                # {{ element.author }}
-                                # </span>
-                            # ответил {{ element.add_datetime }}: #ie-178 Dmitrij
-
                             <a href="{% url 'profile:user' item.author.pk %}">
                                 <span class="font-weight-bold">
                                     {{ item.author }}
@@ -107,8 +102,6 @@
                                     name="comment_id" value="{{item.id}}" type="submit">Отправить
                                 </button>
 
-                                {# <input class="submit_subcomment" name="{{item.id}}" type="submit"
-                                    value="Отправить">#}
                             </div>
                         </form>
                     </div>
