@@ -16,10 +16,12 @@ def check_complaints():
         complaint.text = complaint_text
         first_message.text = complaint_text
         complaint.datetime = comment.add_datetime
-        first_message.datetime = comment.add_datetime
+        #first_message.datetime = comment.add_datetime
         # complaint.is_active = True
         complaint.save()
         first_message.complaint = Complaint.objects.last()
+        first_message.save()
+        first_message.datetime = comment.add_datetime
         first_message.save()
         comment.delete()
         print('Complaints CHECKED')
