@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
@@ -11,7 +12,8 @@ from django.utils.decorators import method_decorator
 from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
-from moderation.models import ArticleMessage
+from moderation.models import ArticleMessage, Complaint, ComplaintMessage
+from .utilities import check_complaints
 
 
 class ModerationMixin(View):
@@ -21,7 +23,8 @@ class ModerationMixin(View):
     @method_decorator(user_passes_test(lambda u: u.is_superuser or u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() in self.http_method_names:
-            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+            handler = getattr(self, request.method.lower(),
+                              self.http_method_not_allowed)
         else:
             handler = self.http_method_not_allowed
         return handler(request, *args, **kwargs)
@@ -32,6 +35,10 @@ class Moderator(ModerationMixin, ListView):
     template_name = 'moderation/moderator.html'
     paginate_by = 5
 
+#    def get_queryset(self):
+#        queryset = Article.objects.filter(
+#            article_status_new=ArticleStatus.objects.get(name='На модерации'))
+#        return queryset # ie-178 Dmitrij
 
     def get_context_data(self, **kwargs):
         context = super(Moderator, self).get_context_data(**kwargs)
@@ -87,7 +94,8 @@ class RegisterNewMessage(View):
 class ApproveArticle(ModerationMixin):
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='Опубликована')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='Опубликована')
         article.save()
         notification = Notification(article, context='published')
         notification.send()
@@ -97,13 +105,14 @@ class ApproveArticle(ModerationMixin):
 class RejectArticle(ModerationMixin):
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='Требует исправления')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='Требует исправления')
         article.save()
         notification = Notification(article, context='rejected')
         notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
-
+      
 # class BlockedArticle(ModerationMixin):
 #     def get(self, request, pk):
 #         article = get_object_or_404(Article, pk=pk)
@@ -111,3 +120,68 @@ class RejectArticle(ModerationMixin):
 #         article.is_active = False
 #         article.save()
 #         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+
+
+class ModerateComplaints(ModerationMixin, ListView):
+    model = Complaint
+    template_name = 'moderation/moderate_complaints.html'
+    extra_context = {'title': 'Модератор'}
+    paginate_by = 5
+
+    def get_queryset(self):
+        check_complaints()
+        queryset = Complaint.objects.filter(
+            is_active=True).order_by('-datetime')
+        return queryset
+
+
+class ModerationArticleComplaintView(View):
+    template_name = 'moderation/article_complaint_page.html'
+
+    def get_context_data(self, pk):
+        article = get_object_or_404(Article, pk=pk)
+        context = {
+            'title': 'Статья',
+            'user': self.request.user,
+            'article': article,
+            'complainant': Complaint.objects.get(article=article.pk).complainant,
+            'messages': ComplaintMessage.objects.filter(article=Article.objects.get(pk=pk)).order_by('-datetime')
+        }
+        return context
+
+    def get(self, request, pk):
+        article = Article.objects.get(pk=pk)
+        # if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user.is_stuff or self.request.user == Complaint.objects.get(article=article).last().complainant):
+        if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user == Complaint.objects.get(article=article).complainant):
+            return render(request, self.template_name, self.get_context_data(pk))
+
+        return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))
+
+
+class RegisterNewComplaintMessage(View):
+    def post(self, request):
+        print('RegisterNewComplaintMessage RUN')
+        if request.is_ajax():
+            ajax = json.loads(request.body.decode('utf-8'))
+            article = Article.objects.get(pk=ajax.get('article'))
+            print(f'article:  {article}')
+            complaint = Complaint.objects.filter(article=article).last()
+            print(f'complaint:  {complaint}')
+            print(f'request.user   {request.user}')
+            message = ComplaintMessage(
+                complaint=complaint,
+                article=article,
+                message_from=request.user,
+                text=ajax.get('text')
+                # datetime=datetime
+            )
+            message.save()
+            print(f'MESSAGE:  {message}')
+            print(f'MESSAGE_OBJ:  {ComplaintMessage.objects.last()}')
+
+            result = {
+                'author': message.message_from.username,
+                'datetime': message.datetime.strftime('%d-%m-%Y %H:%M'),
+                'text': message.text
+            }
+            return JsonResponse(result)

@@ -1240,4 +1240,27 @@
   "groups": [],
   "user_permissions": []
  }
+},
+{
+ "model": "authapp.intergalacticuser",
+ "pk": 7,
+ "fields": {
+  "password": "pbkdf2_sha256$260000$GkiQ37TEOCXh97Kf6kbEN9$LewTIh6Uz/jQyCX3A5qMjuRnk9CsAFiVUkjez1s5irE=",
+  "last_login": "2021-10-31T08:53:45.276Z",
+  "is_superuser": false,
+  "username": "dmitrij",
+  "first_name": "Дмитрий",
+  "last_name": "",
+  "email": "gdems@operamail.com",
+  "is_staff": false,
+  "is_active": true,
+  "date_joined": "2021-10-31T08:53:29.223Z",
+  "avatar": "avatars/2381987_1_ilZEnBD.jpg",
+  "age": 46,
+  "sex": "male",
+  "send_messages": true,
+  "about_me": "<p>Отслужил 25 лет в Космических войсках, в отделе боевых алгоритмов и программ. Желаю связать дальнейшую деятельность с IT - разработкой, машинным обучением, BigData.</p>",
+  "groups": [],
+  "user_permissions": []
+ }
 }]
