@@ -12,7 +12,7 @@
                     <div class="img-role-redaction-block">
                         <div class="profile-img-block">
                             <img class="profile_image" src="{{ user.avatar|media_folder_users }}"
-                                  alt="profile_image">
+                                 alt="profile_image">
                         </div>
                         <div class="profile-role-block">
                             {% if user.is_superuser %}
@@ -27,17 +27,17 @@
                             <a class="btn-red-profile-block" href="{% url 'auth:edit' %}">
                                 Редактировать профиль
                             </a>
-                            Рейтинг автора:
-                            <button type="button" class="btn btn-warning">{{user.rating_author| floatformat:2 }}</button>
                             <div class="admin-moder-buttons">
                                 {% if user.is_superuser %}
                                     <hr>
                                     <div class="btn-profile-admin-block">
                                         <a class="btn-red-profile-block" href="{% url 'adminapp:users' %}">Админка</a>
-                                        <a class="btn-red-profile-block" href="{% url 'moderation:main' %}">Модерация</a>
+                                        <a class="btn-red-profile-block"
+                                           href="{% url 'moderation:main' %}">Модерация</a>
                                     </div>
                                 {% elif user.is_staff %}
-                                    <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Модерация</a></div>
+                                    <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Модерация</a>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -139,15 +139,17 @@
                                                 <td rowspan="2" class="article-name">
                                                     {% if art.article_status_new.name == 'Опубликована' %}
 
-                                                        <a href="{% url 'article_page' art.pk %}" class="article-anchor">
+                                                        <a href="{% url 'article_page' art.pk %}"
+                                                           class="article-anchor">
                                                             <p>{{ art.name }}</p>
                                                         </a>
-                                                    {% elif art.article_status_new.name == 'На модерации' %}
-                                                    <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
-                                                        <p>{{ art.name }}</p>
-                                                    </a>
+                                                    {% elif art.article_status_new.name == 'На модерации' or art.article_status_new.name == 'Требует исправления' %}
+                                                        <a href="{% url 'moderation:article' art.pk %}"
+                                                           class="article-anchor">
+                                                            <p>{{ art.name }}</p>
+                                                        </a>
                                                     {% else %}
-                                                    <p>{{ art.name }}</p>
+                                                        <p>{{ art.name }}</p>
                                                     {% endif %}
 
                                                 </td>
