@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Comment, Article, SubComment, Likes
-from moderation.models import ArticleMessage
+from moderation.models import ArticleMessage, Complaint, ComplaintMessage
 
 
 def notifications_read(self):
@@ -10,7 +10,8 @@ def notifications_read(self):
 
 
 def notifications_not_read_quantity(self):
-    print(NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count())
+    print(NotificationModel.objects.filter(
+        recipient_id=self.request.user.id, is_read=0).count())
     return NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
 
 
@@ -32,21 +33,21 @@ class Notification:
         self.subcomment_id = self.get_subcomment_id()
         self.like_id = self.get_like_id()
 
-
-
     def get_sender_id(self):
         for instance in (Comment, SubComment):
             if isinstance(self.object, instance):
                 return self.object.author_id
-        if  isinstance(self.object, Likes):
+        if isinstance(self.object, Likes):
             return self.object.user_id
-        if  isinstance(self.object, Article):
+        if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 return self.object.author_id
             else:
                 return None
-        if  isinstance(self.object, ArticleMessage):
+        if isinstance(self.object, ArticleMessage):
             return self.object.message_from.id
+        if isinstance(self.object, Complaint):
+            return self.object.complainant.id
         else:
             return None
 
@@ -59,7 +60,7 @@ class Notification:
             action = 'ответил на комментарий '
             self.theme = 'Ответ на комментарий'
             return action
-        if  isinstance(self.object, Likes):
+        if isinstance(self.object, Likes):
             if self.object.status == "LK":
                 action = 'поставил лайк статье '
                 self.theme = 'Уведомление о лайке'
@@ -68,7 +69,7 @@ class Notification:
                 action = 'поставил дизлайк статье '
                 self.theme = 'Уведомление о дизлайке'
                 return action
-        if  isinstance(self.object, Article):
+        if isinstance(self.object, Article):
             if self.context == 'published':
                 action = 'после рассмотрения опубликована Ваша статья '
                 self.theme = 'Публикация статьи'
@@ -89,15 +90,19 @@ class Notification:
                 action = 'отправлена в архив статья: '
                 self.theme = 'Архив'
                 return action
-        if  isinstance(self.object, ArticleMessage):
+        if isinstance(self.object, ArticleMessage):
             action = 'оставил сообщение при модерации статьи '
+            self.theme = 'Модерация'
+            return action
+        if isinstance(self.object, Complaint):
+            action = 'подал жалобу на: '
             self.theme = 'Модерация'
             return action
         else:
             return None
 
     def get_text(self):
-        for instance in (Comment, SubComment, ArticleMessage):
+        for instance in (Comment, SubComment, ArticleMessage, Complaint):
             if isinstance(self.object, instance):
                 return self.object.text
         else:
@@ -112,9 +117,11 @@ class Notification:
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             target = comment.text
             return target
-        elif  isinstance(self.object, Article):
+        elif isinstance(self.object, Article):
             return self.object.name
-        elif  isinstance(self.object, ArticleMessage):
+        elif isinstance(self.object, ArticleMessage):
+            return self.object.article.name
+        elif isinstance(self.object, Complaint):
             return self.object.article.name
         else:
             return None
@@ -127,6 +134,8 @@ class Notification:
             return self.object.id
         elif isinstance(self.object, ArticleMessage):
             return self.object.article.id
+        elif isinstance(self.object, Complaint):
+            return self.object.article.id
         else:
             return None
 
@@ -134,22 +143,30 @@ class Notification:
         recipients = []
         for instance in (Comment, Likes):
             if isinstance(self.object, instance):
-                article = Article.objects.filter(id=self.object.article_id).first()
+                article = Article.objects.filter(
+                    id=self.object.article_id).first()
                 recipient_id = article.author_id
-                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                recipient = IntergalacticUser.objects.filter(
+                    id=recipient_id).first()
         if isinstance(self.object, SubComment):
             comment = Comment.objects.filter(id=self.object.comment_id).first()
             recipient_id = comment.author_id
-            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+            recipient = IntergalacticUser.objects.filter(
+                id=recipient_id).first()
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
-                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
+                recipient = IntergalacticUser.objects.filter(
+                    is_superuser=True).first()
             else:
                 recepient_id = self.object.author_id
-                recipient = IntergalacticUser.objects.filter(id=recepient_id).first()
-        if  isinstance(self.object, ArticleMessage):
+                recipient = IntergalacticUser.objects.filter(
+                    id=recepient_id).first()
+        if isinstance(self.object, ArticleMessage):
             recipient_id = self.object.article.author_id
-            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+            recipient = IntergalacticUser.objects.filter(
+                id=recipient_id).first()
+        if isinstance(self.object, Complaint):
+            recipient = IntergalacticUser.objects.get(pk=1)
         recipients.append(recipient)
         return recipients
 
@@ -174,8 +191,6 @@ class Notification:
     def get_theme(self):
         return None
 
-
-
     def send(self):
 
         for recipient in self.recipients:
@@ -192,7 +207,8 @@ class Notification:
 
             if recipient.send_to_email:
                 if self.sender_id:
-                    user = IntergalacticUser.objects.filter(id=self.sender_id).first()
+                    user = IntergalacticUser.objects.filter(
+                        id=self.sender_id).first()
                     username = user.username
                 else:
                     username = ''
@@ -202,6 +218,5 @@ class Notification:
                 else:
                     text = ''
                 mail_text = f'{username} {self.action} {article.name} {text}'
-                send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'])
-
-
+                send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, [
+                          'test-intergalactic@mail.ru'])

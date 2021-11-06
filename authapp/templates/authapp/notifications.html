@@ -3,63 +3,69 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-    {% if not notifications_not_read and not notifications_read %}
-        <h3 class="display-heading text-center">Уведомлений пока что нет...</h3>
-    {% else %}
-        <div class="article-box">
-            {% if notifications_not_read %}
-                <h3>Новые уведомления: </h3>
-                {% for item in notifications_not_read %}
-                    <div class="block-notification">
-                            {{ item.add_datetime }}
-                            {% if item.sender %}
-                                <a href="{% url 'profile:main' %}">
-                                    <span class="font-weight-bold">
-                                        {{ item.sender }}
-                                    </span>
-                                </a>
-                            {% endif %}
-                            {{ item.action }}
-                            {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
-                                <a href="{% url 'moderation:article' item.article_id %}">
-                            {% else %}
-                                <a href="{% url 'article_page' item.article_id %}">
-                            {% endif %}
-                                <span class="font-weight-bold">
-                                    {{ item.target }}
-                                </span>
-                            </a>
-                            {% if item.text %}
-                                <hr>
-                                {{ item.text }}
-                            {% endif %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <hr>
-            {% if notifications_read %}
-                <h3>Ранее прочитанные: </h3>
-                {% for item in notifications_read %}
-                    <div class="block-notification">
-                            {{ item.add_datetime }}
-                            <a href="{% url 'profile:main' %}">
-                                <span class="font-weight-bold">
-                                    {{item.sender }}
-                                </span>
-                            </a>
-                            {{ item.action }}
-                            <a href="{% url 'article_page' item.pk %}">
-                                <span class="font-weight-bold">
-                                    {{ item.target }}
-                                </span>
-                            </a>
-                            {% if item.text %}
-                                <hr>
-                                {{ item.text }}
-                            {% endif %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+{% if not notifications_not_read and not notifications_read %}
+<h3 class="display-heading text-center">Уведомлений пока что нет...</h3>
+{% else %}
+<div class="article-box">
+    {% if notifications_not_read %}
+    <h3>Новые уведомления: </h3>
+    {% for item in notifications_not_read %}
+    <div class="block-notification">
+        {{ item.add_datetime }}
+        {% if item.sender %}
+        <a href="{% url 'profile:main' %}">
+            <span class="font-weight-bold">
+                {{ item.sender }}
+            </span>
+        </a>
+        {% endif %}
+        {{ item.action }}
+        {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
+        <a href="{% url 'moderation:article' item.article_id %}">
+            {% elif item.action == 'подал жалобу на: ' %}
+            <a href="{% url 'moderation:complaint' item.id %}">
+                {% else %}
+                <a href="{% url 'article_page' item.article_id %}">
+                    {% endif %}
+                    <span class="font-weight-bold">
+                        {{ item.target }}
+                    </span>
+                </a>
+                {% if item.text %}
+                <hr>
+                {{ item.text }}
+                {% endif %}
+    </div>
+    {% endfor %}
     {% endif %}
+    <hr>
+    {% if notifications_read %}
+    <h3>Ранее прочитанные: </h3>
+    {% for item in notifications_read %}
+    <div class="block-notification">
+        {{ item.add_datetime }}
+        <a href="{% url 'profile:main' %}">
+            <span class="font-weight-bold">
+                {{item.sender }}
+            </span>
+        </a>
+        {{ item.action }}
+        {% if item.action == 'подал жалобу на: ' %}
+        <a href="{% url 'moderation:complaint' item.id %}">
+            {% else %}
+            <a href="{% url 'article_page' item.pk %}">
+                {% endif %}
+                <span class="font-weight-bold">
+                    {{ item.target }}
+                </span>
+            </a>
+            {% if item.text %}
+            <hr>
+            {{ item.text }}
+            {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}

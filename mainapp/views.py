@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
@@ -47,7 +47,7 @@ class Main(ListView):
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
         return self.render_to_response(context)
-    
+
 
 class Articles(ListView):
     """ CBV хабов страницы """
@@ -100,30 +100,37 @@ class ArticlePage(DetailView):
         view_views(self)
         # Валидация на добавление или удаление дизлайков или лайков
         if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).add_get_or_post()
+            CommentSubcomment(self.request, self.kwargs,
+                              self.request.GET.dict()).add_get_or_post()
         elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete_get_or_post()
+            CommentSubcomment(self.request, self.kwargs,
+                              self.request.GET.dict()).delete_get_or_post()
         elif self.request.GET.dict().get("status"):
             LikeDislike(self.request, self.kwargs, ).status_like()
         # Набор контекста
         self.object = self.get_object()
         context = self.get_context_data(object=self.get_object())
-        context = CommentSubcomment(self.request, self.kwargs).render_context(context)
+        context = CommentSubcomment(
+            self.request, self.kwargs).render_context(context)
         context['likes'] = LikeDislike(self.request, self.kwargs).view_like()
         context["rating"] = rating(self.object)
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
-        context['audio'] = VoiceArticle.objects.filter(article=self.object).first()
+        context['audio'] = VoiceArticle.objects.filter(
+            article=self.object).first()
         if self.request.is_ajax():
-            result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
+            result = render_to_string(
+                'mainapp/includes/inc__activity.html', context, request=self.request)
             # Отправка аяксу результата
             return JsonResponse({"result": result})
         # Рендер обычного гет запроса
         return self.render_to_response(context)
 
     def post(self):
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+        CommentSubcomment(self.request, self.kwargs,
+                          self.request.POST.dict()).add_get_or_post()
+        CommentSubcomment(self.request, self.kwargs,
+                          self.request.POST.dict()).delete_get_or_post()
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
@@ -137,7 +144,8 @@ class ArticleCreationView(CreateView):
         """If the form is valid, save the associated model."""
         self.object = form.save(commit=False)
         self.object.author = self.request.user
-        self.object.article_status_new = ArticleStatus.objects.get(name='Черновик')
+        self.object.article_status_new = ArticleStatus.objects.get(
+            name='Черновик')
         self.object.save()
         return super().form_valid(form)
 
@@ -150,9 +158,11 @@ class ArticleChangeActiveView(View):
         target_article.is_active = False if target_article.is_active else True
 
         if target_article.article_status_new.name == 'В архиве':
-            target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
+            target_article.article_status_new = ArticleStatus.objects.get(
+                name='Черновик')
         else:
-            target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
+            target_article.article_status_new = ArticleStatus.objects.get(
+                name='В архиве')
 
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -179,7 +189,8 @@ class ArticleEditView(View):
         if article_form.is_valid():
             article_form.save()
             if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
-                article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+                article.article_status_new = ArticleStatus.objects.get(
+                    name='На модерации')
                 article.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
@@ -188,7 +199,8 @@ class ArticleEditView(View):
 class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='На модерации')
         play_text(pk)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
@@ -209,7 +221,8 @@ class Search(ListView):
     paginate_by = 5
 
     def get(self, request, page_num=1, *args, **kwargs):
-        article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
+        article = Article.objects.filter(
+            article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
         self.object_list = article
