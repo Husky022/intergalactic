@@ -312,16 +312,14 @@ button::-moz-focus-inner {
 
 /* Классы для кирпичей */
 
-.related-articles {
-    /* display: flex;
+/* .related-articles {
+    display: flex;
     justify-content: space-around;
-    flex-wrap: wrap; */
-    /*padding-top: 32px;*/
-    /*margin-bottom: 32px;*/
+    flex-wrap: wrap;
+    margin-bottom: 32px;
 }
 
 .article-brick {
-    /* width: 777px; */
     padding: 44px 32px;
     box-sizing: border-box;
     background: #FFFFFF;
@@ -330,7 +328,7 @@ button::-moz-focus-inner {
     margin-bottom: 32px;
     display: flex;
     flex-direction: column;
-}
+} */
 
 .admin-moder-panel{
     margin-right: 5%;
@@ -966,6 +964,11 @@ textarea {
 
 .moderation-message {
     border: 1px solid black;
+    border-radius: 7px;
+    margin-bottom: 5px;
+}
+
+.complaint-message {
     border-radius: 7px;
     margin-bottom: 5px;
 }

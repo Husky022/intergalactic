@@ -46,25 +46,33 @@
             <div class="moderation-messages">
 
                 {% for message in messages %}
-                <div class="moderation-message">
-                    <div class="first-line">
-                        <div class="author">
-                            <p>{{ message.message_from.username|title }}</p>
+                {% if user.pk == message.message_from.pk %}
+                <div class="complaint-message" style="background-color: springgreen; margin-left: 5%;">
+                    {% else %}
+                    <div class="complaint-message" style="background-color: thistle; margin-right: 5%;">
+                        {% endif %}
+                        <div class="first-line">
+                            <div class="author">
+                                {% if message.message_from.is_stuff or message.message_from.is_superuser %}
+                                <p>{{ message.message_from.username|title }} (модератор)</p>
+                                {% else %}
+                                <p>{{ message.message_from.username|title }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="datetime">
+                                <p>{{ message.datetime | date:"d-m-Y H:i" }}</p>
+                            </div>
                         </div>
-                        <div class="datetime">
-                            <p>{{ message.datetime | date:"d-m-Y H:i" }}</p>
+                        <div class="second-line">
+                            <p>{{ message.text }}</p>
                         </div>
                     </div>
-                    <div class="second-line">
-                        <p>{{ message.text }}</p>
-                    </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
 
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/moderate_complaints.js' %}"></script>
-{% endblock %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/moderate_complaints.js' %}"></script>
+    {% endblock %}
