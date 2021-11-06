@@ -166,24 +166,17 @@ class ModerationArticleComplaintView(View):
 
 class RegisterNewComplaintMessage(View):
     def post(self, request):
-        print('RegisterNewComplaintMessage RUN')
         if request.is_ajax():
             ajax = json.loads(request.body.decode('utf-8'))
             article = Article.objects.get(pk=ajax.get('article'))
-            print(f'article:  {article}')
             complaint = Complaint.objects.filter(article=article).last()
-            print(f'complaint:  {complaint}')
-            print(f'request.user   {request.user}')
             message = ComplaintMessage(
                 complaint=complaint,
                 article=article,
                 message_from=request.user,
                 text=ajax.get('text')
-                # datetime=datetime
             )
             message.save()
-            print(f'MESSAGE:  {message}')
-            print(f'MESSAGE_OBJ:  {ComplaintMessage.objects.last()}')
 
             result = {
                 'author': message.message_from.username,

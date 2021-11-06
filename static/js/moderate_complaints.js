@@ -20,15 +20,15 @@ $(document).ready(function () {
                 console.log(data)
                 if (data) {
                     let message = $(
-                        `<div class="moderation-message">` +
+                        `<div class="complaint-message" style="background-color: springgreen; margin-left: 5%;">` +
                         `<div class="first-line">` +
                         `<div class="author"><p>${data.author}</p></div>` +
-                        `<div class="datetime"><p>${data.datetime}</p></div>` +
+                        `<div class="datetime"><p>${'только что'}</p></div>` +
                         `</div>` +
                         `<div class="second-line"><p>${data.text}</p></div>` +
                         `</div>`
                     )
-                    let last_msg = $('.moderation-message')[0]
+                    let last_msg = $('.complaint-message')[0]
                     message.insertBefore(last_msg)
                 }
             }
