@@ -24,11 +24,15 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            for blocked in BlockedUser.objects.all():
-                if blocked.user == user:
-                    return redirect('auth:blocked')
-                else:
-                    auth.login(self.request, user)
+            blocked = BlockedUser.objects.all()
+            if blocked:
+                for b_usr in blocked:
+                    if b_usr.user == user:
+                        return redirect('auth:blocked')
+                    else:
+                        auth.login(self.request, user)
+            else:
+                auth.login(self.request, user)
 
         return super().form_valid(form)
 
