@@ -37,22 +37,17 @@ class CommentSubcomment:
         article = Article.objects.filter(id=int(self.pk)).first()
         recipient = IntergalacticUser.objects.filter(
             id=article.author_id).first()
+        print(f'getpost: {self.get_post}')
         if 'text_comment' in self.get_post:
             comment = self.add_comment()
-            notification = Notification(comment)
-            notification.send()
+            print(f'COMMENT: {comment}')
+            if not self.get_post['text_comment'].startswith('@moderator'):
+                notification = Notification(comment)
+                notification.send()
         elif 'text_subcomment' in self.get_post:
             subcomment = self.add_sub_comment()
-
-#            comment = Comment.objects.filter(
-#                id=self.get_post['comment_id']).first()
-#            Notification.create('subcomment', recipient, self.request.user, self.get_post['text_subcomment'],
-#                                comment.text, int(self.pk), None, subcomment.id)  # ie-178 Dmitrij
-
             notification = Notification(subcomment)
             notification.send()
-
-
 
     def delete_comment(self):
         """Удаление комментария"""
@@ -62,7 +57,8 @@ class CommentSubcomment:
         for item in sub_comment:
             item.is_active = False
             item.save()
-            notification_sub = NotificationModel.objects.filter(subcomment_id=item.id)
+            notification_sub = NotificationModel.objects.filter(
+                subcomment_id=item.id)
             notification_sub.delete()
         notification = NotificationModel.objects.filter(comment_id=comment.id)
         notification.delete()
@@ -99,7 +95,7 @@ class CommentSubcomment:
     def render_context(self, context):
         """Рендер контекста"""
         context["comments"] = Comment.objects.filter(
-            article_id=self.pk, is_active=True).exclude(text__startswith='@moderator')
+            article_id=self.pk, is_active=True).exclude(text__startswith='@moderator')  # можно впоследствии отстегнуть exclude - dmitrij
         context['subcomments'] = self.parse_sub_comment()
         context['comments_count'] = len(context['comments']) + len(
             SubComment.objects.filter(article_id=self.pk, is_active=True))
