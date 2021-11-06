@@ -1039,5 +1039,12 @@ textarea {
     font-weight: bold;
 }
 
+.button_hovertext:hover::before {
+  content: attr(hover-text);
+}
+.is_admin_text{
+    color: #9b3838 ;
+}
+
 
 
