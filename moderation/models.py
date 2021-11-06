@@ -21,14 +21,16 @@ class ArticleMessage(models.Model):
         on_delete=models.SET_NULL,
         related_name='moderator'
     )
-    datetime = models.DateTimeField(verbose_name='Дата и время сообщения', auto_now_add=True)
+    datetime = models.DateTimeField(
+        verbose_name='Дата и время сообщения', auto_now_add=True)
 
 
 class BlockedUser(models.Model):
-    user = models.ForeignKey(IntergalacticUser, verbose_name='Пользователь', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        IntergalacticUser, verbose_name='Пользователь', on_delete=models.CASCADE)
     text = models.TextField(verbose_name='Причина блокировки', blank=True)
-    datetime = models.DateTimeField(verbose_name='Дата и время блокировки', auto_now_add=True)
-
+    datetime = models.DateTimeField(
+        verbose_name='Дата и время блокировки', auto_now_add=True)
 
     def __str__(self):
         return f'{self.user}'
@@ -45,7 +47,7 @@ class Complaint(models.Model):
     )
     text = models.TextField(verbose_name='Текст жалобы')
     datetime = models.DateTimeField(
-        verbose_name='Дата и время жалобы')
+        verbose_name='Дата и время жалобы', auto_now_add=True)
     is_active = models.BooleanField(
         verbose_name='Актуальность жалобы',
         default=True,

@@ -14,7 +14,6 @@ from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from moderation.models import ArticleMessage, Complaint, ComplaintMessage
-from .utilities import check_complaints
 
 
 class ModerationMixin(View):
