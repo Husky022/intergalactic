@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'corsheaders',
     'background_task',
+    'moneyapp',
 ]
 
 MIDDLEWARE = [
