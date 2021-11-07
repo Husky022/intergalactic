@@ -43,20 +43,24 @@ class IntergalacticUser(AbstractUser):
 
 class NotificationModel(models.Model):
     recipient = models.ForeignKey(IntergalacticUser, on_delete=models.PROTECT,
-                                verbose_name='Получатель', related_name='recipient')
+                                  verbose_name='Получатель', related_name='recipient')
     sender = models.ForeignKey(IntergalacticUser, on_delete=models.PROTECT,
-                                verbose_name='Отправитель', related_name='sender', null=True)
+                               verbose_name='Отправитель', related_name='sender', null=True)
     is_read = models.BooleanField(default=False, db_index=True,
                                   verbose_name='Статус прочтения')
     action = models.TextField(verbose_name='Текст')
     text = models.TextField(verbose_name='Текст', blank=True, null=True)
     target = models.TextField(verbose_name='Цель')
-    article_id = models.PositiveIntegerField(verbose_name='ID статьи', null=True)
-    comment_id = models.PositiveIntegerField(verbose_name='ID комментария', null=True)
-    subcomment_id = models.PositiveIntegerField(verbose_name='ID подкомментария', null=True)
+    article_id = models.PositiveIntegerField(
+        verbose_name='ID статьи', null=True)
+    comment_id = models.PositiveIntegerField(
+        verbose_name='ID комментария', null=True)
+    subcomment_id = models.PositiveIntegerField(
+        verbose_name='ID подкомментария', null=True)
     like_id = models.PositiveIntegerField(verbose_name='ID лайка', null=True)
+    complaint_id = models.PositiveIntegerField(
+        verbose_name='ID жалобы', null=True)
     add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
-
 
     def __str__(self):
         return f'Уведомление: {self.text}'
@@ -64,5 +68,3 @@ class NotificationModel(models.Model):
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'
-
-

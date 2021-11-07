@@ -126,15 +126,17 @@ class RejectArticle(ModerationMixin):
 class ModerateComplaints(ModerationMixin, ListView):
     model = Complaint
     template_name = 'moderation/moderate_complaints.html'
-    extra_context = {'title': 'Модератор'}
+    # extra_context = {'title': 'Модератор'}
     paginate_by = 5
 
-    def get_queryset(self):
-        check_complaints()
-        queryset = Complaint.objects.filter(
+    def get_context_data(self, **kwargs):
+        context = super(ModerateComplaints, self).get_context_data(**kwargs)
+        context['title'] = 'модератор'
+        context['objects_list'] = Complaint.objects.filter(
             is_active=True).order_by('-datetime')
-        pprint(queryset)
-        return queryset
+        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
+                                                                             recipient=self.request.user.id).count()
+        return context
 
 
 class ModerationArticleComplaintView(View):
@@ -142,22 +144,23 @@ class ModerationArticleComplaintView(View):
 
     def get_context_data(self, pk):
         # article = get_object_or_404(Article, pk=pk)
-        article = Complaint.objects.get(pk=pk).article
-        complainant = Complaint.objects.get(pk=pk).complainant
+        # article = Complaint.objects.get(pk=pk).article
+        # complainant = Complaint.objects.get(pk=pk).complainant
         context = {
             'title': 'Статья',
             'user': self.request.user,
-            'article': article,
-            # 'complainant': Complaint.objects.filter(article=article.pk).last().complainant,
-            'complainant': complainant,
-            'messages': ComplaintMessage.objects.filter(complaint=pk).order_by('-datetime')
+            'article': Complaint.objects.get(pk=pk).article,
+            'complainant': Complaint.objects.get(pk=pk).complainant,
+            'messages': ComplaintMessage.objects.filter(complaint=pk).order_by('-datetime'),
+            'notifications_not_read': NotificationModel.objects.filter(is_read=0, recipient=self.request.user.id).count()
         }
         return context
 
     def get(self, request, pk):
-        article = Complaint.objects.get(pk=pk).article
-        # if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user.is_stuff or self.request.user == Complaint.objects.get(article=article).last().complainant):
-        if self.request.user.is_authenticated and (self.request.user == article.author or self.request.user.is_superuser or self.request.user == Complaint.objects.filter(article=article).last().complainant):
+        # article = Complaint.objects.get(pk=pk).article
+        complainant = Complaint.objects.get(pk=pk).complainant
+        # if self.request.user.is_authenticated and (self.request.user == Complaint.objects.get(pk=pk).article.author or self.request.user.is_superuser or self.request.user == complainant):
+        if self.request.user.is_authenticated and (self.request.user.is_superuser or self.request.user == complainant):
             return render(request, self.template_name, self.get_context_data(pk))
 
         return render(request, 'moderation/err_article_on_moderation.html', self.get_context_data(pk))
@@ -176,7 +179,8 @@ class RegisterNewComplaintMessage(View):
                 text=ajax.get('text')
             )
             message.save()
-
+            notification = Notification(message)
+            notification.send()
             result = {
                 'author': message.message_from.username,
                 'datetime': message.datetime.strftime('%d-%m-%Y %H:%M'),
