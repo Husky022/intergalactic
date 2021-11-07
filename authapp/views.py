@@ -11,6 +11,7 @@ from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from moderation.models import BlockedUser
+from moneyapp.models import UserBalance
 
 
 class LoginView(FormView):
@@ -24,6 +25,9 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
+            if not UserBalance.objects.filter(user_id=user.id):
+                new_balance = UserBalance.objects.create(user_id=user.id)
+                new_balance.save()
             blocked = BlockedUser.objects.all()
             if blocked:
                 for b_usr in blocked:
@@ -33,6 +37,7 @@ class LoginView(FormView):
                         auth.login(self.request, user)
             else:
                 auth.login(self.request, user)
+
 
         return super().form_valid(form)
 
@@ -67,6 +72,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
+
         return HttpResponseRedirect(reverse('auth:login'))
 
 
