@@ -1085,3 +1085,11 @@ td.users {
     padding: 2px 2px 2px 2px !important;
     margin: 0 0 0 0 !important;
 }
+
+.transaction-buttons-form{
+    display: table-cell
+}
+
+.transaction-actions-box{
+    display: table
+}

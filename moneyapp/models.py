@@ -17,7 +17,7 @@ class Transaction(models.Model):
         ('DONE', 'Выполнена'),
         ('CANCELLED', 'Отменена'),
     ]
-    TRANSACTION_DEFAULT_STATUS = 'REG'
+    TRANSACTION_DEFAULT_STATUS = 'CREATED'
 
     to_user = models.ForeignKey(IntergalacticUser, related_name='Получатель', on_delete=models.CASCADE)
     status = models.CharField(verbose_name='Статус лайка статьи', max_length=9,

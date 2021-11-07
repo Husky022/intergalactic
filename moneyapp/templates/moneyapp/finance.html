@@ -55,12 +55,17 @@
                     <td class="users">{{ transaction.datetime }}</td>
                     <td class="users" >
                         <div class="transaction-actions-box">
-                            <button type="button" class="btn btn-success transaction-buttons">
-                                Подтвердить
-                            </button>
-                            <button type="button" class="btn btn-danger transaction-buttons" data-toggle="modal"
-                                    data-target="#archive_{{ art.pk }}" title="В архив">Отклонить
-                            </button>
+                            <form class="transaction-buttons-form" action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="transaction-approve" value="{{ transaction.id }}" class="btn btn-success transaction-buttons">
+                                    Подтвердить
+                                </button>
+                            </form>
+                            <form class="transaction-buttons-form" action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="transaction-reject" value="{{ transaction.id }}" class="btn btn-danger transaction-buttons">Отклонить
+                                </button>
+                            </form>
                         </div>
                     </td>
                 {% endfor %}
@@ -77,7 +82,7 @@
                   <th class="users">Сумма</th>
                   <th class="users">Статус</th>
                   <th class="users">Время заявки</th>
-                  <th style="width: 15%" class="users">Действия</th>
+                  <th style="width: 12%" class="users">Действия</th>
                 </tr>
                 {% for transaction in transactions_is_read %}
                     <tr>
@@ -103,18 +108,22 @@
                     <td class="users">{{ transaction.datetime }}</td>
                     <td class="users" >
                         <div class="transaction-actions-box">
-                            <button type="button" class="btn btn-success transaction-buttons">
-                                Подтвердить
-                            </button>
-                            <button type="button" class="btn btn-danger transaction-buttons" data-toggle="modal"
-                                    data-target="#archive_{{ art.pk }}" title="В архив">Отклонить
-                            </button>
+                            <form class="transaction-buttons-form" action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="transaction-approve" value="{{ transaction.id }}" class="btn btn-success transaction-buttons">
+                                    Подтвердить
+                                </button>
+                            </form>
+                            <form class="transaction-buttons-form" action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="transaction-reject" value="{{ transaction.id }}" class="btn btn-danger transaction-buttons">Отклонить
+                                </button>
+                            </form>
                         </div>
                     </td>
                 {% endfor %}
             </table>
         {% endif %}
-
         <h3 style="margin-top: 5%">Балансы пользователей: </h3>
         <table class="users">
             <tr>
