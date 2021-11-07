@@ -24,5 +24,6 @@ class Transaction(models.Model):
                               choices=TRANSACTION_STATUS_CHOICES, default=TRANSACTION_DEFAULT_STATUS)
     sender = models.TextField(verbose_name='Отправитель')
     message = models.TextField(verbose_name='Сопроводительное сообщение', blank=True, null=True)
-    coins = models.DecimalField(verbose_name='Монеты', default=0, max_digits=18, decimal_places=6)
+    coins = models.DecimalField(verbose_name='Монеты', default=0, max_digits=18, decimal_places=2)
+    is_read = models.BooleanField(default=False, db_index=True, verbose_name='Статус прочтения')
     datetime = models.DateTimeField('Время транзакции', auto_now_add=True)
