@@ -33,6 +33,24 @@ class ArticleStatus(models.Model):
     )
 
 
+class Likes(models.Model):
+    class Meta:
+        verbose_name = 'лайк'
+        verbose_name_plural = 'лайки'
+
+    LIKE_STATUS_CHOICES = [
+        ('DZ', 'Дизлайк'),
+        ('UND', 'Не установлено'),
+        ('LK', 'Лайк'),
+    ]
+    LIKE_DEFAULT_STATUS = 'UND'
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
+
+
+
 class Article(models.Model):
     class Meta:
         verbose_name = 'статья'
@@ -87,7 +105,12 @@ class Article(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    views = models.IntegerField(default=0, verbose_name='просмотры')
+
+    # Activity block
+    like_and_dislike = models.ManyToManyField(Likes)
+    count_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
+    count_sub_comment = models.IntegerField(default=0, verbose_name='количество сабкомментариев')
+    views = models.IntegerField(default=0, verbose_name='количество просмотров')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
     def __init__(self, *args, **kwargs):
@@ -116,32 +139,6 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'комментарии'
-
-
-class Likes(models.Model):
-    class Meta:
-        verbose_name = 'лайк'
-        verbose_name_plural = 'лайки'
-
-    LIKE_STATUS_CHOICES = [
-        ('DZ', 'Дизлайк'),
-        ('UND', 'Не установлено'),
-        ('LK', 'Лайк'),
-    ]
-    LIKE_DEFAULT_STATUS = 'UND'
-
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-
-    def __str__(self):
-        data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
-        if self.status:
-            data_str += f'установил лайк к статье - \"{self.article.name}\"'
-        else:
-            data_str += f'снял лайк к статье - \"{self.article.name}\"'
-        return data_str
 
 
 class SubComment(models.Model):
@@ -176,19 +173,3 @@ class VoiceArticle(models.Model):
     """Аудио текст"""
     audio_file = models.FileField(upload_to="audio")
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-
-
-class Rating(models.Model):
-    """Рейтинг"""
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article')
-
-    @property
-    def total_rating(self):
-        """Подсчет рейтинга"""
-        _article = self.article
-        _likes = Likes.objects.filter(article=_article, status="LK").count()
-        _dislikes = Likes.objects.filter(article=_article, status="DZ").count()
-        _comment = Comment.objects.filter(article=_article, is_active=True).count()
-        _sub_comment = SubComment.objects.filter(article=_article, is_active=True).count()
-        total_rating = (int(_article.views) * 2) + (_likes * 3) + _dislikes + (_comment * 4) + (_sub_comment * 5)
-        return total_rating
