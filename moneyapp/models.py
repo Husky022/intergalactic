@@ -6,7 +6,8 @@ from authapp.models import IntergalacticUser
 
 class UserBalance(models.Model):
     user = models.ForeignKey(IntergalacticUser, related_name='Пользователь', on_delete=models.CASCADE)
-    amount = models.DecimalField(verbose_name='Баланс', default=0, max_digits=18, decimal_places=6)
+    is_active = models.BooleanField(default=True)
+    amount = models.DecimalField(verbose_name='Баланс', default=0, max_digits=18, decimal_places=2)
     update_datetime = models.DateTimeField('Время обновления баланса', auto_now=True)
 
 

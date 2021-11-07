@@ -26,6 +26,7 @@ urlpatterns = [
     path('profile/', include('userprofile.urls', namespace='profile')),
     path('blog_admin/', include('adminapp.urls', namespace='adminapp')),
     path('moderation/', include('moderation.urls', namespace='moderation')),
+    path('moneyapp/', include('moneyapp.urls', namespace='moneyapp')),
 ]
 
 if settings.DEBUG:

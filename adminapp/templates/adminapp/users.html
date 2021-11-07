@@ -4,9 +4,22 @@
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
     <div class="users_list">
+        <div>
+            <ul class="nav nav-pills mb-2">
+                <li class="nav-item">
+                    <a href="{% url 'adminapp:users' %}" class="btn btn-secondary btn-sm disabled active"
+                        role="button" aria-pressed="true">Пользователи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'moneyapp:finance' %}" class="btn btn-secondary btn-sm active"
+                        role="button" aria-disabled="true">Финансы
+                    </a>
+                </li>
+            </ul>
+        </div>
         <div class="flex-block-profile">
-            <a href="{% url 'main' %}">На сайт</a>
-            <button class="new_user">
+            <button class="new_user" >
                 <a href={% url 'adminapp:user_create' %}>Новый пользователь</a>
             </button>
         </div>
@@ -22,7 +35,7 @@
               <th>Почта</th>
               <th>Последний вход</th>
               <th>Активен</th>
-              <th>Собщения</th>
+              <th>Сообщения</th>
               <th>Уведомления на почту</th>
               <th>Действия с пользователем</th>
             </tr>
