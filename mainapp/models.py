@@ -33,24 +33,6 @@ class ArticleStatus(models.Model):
     )
 
 
-class Likes(models.Model):
-    class Meta:
-        verbose_name = 'лайк'
-        verbose_name_plural = 'лайки'
-
-    LIKE_STATUS_CHOICES = [
-        ('DZ', 'Дизлайк'),
-        ('UND', 'Не установлено'),
-        ('LK', 'Лайк'),
-    ]
-    LIKE_DEFAULT_STATUS = 'UND'
-
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
-                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
-
-
-
 class Article(models.Model):
     class Meta:
         verbose_name = 'статья'
@@ -107,9 +89,9 @@ class Article(models.Model):
     )
 
     # Activity block
-    like_and_dislike = models.ManyToManyField(Likes)
-    count_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
-    count_sub_comment = models.IntegerField(default=0, verbose_name='количество сабкомментариев')
+    count_like = models.IntegerField(default=0, verbose_name='количество лайков')
+    count_dislike = models.IntegerField(default=0, verbose_name='количество дизлайков')
+    count_comment_and_sub_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
     views = models.IntegerField(default=0, verbose_name='количество просмотров')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
@@ -119,6 +101,7 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.name} - ({self.hub.name})'
+
 
 
 class Comment(models.Model):
@@ -139,6 +122,32 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'комментарии'
+
+
+class Likes(models.Model):
+    class Meta:
+        verbose_name = 'лайк'
+        verbose_name_plural = 'лайки'
+
+    LIKE_STATUS_CHOICES = [
+        ('DZ', 'Дизлайк'),
+        ('UND', 'Не установлено'),
+        ('LK', 'Лайк'),
+    ]
+    LIKE_DEFAULT_STATUS = 'UND'
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
+                              choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
+
+    def __str__(self):
+        data_str = f'Пользователь {self.user.last_name} {self.user.first_name} '
+        if self.status:
+            data_str += f'установил лайк к статье - \"{self.article.name}\"'
+        else:
+            data_str += f'снял лайк к статье - \"{self.article.name}\"'
+        return data_str
 
 
 class SubComment(models.Model):

@@ -1,10 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from authapp.models import NotificationModel
 from mainapp.models import Article, ArticleStatus, VoiceArticle
 # from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
@@ -29,9 +28,6 @@ class Main(ListView):
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
             if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
                 is_empty = not self.object_list.exists()
             else:
@@ -41,8 +37,6 @@ class Main(ListView):
                     'class_name': self.__class__.__name__,
                 })
         context = self.get_context_data()
-        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                             recipient=self.request.user.id).count()
         return self.render_to_response(context)
 
 
@@ -52,22 +46,13 @@ class Articles(ListView):
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
     context_object_name = 'articles'
-    # ordering = ['add_datetime']
     paginate_by = 5
-
-    # def get_queryset(self, request):
-    #     self.kwargs.update(get_sorted(self.kwargs, request))
-    #     queryset = RenderArticle(self.kwargs).queryset_activity()
-    #     return queryset
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
             if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
                 is_empty = not self.object_list.exists()
             else:
@@ -77,8 +62,6 @@ class Articles(ListView):
                     'class_name': self.__class__.__name__,
                 })
         context = self.get_context_data()
-        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                             recipient=self.request.user.id).count()
         return self.render_to_response(context)
 
 
@@ -93,25 +76,24 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        # Добавление и валидация просмотра
-        view_views(self)
         # Набор контекста
         self.object = self.get_object()
         context = self.get_context_data(object=self.get_object())
-        context = CommentSubcomment(self.request, self.kwargs).render_context(context)
-        context['likes'] = LikeDislike(self.request.user, context["article"]).like
-        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                             recipient=self.request.user.id).count()
+        context = CommentSubcomment(self.request.user, context["article"]).render_context(context)
         context['audio'] = VoiceArticle.objects.filter(article=self.object).first()
+        # Добавление и валидация просмотра
+        view_views(self)
         # Валидация на добавление или удаление дизлайков или лайков
         if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).add_get_or_post()
+            CommentSubcomment(self.request.user, context["article"], self.request.GET.dict()).add_get_or_post()
         elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-            CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete_get_or_post()
+            CommentSubcomment(self.request.user, context["article"], self.request.GET.dict()).delete_get_or_post()
         elif self.request.GET.dict().get("status"):
             LikeDislike(self.request.user, self.object).status_like(self.request.GET.get("status"))
             context['article'] = LikeDislike(self.request.user, context["article"]).render_like_and_dislike()
-            context['likes'] = LikeDislike(self.request.user, context["article"]).like
+
+        context['likes'] = LikeDislike(self.request.user, context["article"]).like
+        context = CommentSubcomment(self.request.user, context["article"]).render_context(context)
 
         if self.request.is_ajax():
             result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)

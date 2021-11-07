@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'mainapp.context_processors.category',
                 'mainapp.context_processors.search_filter',
+                'mainapp.context_processors.notification',
             ],
         },
     },
