@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from authapp.models import NotificationModel
+from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+from moneyapp.models import Transaction
+from moneyapp.services.moneys import make_donations
 from .search_filter import ArticleFilter
 
 from .services.activity.comment import CommentSubcomment
@@ -96,6 +98,7 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
+        print('1')
         # Добавление и валидация просмотра
         view_views(self)
         # Валидация на добавление или удаление дизлайков или лайков
@@ -121,9 +124,11 @@ class ArticlePage(DetailView):
         # Рендер обычного гет запроса
         return self.render_to_response(context)
 
-    def post(self):
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+    def post(self, *args, **kwargs):
+        if 'donation' in self.request.POST.dict():
+            make_donations(self, self.request.POST)
+        # CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
+        # CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 

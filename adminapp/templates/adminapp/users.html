@@ -23,55 +23,55 @@
                 <a href={% url 'adminapp:user_create' %}>Новый пользователь</a>
             </button>
         </div>
-        <table>
+        <table class="users">
             <tr>
-              <th>ID</th>
-              <th>Роль</th>
-              <th>Аватар</th>
-              <th>Логин</th>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Возраст</th>
-              <th>Почта</th>
-              <th>Последний вход</th>
-              <th>Активен</th>
-              <th>Сообщения</th>
-              <th>Уведомления на почту</th>
-              <th>Действия с пользователем</th>
+              <th class="users">ID</th>
+              <th class="users">Роль</th>
+              <th class="users">Аватар</th>
+              <th class="users">Логин</th>
+              <th class="users">Имя</th>
+              <th class="users">Фамилия</th>
+              <th class="users">Возраст</th>
+              <th class="users">Почта</th>
+              <th class="users">Последний вход</th>
+              <th class="users">Активен</th>
+              <th class="users">Сообщения</th>
+              <th class="users">Уведомления на почту</th>
+              <th class="users">Действия с пользователем</th>
             </tr>
             {% for object in object_list %}
                 <tr>
-                    <td>{{ object.id }}</td>
-                    <td>
+                    <td class="users">{{ object.id }}</td>
+                    <td class="users">
                         {% if object.is_superuser %}Администратор{% else %}Пользователь{% endif %}
                     </td>
-                    <td>
+                    <td class="users">
                         <div class="col-3 align-baseline">
                             <img src="{{ object.avatar|media_folder_users }}" class="rounded mx-auto d-block" alt="{{ object.username }}" height="50 px">
                         </div>
-                    </td>
-                    <td>{{ object.username }}</td>
-                    <td>{{ object.first_name|title }}</td>
-                    <td>{{ object.last_name|title }}</td>
-                    <td>{{ object.age }}</td>
-                    <td>{{ object.email }}</td>
-                    <td>{{ object.last_login }}</td>
-                    <td>
+                    </td class="users">
+                    <td class="users">{{ object.username }}</td>
+                    <td class="users">{{ object.first_name|title }}</td>
+                    <td class="users">{{ object.last_name|title }}</td>
+                    <td class="users">{{ object.age }}</td>
+                    <td class="users">{{ object.email }}</td>
+                    <td class="users">{{ object.last_login }}</td>
+                    <td class="users">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >
                         </div>
                     </td>
-                    <td>
+                    <td class="users">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="chk" id="messages-{{ object.id }}" {% if object.send_messages %} checked {% endif %} >
                         </div>
                     </td>
-                    <td>
+                    <td class="users">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="chk" id="notifications_to_email-{{ object.id }}" {% if object.send_to_email %} checked {% endif %} >
                         </div>
                     </td>
-                    <td>
+                    <td class="users">
                         <div>
                             <a href = {% url 'adminapp:user_update' object.pk %} role="button" class="btn btn-outline-warning button_hovertext mx-2 my-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

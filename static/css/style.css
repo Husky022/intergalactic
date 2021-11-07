@@ -266,6 +266,10 @@ button::-moz-focus-inner {
     height: auto;
 }
 
+.margin-left{
+    float: right;
+}
+
 .content-wrapper {
     margin: 0 auto;
     flex-direction: column;
@@ -1049,7 +1053,7 @@ textarea {
     color: #9b3838 ;
 }
 
-table {
+table.users {
     margin-top: 3%;
     background-color: white;
     border: 1px solid grey;
@@ -1058,13 +1062,13 @@ table {
     text-align: center;
 }
 /* границы ячеек первого ряда таблицы */
-th {
+th.users {
     border: 1px solid grey;
     background-color: lightgray;
     padding: 1% 0 1% 0;
 }
 /* границы ячеек тела таблицы */
-td {
+td.users {
     border: 1px solid grey;
 }
 
