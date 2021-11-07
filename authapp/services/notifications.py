@@ -32,6 +32,7 @@ class Notification:
         self.comment_id = self.get_comment_id()
         self.subcomment_id = self.get_subcomment_id()
         self.like_id = self.get_like_id()
+        self.complaint_id = self.get_complaint_id()
 
     def get_sender_id(self):
         for instance in (Comment, SubComment):
@@ -44,8 +45,9 @@ class Notification:
                 return self.object.author_id
             else:
                 return None
-        if isinstance(self.object, ArticleMessage):
-            return self.object.message_from.id
+        for instance in (ArticleMessage, ComplaintMessage):
+            if isinstance(self.object, instance):
+                return self.object.message_from.id
         if isinstance(self.object, Complaint):
             return self.object.complainant.id
         else:
@@ -98,11 +100,15 @@ class Notification:
             action = 'подал жалобу на: '
             self.theme = 'Модерация'
             return action
+        if isinstance(self.object, ComplaintMessage):
+            action = 'оставил сообщение при обжаловании статьи '
+            self.theme = 'Модерация'
+            return action
         else:
             return None
 
     def get_text(self):
-        for instance in (Comment, SubComment, ArticleMessage, Complaint):
+        for instance in (Comment, SubComment, ArticleMessage, Complaint, ComplaintMessage):
             if isinstance(self.object, instance):
                 return self.object.text
         else:
@@ -119,10 +125,9 @@ class Notification:
             return target
         elif isinstance(self.object, Article):
             return self.object.name
-        elif isinstance(self.object, ArticleMessage):
-            return self.object.article.name
-        elif isinstance(self.object, Complaint):
-            return self.object.article.name
+        for instance in (ArticleMessage, Complaint, ComplaintMessage):
+            if isinstance(self.object, instance):
+                return self.object.article.name
         else:
             return None
 
@@ -132,10 +137,9 @@ class Notification:
                 return self.object.article_id
         if isinstance(self.object, Article):
             return self.object.id
-        elif isinstance(self.object, ArticleMessage):
-            return self.object.article.id
-        elif isinstance(self.object, Complaint):
-            return self.object.article.id
+        for instance in (ArticleMessage, Complaint, ComplaintMessage):
+            if isinstance(self.object, instance):
+                return self.object.article.id
         else:
             return None
 
@@ -166,7 +170,15 @@ class Notification:
             recipient = IntergalacticUser.objects.filter(
                 id=recipient_id).first()
         if isinstance(self.object, Complaint):
+            # *1: пока выбираем для рассмотрения жалобы админа,
+            # позже надо всех модераторов добавить (Дмитрий)
             recipient = IntergalacticUser.objects.get(pk=1)
+        if isinstance(self.object, ComplaintMessage):
+            if self.object.message_from.id == 1:  # смотри *1 чуть выше
+                recipient = self.object.complaint.complainant
+            else:
+                recipient = IntergalacticUser.objects.get(
+                    pk=1)  # смотри *1 чуть выше
         recipients.append(recipient)
         return recipients
 
@@ -188,6 +200,14 @@ class Notification:
         else:
             return None
 
+    def get_complaint_id(self):
+        if isinstance(self.object, Complaint):
+            return self.object.id
+        if isinstance(self.object, ComplaintMessage):
+            return self.object.complaint.id
+        else:
+            return None
+
     def get_theme(self):
         return None
 
@@ -202,7 +222,8 @@ class Notification:
                                                             article_id=self.article_id,
                                                             comment_id=self.comment_id,
                                                             subcomment_id=self.subcomment_id,
-                                                            like_id=self.like_id)
+                                                            like_id=self.like_id,
+                                                            complaint_id=self.complaint_id)
             notification.save()
 
             if recipient.send_to_email:

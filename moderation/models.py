@@ -57,6 +57,7 @@ class Complaint(models.Model):
     class Meta:
         verbose_name = 'жалоба'
         verbose_name_plural = 'жалобы'
+        ordering = ['-datetime']
 
 
 class ComplaintMessage(models.Model):

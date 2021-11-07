@@ -66,8 +66,7 @@ class CommentSubcomment:
         if 'text_comment' in self.get_post:
             if self.get_post['text_comment'].startswith('@moderator'):
                 complaint = self.add_complaint()
-                notification = Notification(
-                    complaint)
+                notification = Notification(complaint)
                 notification.send()
             else:
                 comment = self.add_comment()

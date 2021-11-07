@@ -23,18 +23,20 @@
         {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
         <a href="{% url 'moderation:article' item.article_id %}">
             {% elif item.action == 'подал жалобу на: ' %}
-            <a href="{% url 'moderation:complaint' item.id %}">
-                {% else %}
-                <a href="{% url 'article_page' item.article_id %}">
+            <a href="{% url 'moderation:complaint' item.complaint_id %}">
+                {% elif item.action == 'оставил сообщение при обжаловании статьи ' %}
+                <a href="{% url 'moderation:complaint' item.complaint_id %}">
+                    {% else %}
+                    <a href="{% url 'article_page' item.article_id %}">
+                        {% endif %}
+                        <span class="font-weight-bold">
+                            {{ item.target }}
+                        </span>
+                    </a>
+                    {% if item.text %}
+                    <hr>
+                    {{ item.text }}
                     {% endif %}
-                    <span class="font-weight-bold">
-                        {{ item.target }}
-                    </span>
-                </a>
-                {% if item.text %}
-                <hr>
-                {{ item.text }}
-                {% endif %}
     </div>
     {% endfor %}
     {% endif %}
