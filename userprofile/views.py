@@ -8,6 +8,7 @@ from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from mainapp.services.audio import play_text
+from moneyapp.models import UserBalance
 
 
 class UserProfileView(View):
@@ -29,7 +30,8 @@ class UserProfileView(View):
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
             'notifications_not_read': NotificationModel.objects.filter(is_read=0,
-                                                                         recipient=self.request.user.id).count()
+                                                                         recipient=self.request.user.id).count(),
+            'balance': round(UserBalance.objects.filter(user_id=self.request.user.id).first().amount,2)
         }
         return context
 
