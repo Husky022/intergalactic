@@ -4,17 +4,14 @@ from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from mainapp.models import Article, ArticleStatus, VoiceArticle
+from mainapp.models import Article, ArticleStatus
 # from mainapp.services.activity.parse import RenderArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
-from .services.activity.comment import Comments
-from .services.activity.likes import LikeDislike
 # from .services.activity.parse import get_sorted
-from .services.activity.rating import total_rating
-from .services.activity.views import view_views
 from .services.articlepage.get import get_article_page
+from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 
 
@@ -92,8 +89,10 @@ class ArticlePage(DetailView):
         return self.render_to_response(context)
 
     def post(self):
-        Comments(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        Comments(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+        # Взаимодействие активити
+        post_article_page(self)
+
+        # Рендер обычного гет запроса
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
