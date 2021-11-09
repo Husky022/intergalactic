@@ -14,5 +14,8 @@ def search_filter(request):
 
 
 def notification(request):
-    notifications_not_read = NotificationModel.objects.filter(is_read=0, recipient=request.user).count()
-    return {'notifications_not_read': notifications_not_read}
+    if request.user.is_authenticated:
+        notifications_not_read = NotificationModel.objects.filter(is_read=0, recipient=request.user).count()
+        return {'notifications_not_read': notifications_not_read}
+    else:
+        return  {'notifications_not_read': NotificationModel}

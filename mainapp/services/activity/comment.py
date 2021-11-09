@@ -22,25 +22,29 @@ class CommentSubcomment:
 
     def add_sub_comment(self):
         """Добавление под комментариев"""
-        subcomment = SubComment.objects.create(
-            comment_id=self.get_post['comment_id'],
+        sub_comment = Comment.objects.create(
             author=self.user,
             text=self.get_post['text_subcomment'],
             article=self.article,
+            sub_comment=True,
         )
-        subcomment.save()
-        return subcomment
+        sub_comment.save()
+        print(self.get_post)
+        comment = Comment.objects.get(pk=self.get_post['comment_id'])
+        comment.parent = sub_comment
+        comment.save()
+        return comment
 
     def add_get_or_post(self):
         """Сохранение комментарий и их комментарий"""
         if 'text_comment' in self.get_post:
             comment = self.add_comment()
-            notification = Notification(comment)
-            notification.send()
+            # notification = Notification(comment)
+            # notification.send()
         elif 'text_subcomment' in self.get_post:
             subcomment = self.add_sub_comment()
-            notification = Notification(subcomment)
-            notification.send()
+            # notification = Notification(subcomment)
+            # notification.send()
 
     def delete_comment(self):
         """Удаление комментария"""

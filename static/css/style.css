@@ -159,6 +159,17 @@ button::-moz-focus-inner {
     border-radius: 10px;
 }
 
+.block-sub-comment {
+    background-color: white;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 2%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+    width: 80%;
+    margin-left: 20%;
+}
+
 .block-notification {
     background-color: white;
     width: 50%;

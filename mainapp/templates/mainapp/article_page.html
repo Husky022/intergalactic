@@ -1,4 +1,5 @@
 {% extends "mainapp/base.html" %}
+{% load mptt_tags %}
 {% load project_tags %}
 {% load static %}
 {% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}

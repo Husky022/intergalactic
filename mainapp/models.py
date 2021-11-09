@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import CASCADE
+
 from authapp.models import IntergalacticUser
 
 from userprofile.models import ButtonsInProfile
@@ -106,6 +108,8 @@ class Article(models.Model):
 
 class Comment(models.Model):
     text = models.TextField(verbose_name='Текст комментария')
+    sub_comment = models.BooleanField(default=False)
+    comments = models.ForeignKey("self", on_delete=CASCADE, null=True)
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     article = models.ForeignKey(Article, on_delete=models.PROTECT,
                                 verbose_name='Статья')
