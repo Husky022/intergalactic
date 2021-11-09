@@ -9,10 +9,12 @@ from mainapp.models import Article, ArticleStatus, VoiceArticle
 from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
 from .search_filter import ArticleFilter
 
-from .services.activity.comment import CommentSubcomment
+from .services.activity.comment import Comments
 from .services.activity.likes import LikeDislike
-from .services.activity.other import view_views
 # from .services.activity.parse import get_sorted
+from .services.activity.rating import total_rating
+from .services.activity.views import view_views
+from .services.articlepage.get import get_article_page
 from .services.audio import play_text
 
 
@@ -76,35 +78,22 @@ class ArticlePage(DetailView):
     }
 
     def get(self, request, *args, **kwargs):
-        # Набор контекста
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.get_object())
-        context = CommentSubcomment(self.request.user, context["article"]).render_context(context)
-        context['audio'] = VoiceArticle.objects.filter(article=self.object).first()
-        # Добавление и валидация просмотра
-        view_views(self)
-        # Валидация на добавление или удаление дизлайков или лайков
-        if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-            CommentSubcomment(self.request.user, context["article"], self.request.GET.dict()).add_get_or_post()
-        elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-            CommentSubcomment(self.request.user, context["article"], self.request.GET.dict()).delete_get_or_post()
-        elif self.request.GET.dict().get("status"):
-            LikeDislike(self.request.user, self.object).status_like(self.request.GET.get("status"))
-            context['article'] = LikeDislike(self.request.user, context["article"]).render_like_and_dislike()
+        # Сбор контекста и взаимодействие активити
+        context = get_article_page(self)
 
-        context['likes'] = LikeDislike(self.request.user, context["article"]).like
-        context = CommentSubcomment(self.request.user, context["article"]).render_context(context)
-
+        # Проверка на аякс
         if self.request.is_ajax():
             result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
+
             # Отправка аяксу результата
             return JsonResponse({"result": result})
+
         # Рендер обычного гет запроса
         return self.render_to_response(context)
 
     def post(self):
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+        Comments(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
+        Comments(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 

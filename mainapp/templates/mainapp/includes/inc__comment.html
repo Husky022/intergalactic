@@ -1,42 +1,37 @@
-{% if not comment %}
-Комментариев пока что нет...
-{% endif %}
-{% if comment %}
-<div style="margin-left: 10%">
-    <div class="text">
-        <p style="color: maroon">
-            <a href="{% url 'profile:user' comment.author.pk %}">
+<div class="text">
+    <p style="color: maroon">
+        <a href="{% url 'profile:user' node.author.pk %}">
                             <span class="font-weight-bold">
-                                {{ comment.author }}
+                                {{ node.author }}
                             </span>
-            </a>
-            оставил комментарий {{ comment.add_datetime }}:
-        </p>
-        <p>{{ comment.text }}</p>
-        {% if request.user.username == comment.author.username or request.user.is_superuser %}
-        <button class="btn-comments-answer com_delete" name="{{article.id}}" value="{{comment.id}}">
-            Удалить
-        </button>
-        {% endif %}
-        <button class="btn-comments-answer" onclick="show('subcomment_block_{{ comment.id }}')">
-            Ответить
-        </button>
-        <div class="subcomment_block" id="subcomment_block_{{ comment.id }}">
-            <form class="form-horizontal" action="" method="post">
-                {% csrf_token %}
-                <textarea class="textarea_subcomment_{{comment.id}}" name="text_subcomment" rows="3"
-                          style="width: 80%"></textarea>
-                <div class="text-right">
-                    <button class="submit_subcomment submit_subcomment_{{comment.id}}"
-                            name="{{article.pk}}" value="{{comment.id}}" type="submit">Отправить
-                    </button>
-                </div>
-            </form>
-        </div>
-        <hr>
-        {% if comment.comments %}
-        {% include 'mainapp/includes/inc__comment.html' with comment=comment.comments %}
-        {% endif %}
+        </a>
+        оставил комментарий {{ node.add_datetime }}:
+    </p>
+    <p>{{ node.text }}</p>
+    {% if request.user.username == node.author.username or request.user.is_superuser %}
+    <button class="btn-comments-answer com_delete" name="{{article.id}}" value="{{node.id}}">
+        Удалить
+    </button>
+    {% endif %}
+    <button class="btn-comments-answer" onclick="show('subcomment_block_{{ node.id }}')">
+        Ответить
+    </button>
+    <div class="subcomment_block" id="subcomment_block_{{ node.id }}">
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <textarea class="textarea_subcomment_{{node.id}}" name="text_subcomment" rows="3"
+                      style="width: 80%"></textarea>
+            <div class="text-right">
+                <button class="submit_subcomment submit_subcomment_{{node.id}}"
+                        name="{{article.pk}}" value="{{node.id}}" type="submit">Отправить
+                </button>
+
+            </div>
+        </form>
     </div>
+    <hr>
+    {% if not node.is_leaf_node %}
+    {{ children }}
+    {% endif %}
 </div>
-{% endif %}
+

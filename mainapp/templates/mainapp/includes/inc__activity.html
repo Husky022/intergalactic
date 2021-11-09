@@ -9,7 +9,7 @@
                 <path fill-rule="evenodd"
                       d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
             </svg>
-            {{article.count_comment_and_sub_comment}}
+            {{article.count_comment}}
         </button>
         <button class="btn-likes">
             <svg id={{article.pk}} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
@@ -43,48 +43,15 @@
     <div class="ajax_comment">
         <h2 class="comment_h2">Последние комментарии:</h2>
         <div class="comment-main ">
-            {% for comment in comments %}
-            {% if not comment.sub_comment %}
             <div class="block-comment">
-                <div class="text">
-                    <p style="color: maroon">
-                        <a href="{% url 'profile:user' comment.author.pk %}">
-                            <span class="font-weight-bold">
-                                {{ comment.author }}
-                            </span>
-                        </a>
-                        оставил комментарий {{ comment.add_datetime }}:
-                    </p>
-                    <p>{{ comment.text }}</p>
-                    {% if request.user.username == comment.author.username or request.user.is_superuser %}
-                    <button class="btn-comments-answer com_delete" name="{{article.id}}" value="{{comment.id}}">
-                        Удалить
-                    </button>
-                    {% endif %}
-                    <button class="btn-comments-answer" onclick="show('subcomment_block_{{ comment.id }}')">
-                        Ответить
-                    </button>
-                    <div class="subcomment_block" id="subcomment_block_{{ comment.id }}">
-                        <form class="form-horizontal" action="" method="post">
-                            {% csrf_token %}
-                            <textarea class="textarea_subcomment_{{comment.id}}" name="text_subcomment" rows="3"
-                                      style="width: 80%"></textarea>
-                            <div class="text-right">
-                                <button class="submit_subcomment submit_subcomment_{{comment.id}}"
-                                        name="{{article.pk}}" value="{{comment.id}}" type="submit">Отправить
-                                </button>
-
-                            </div>
-                        </form>
-                    </div>
-                    <hr>
-                    {% include 'mainapp/includes/inc__comment.html' with comment=comment.comments %}
-                </div>
+                {% if not comments %}
+                Комментариев пока что нет...
+                {% endif %}
+                {% recursetree comments %}
+                {% include 'mainapp/includes/inc__comment.html' %}
+                {% endrecursetree %}
             </div>
-            {% endif %}
-
-
-            {% endfor%}
+            {% if request.user.is_authenticated %}
             <form class="form-horizontal" action="" method="post">
                 {% csrf_token %}
                 <br>
@@ -100,6 +67,7 @@
                     <input class="submit_comment" name="{{article.pk}}" type="submit" value="Отправить">
                 </div>
             </form>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -80,10 +80,9 @@ window.onload = function () {
             $.ajax({
                 url: "/article_page/" + target_href.name + "/",
                 data: {  comment_id: $('.submit_subcomment_' + target_href.value).val(),
-                         text_subcomment: $('.textarea_subcomment_' + target_href.value).val(),
+                         text_comment: $('.textarea_subcomment_' + target_href.value).val(),
                       },
                 success: function (data) {
-                    console.log(data.result)
                     $('.ajax_activity').remove();
                     $('.likes-dislikes-comments-box').html(data.result);
 
@@ -101,24 +100,6 @@ window.onload = function () {
                 url: "/article_page/" + target_href.name + "/",
                 data: {
                          com_delete: target_href.value,
-                      },
-                success: function (data) {
-                    $('.ajax_activity').remove();
-                    $('.likes-dislikes-comments-box').html(data.result);
-
-                },
-            });
-
-        }
-        event.preventDefault();
-    });
-    $('.likes-dislikes-comments-box').on('click', '.sub_com_delete', function () {
-        let target_href = event.target;
-        if (target_href) {
-            $.ajax({
-                url: "/article_page/" + target_href.name + "/",
-                data: {  comment_id: target_href.name,
-                         sub_com_delete: target_href.value,
                       },
                 success: function (data) {
                     $('.ajax_activity').remove();

@@ -1,6 +1,6 @@
 # модуль для сохранения кода, не относящегося напрямую к контроллерам
 from .models import Complaint, ComplaintMessage
-from mainapp.models import Article, Comment, SubComment
+from mainapp.models import Comment
 
 
 def check_complaints():

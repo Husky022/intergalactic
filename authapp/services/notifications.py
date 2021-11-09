@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from authapp.models import NotificationModel, IntergalacticUser
-from mainapp.models import Comment, Article, SubComment, Likes
+from mainapp.models import Comment, Article, Likes
 from moderation.models import ArticleMessage
 
 
@@ -29,13 +29,12 @@ class Notification:
         self.target = self.get_target()
         self.article_id = self.get_article_id()
         self.comment_id = self.get_comment_id()
-        self.subcomment_id = self.get_subcomment_id()
         self.like_id = self.get_like_id()
 
 
 
     def get_sender_id(self):
-        for instance in (Comment, SubComment):
+        for instance in (Comment, Comment):
             if isinstance(self.object, instance):
                 return self.object.author_id
         if  isinstance(self.object, Likes):
@@ -54,10 +53,6 @@ class Notification:
         if isinstance(self.object, Comment):
             action = 'оставил комментарий к статье '
             self.theme = 'Комментарий'
-            return action
-        if isinstance(self.object, SubComment):
-            action = 'ответил на комментарий '
-            self.theme = 'Ответ на комментарий'
             return action
         if  isinstance(self.object, Likes):
             if self.object.status == "LK":
@@ -97,7 +92,7 @@ class Notification:
             return None
 
     def get_text(self):
-        for instance in (Comment, SubComment, ArticleMessage):
+        for instance in (Comment, ArticleMessage):
             if isinstance(self.object, instance):
                 return self.object.text
         else:
@@ -108,10 +103,6 @@ class Notification:
             article = Article.objects.filter(id=self.object.article_id).first()
             target = article.name
             return target
-        elif isinstance(self.object, SubComment):
-            comment = Comment.objects.filter(id=self.object.comment_id).first()
-            target = comment.text
-            return target
         elif  isinstance(self.object, Article):
             return self.object.name
         elif  isinstance(self.object, ArticleMessage):
@@ -120,7 +111,7 @@ class Notification:
             return None
 
     def get_article_id(self):
-        for instance in (Comment, SubComment, Likes):
+        for instance in (Comment, Likes):
             if isinstance(self.object, instance):
                 return self.object.article_id
         if isinstance(self.object, Article):
@@ -137,10 +128,6 @@ class Notification:
                 article = Article.objects.filter(id=self.object.article_id).first()
                 recipient_id = article.author_id
                 recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
-        if isinstance(self.object, SubComment):
-            comment = Comment.objects.filter(id=self.object.comment_id).first()
-            recipient_id = comment.author_id
-            recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
@@ -155,12 +142,6 @@ class Notification:
 
     def get_comment_id(self):
         if isinstance(self.object, Comment):
-            return self.object.id
-        else:
-            return None
-
-    def get_subcomment_id(self):
-        if isinstance(self.object, SubComment):
             return self.object.id
         else:
             return None
@@ -186,7 +167,6 @@ class Notification:
                                                             target=self.target,
                                                             article_id=self.article_id,
                                                             comment_id=self.comment_id,
-                                                            subcomment_id=self.subcomment_id,
                                                             like_id=self.like_id)
             notification.save()
 

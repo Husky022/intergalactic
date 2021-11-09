@@ -49,4 +49,4 @@ class LikeDislike(object):
             notification = Notification(self.like)
             notification.send()
         self.like.save()
-        return self.like.status
+        return self.render_like_and_dislike()

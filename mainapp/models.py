@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import CASCADE
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 
 from authapp.models import IntergalacticUser
 
@@ -93,7 +95,7 @@ class Article(models.Model):
     # Activity block
     count_like = models.IntegerField(default=0, verbose_name='количество лайков')
     count_dislike = models.IntegerField(default=0, verbose_name='количество дизлайков')
-    count_comment_and_sub_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
+    count_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
     views = models.IntegerField(default=0, verbose_name='количество просмотров')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
@@ -105,11 +107,9 @@ class Article(models.Model):
         return f'{self.name} - ({self.hub.name})'
 
 
-
-class Comment(models.Model):
+class Comment(MPTTModel):
     text = models.TextField(verbose_name='Текст комментария')
-    sub_comment = models.BooleanField(default=False)
-    comments = models.ForeignKey("self", on_delete=CASCADE, null=True)
+    parent = TreeForeignKey("self", on_delete=CASCADE, blank=True, null=True, related_name='children')
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     article = models.ForeignKey(Article, on_delete=models.PROTECT,
                                 verbose_name='Статья')
@@ -153,26 +153,6 @@ class Likes(models.Model):
             data_str += f'снял лайк к статье - \"{self.article.name}\"'
         return data_str
 
-
-class SubComment(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.PROTECT,
-                                verbose_name='Статья')
-    text = models.TextField(verbose_name='Текст подкомментария')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
-                                verbose_name='Комментарий')
-    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
-                               verbose_name='Автор подкомментария')
-    is_active = models.BooleanField(
-        default=True, db_index=True, verbose_name='Активация комментария')
-    add_datetime = models.DateTimeField(
-        'Время добавления ответа', auto_now_add=True)
-
-    def __str__(self):
-        return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
-
-    class Meta:
-        verbose_name = 'Подкомментарий'
-        verbose_name_plural = 'Подкомментарии'
 
 
 class Visits(models.Model):
