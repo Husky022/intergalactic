@@ -2,6 +2,7 @@ import os
 import random
 
 from background_task import background
+from bs4 import BeautifulSoup
 from gtts import gTTS
 from intergalactic.settings import MEDIA_URL
 from mainapp.models import Article, VoiceArticle
@@ -19,8 +20,9 @@ def play_text(pk):
         except FileNotFoundError:
             print("Файл отсутствует")
         VoiceArticle.objects.get(article=article).delete()
-    text = article.text_audio
-    print(text)
+    text = article.text
+    soup = BeautifulSoup(text, 'html.parser')
+    text = soup.get_text()
     unique_file = "audio_" + str(random.randint(0, 10000)) + ".mp3"
     path = f".{MEDIA_URL}audio/{unique_file}"
     voice = gTTS(text, lang="ru")

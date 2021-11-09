@@ -6,7 +6,8 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from mainapp.models import Article, ArticleStatus
 # from mainapp.services.activity.parse import RenderArticle
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+from mainapp.forms import ArticleCreationForm, CommentForm
+
 from .search_filter import ArticleFilter
 
 # from .services.activity.parse import get_sorted
@@ -71,7 +72,6 @@ class ArticlePage(DetailView):
     extra_context = {
         'page_title': 'Статья',
         'CommentForm': CommentForm,
-        'SubCommentForm': SubCommentForm
     }
 
     def get(self, request, *args, **kwargs):

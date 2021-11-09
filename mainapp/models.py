@@ -60,7 +60,6 @@ class Article(models.Model):
         verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
     preview = models.TextField(verbose_name='Предпросмотр', max_length=250)
     text = models.TextField(verbose_name='Текст статьи')
-    text_audio = models.TextField(blank=True, verbose_name='Текст аудио')
     tag = models.CharField(verbose_name='Тэг статьи',
                            max_length=64, blank=True)
     hub = models.ForeignKey(
