@@ -18,6 +18,7 @@
                             <span class="font-weight-bold"><img class="mr-2"
                                                                 src="{{ item.author.avatar|media_folder_users }}"
                                                                 alt="profile_image" height="24">
+                                <button type="button" class="btn btn-warning">{{item.author.rating_author|floatformat:2}}</button>
                                 {{ item.author }}
                             </span></a>
                         <span class="font-weight-light">

@@ -36,6 +36,7 @@ class IntergalacticUser(AbstractUser):
         verbose_name='Уведомления на почту'
     )
     about_me = models.TextField(verbose_name='О себе', blank=True, null=True)
+    rating_author = models.FloatField(default=0, verbose_name='Рейтинг автора')
 
     def __str__(self):
         return f'{self.username}'

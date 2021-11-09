@@ -4,20 +4,25 @@
 {% load static %}
 {% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}
 {% block content %}
-    <div class="article-box">
-        <div class="details">
-            <div class="details-articles">
-                <p> <a href="{% url 'profile:user' article.author.pk %}">
+<div class="article-box">
+    <div class="details">
+        <div class="details-articles">
+            <p><a href="{% url 'profile:user' article.author.pk %}">
                             <span class="font-weight-bold"><img class="mr-2"
                                                                 src="{{article.author.avatar|media_folder_users }}"
                                                                 alt="profile_image" height="24">
+                                <button type="button" class="btn btn-warning">{{article.author.rating_author|floatformat:2}}</button>
                                 {{article.author }}
+
                             </span></a>
                 <span class="font-weight-light">
                             {{ article.add_datetime }}
                         </span>
+
             </p>
+
             <h4 class="text-center">{{ article.name }}</h4>
+
             <div class="img-box">
                 <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
             </div>

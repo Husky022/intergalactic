@@ -27,6 +27,8 @@
                             <a class="btn-red-profile-block" href="{% url 'auth:edit' %}">
                                 Редактировать профиль
                             </a>
+                            Рейтинг автора:
+                            <button type="button" class="btn btn-warning">{{user.rating_author| floatformat:2 }}</button>
                             <div class="admin-moder-buttons">
                                 {% if user.is_superuser %}
                                     <hr>

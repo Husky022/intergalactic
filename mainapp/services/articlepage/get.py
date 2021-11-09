@@ -34,7 +34,7 @@ def get_article_page(self):
     context = Comments(user, article).render_context(context)
 
     # Рендер рейтинга
-    context["article"] = total_rating(article)
+    context["article"] = total_rating(article, user)
 
     # Рендер аудио
     context['audio'] = VoiceArticle.objects.filter(article=article).first()
