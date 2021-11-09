@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import CASCADE
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
+
 from authapp.models import IntergalacticUser
 
 from userprofile.models import ButtonsInProfile
@@ -87,7 +91,12 @@ class Article(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    views = models.IntegerField(default=0, verbose_name='просмотры')
+
+    # Activity block
+    count_like = models.IntegerField(default=0, verbose_name='количество лайков')
+    count_dislike = models.IntegerField(default=0, verbose_name='количество дизлайков')
+    count_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
+    views = models.IntegerField(default=0, verbose_name='количество просмотров')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')
 
     def __init__(self, *args, **kwargs):
@@ -98,8 +107,9 @@ class Article(models.Model):
         return f'{self.name} - ({self.hub.name})'
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     text = models.TextField(verbose_name='Текст комментария')
+    parent = TreeForeignKey("self", on_delete=CASCADE, blank=True, null=True, related_name='children')
     image = models.ImageField(blank=True, upload_to=get_timestamp_path)
     article = models.ForeignKey(Article, on_delete=models.PROTECT,
                                 verbose_name='Статья')
@@ -144,26 +154,6 @@ class Likes(models.Model):
         return data_str
 
 
-class SubComment(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.PROTECT,
-                                verbose_name='Статья')
-    text = models.TextField(verbose_name='Текст подкомментария')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
-                                verbose_name='Комментарий')
-    author = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE,
-                               verbose_name='Автор подкомментария')
-    is_active = models.BooleanField(
-        default=True, db_index=True, verbose_name='Активация комментария')
-    add_datetime = models.DateTimeField(
-        'Время добавления ответа', auto_now_add=True)
-
-    def __str__(self):
-        return f'Комментарий к сообщению: {self.comment.text} - {self.text}'
-
-    class Meta:
-        verbose_name = 'Подкомментарий'
-        verbose_name_plural = 'Подкомментарии'
-
 
 class Visits(models.Model):
     """Визиты пользователей для просмотра"""
@@ -176,19 +166,3 @@ class VoiceArticle(models.Model):
     """Аудио текст"""
     audio_file = models.FileField(upload_to="audio")
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-
-
-class Rating(models.Model):
-    """Рейтинг"""
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article')
-
-    @property
-    def total_rating(self):
-        """Подсчет рейтинга"""
-        _article = self.article
-        _likes = Likes.objects.filter(article=_article, status="LK").count()
-        _dislikes = Likes.objects.filter(article=_article, status="DZ").count()
-        _comment = Comment.objects.filter(article=_article, is_active=True).count()
-        _sub_comment = SubComment.objects.filter(article=_article, is_active=True).count()
-        total_rating = (int(_article.views) * 2) + (_likes * 3) + _dislikes + (_comment * 4) + (_sub_comment * 5)
-        return total_rating

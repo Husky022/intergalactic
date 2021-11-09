@@ -1,3 +1,4 @@
+from authapp.models import NotificationModel
 from mainapp.models import Hub, Article, ArticleStatus
 from mainapp.search_filter import ArticleFilter
 
@@ -11,3 +12,10 @@ def search_filter(request):
     search_filter = ArticleFilter(request.GET, queryset=article)
     return {'search_filter': search_filter}
 
+
+def notification(request):
+    if request.user.is_authenticated:
+        notifications_not_read = NotificationModel.objects.filter(is_read=0, recipient=request.user).count()
+        return {'notifications_not_read': notifications_not_read}
+    else:
+        return  {'notifications_not_read': NotificationModel}

@@ -1,5 +1,5 @@
-from ...models import Article, ArticleStatus
-from ...search_filter import ArticleFilter
+from mainapp.models import Article, ArticleStatus
+from mainapp.search_filter import ArticleFilter
 
 
 def search_pb(request):

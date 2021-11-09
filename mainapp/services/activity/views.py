@@ -1,11 +1,4 @@
-from mainapp.models import Rating, Visits
-
-
-def rating(article):
-    """Показывает рейтинг"""
-    Rating.objects.get_or_create(article=article)
-    rating = Rating.objects.get(article=article)
-    return rating.total_rating
+from mainapp.models import Visits
 
 
 def view_views(self):
@@ -16,7 +9,7 @@ def view_views(self):
     else:
         user_name = "Anon"
     self.object = self.get_object()
-    if Visits.objects.filter(article=self.object,host=user_ip, user=user_name):
+    if Visits.objects.filter(article=self.object, host=user_ip, user=user_name):
         return None
     else:
         self.object.views += 1
