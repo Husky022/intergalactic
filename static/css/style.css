@@ -159,6 +159,12 @@ button::-moz-focus-inner {
     border-radius: 10px;
 }
 
+.audio-text{
+    margin-left:5%;
+    align-text: center;
+    padding: 15px 0px;
+}
+
 .block-sub-comment {
     background-color: white;
     margin-top: 1%;
@@ -571,6 +577,7 @@ a.article-anchor {
     float: left;
 }
 
+.btn-views,
 .btn-comments,
 .btn-likes,
 .btn-likess,
@@ -605,7 +612,8 @@ a.article-anchor {
     color: red !important;
 }
 
-.btn-comments {
+
+.btn-views, .btn-comments {
     color: black !important;
     padding-top: 2px;
 }
@@ -638,6 +646,20 @@ a.article-anchor {
     width: 100%;
 }
 
+.ajax_like{
+    display:flex;
+    justify-content:space-between;
+}
+
+.rating{
+    display:flex;
+    justify-content: space-between;
+}
+
+.icon-activity{
+    padding-left: 2px;
+    padding-top: 5px;
+}
 
 /* Классы для администрования пользователей */
 

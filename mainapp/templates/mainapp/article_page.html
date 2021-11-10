@@ -27,10 +27,14 @@
                 <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
             </div>
             {% if audio %}
-            <div class="text">
+            <div class="audio-text">
                 <audio controls preload="auto">
                     <source src="{{ audio.audio_file.url }}" type="audio/mp3">
                 </audio>
+            </div>
+            {% else %}
+            <div class="audio-text fw-lighter">
+                Аудиостатья ещё подготавливается, либо ее нету для этой статьи
             </div>
             {% endif %}
             <div id="text" class="text">
