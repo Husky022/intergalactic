@@ -1,6 +1,6 @@
 from authapp.models import NotificationModel
-from mainapp.models import Hub, Article, ArticleStatus
-from mainapp.search_filter import ArticleFilter
+from mainapp.models import Hub, Article, ArticleStatus, Sorting
+from .services.search_filter import ArticleFilter
 
 
 def category(request):
@@ -18,4 +18,18 @@ def notification(request):
         notifications_not_read = NotificationModel.objects.filter(is_read=0, recipient=request.user).count()
         return {'notifications_not_read': notifications_not_read}
     else:
-        return  {'notifications_not_read': NotificationModel}
+        return {'notifications_not_read': NotificationModel}
+
+
+def get_sorted_type(request):
+    if request.user.is_anonymous:
+        try:
+            sorting_type = request.session['sorting']
+        except:
+            sorting_type = 'NEWEST'
+    else:
+        try:
+            sorting_type = Sorting.objects.filter(user=request.user.id)[0].sorting_type
+        except:
+            sorting_type = 'NEWEST'
+    return {'sorting_type': sorting_type}

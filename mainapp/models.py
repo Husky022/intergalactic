@@ -16,10 +16,8 @@ class Hub(models.Model):
         verbose_name = 'хаб'
         verbose_name_plural = 'хабы'
 
-    name = models.CharField(max_length=20, db_index=True,
-                            verbose_name='Название хаба')
-    order = models.SmallIntegerField(
-        default=0, db_index=True, verbose_name='Порядок вывода')
+    name = models.CharField(max_length=20, db_index=True, verbose_name='Название хаба')
+    order = models.SmallIntegerField(default=0, db_index=True, verbose_name='Порядок вывода')
     is_active = models.BooleanField('активность', default=True)
 
     def __str__(self):
@@ -30,11 +28,8 @@ class ArticleStatus(models.Model):
     short_name = models.CharField(verbose_name='Краткое название', max_length=2)
     name = models.CharField(verbose_name='Название статуса', max_length=50)
     name_plural = models.CharField(verbose_name='Название раздела в ЛК (мн.число)', max_length=50)
-    buttons = models.ManyToManyField(
-        ButtonsInProfile,
-        verbose_name='Кнопки для этого статуса в ЛК',
-        related_name='кнопки'
-    )
+    buttons = models.ManyToManyField(ButtonsInProfile, verbose_name='Кнопки для этого статуса в ЛК',
+                                     related_name='кнопки')
 
 
 class Article(models.Model):
@@ -56,40 +51,18 @@ class Article(models.Model):
     ARTICLE_DEFAULT_STATUS = 'DR' if settings.MODERATION_STATUS else 'PB'
 
     name = models.CharField(verbose_name='Название статьи', max_length=168)
-    image = models.ImageField(
-        verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
+    image = models.ImageField(verbose_name='Изображение для статьи', blank=True, upload_to=get_timestamp_path)
     preview = models.TextField(verbose_name='Предпросмотр', max_length=250)
     text = models.TextField(verbose_name='Текст статьи')
-    tag = models.CharField(verbose_name='Тэг статьи',
-                           max_length=64, blank=True)
-    hub = models.ForeignKey(
-        Hub,
-        verbose_name='Хаб',
-        on_delete=models.PROTECT,
-        blank=True
-    )
-    author = models.ForeignKey(
-        IntergalacticUser,
-        verbose_name='Автор статьи',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
-    is_active = models.BooleanField(
-        verbose_name='Актуальность статьи',
-        default=True,
-        db_index=True,
-    )
-    add_datetime = models.DateTimeField(
-        verbose_name='Время добавления',
-        auto_now_add=True
-    )
-    article_status_new = models.ForeignKey(
-        ArticleStatus,
-        verbose_name='Статус публикации (новый)',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+
+    tag = models.CharField(verbose_name='Тэг статьи', max_length=64, blank=True)
+    hub = models.ForeignKey(Hub, verbose_name='Хаб', on_delete=models.PROTECT, blank=True)
+    author = models.ForeignKey(IntergalacticUser, verbose_name='Автор статьи',
+                               on_delete=models.CASCADE, null=True, blank=True,)
+    is_active = models.BooleanField(verbose_name='Актуальность статьи', default=True, db_index=True)
+    add_datetime = models.DateTimeField(verbose_name='Время добавления', auto_now_add=True)
+    article_status_new = models.ForeignKey(ArticleStatus, verbose_name='Статус публикации (новый)',
+                                           null=True, on_delete=models.SET_NULL,)
 
     # Activity block
     count_like = models.IntegerField(default=0, verbose_name='количество лайков')
@@ -153,7 +126,6 @@ class Likes(models.Model):
         return data_str
 
 
-
 class Visits(models.Model):
     """Визиты пользователей для просмотра"""
     article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
@@ -165,3 +137,21 @@ class VoiceArticle(models.Model):
     """Аудио текст"""
     audio_file = models.FileField(upload_to="audio")
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+
+class Sorting(models.Model):
+    SORTING_TYPE_CHOICES = [
+        ('NEWEST', 'По дате сначала новые'),
+        ('ELDEST', 'По дате сначала старые'),
+        ('LK_MORE', 'По лайкам сначала больше'),
+        ('LK_LESS', 'По лайкам сначала меньше'),
+        ('COM_MORE', 'По комментариям сначала больше'),
+        ('COM_LESS', 'По комментариям сначала меньше'),
+    ]
+
+    user = models.OneToOneField(IntergalacticUser, on_delete=models.CASCADE, unique=True)
+    sorting_type = models.CharField(verbose_name='Тип сортировки статей', max_length=8,
+                                    choices=SORTING_TYPE_CHOICES, default='NEWEST')
+
+    def __str__(self):
+        return f'{self.user} - {self.sorting_type}'

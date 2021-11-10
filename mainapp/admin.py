@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
-from mainapp.models import Article, Hub, Comment, Likes, ArticleStatus
+from mainapp.models import Article, Hub, Comment, Likes, ArticleStatus, Sorting
 from authapp.models import IntergalacticUser
 from moderation.models import BlockedUser
 
@@ -21,3 +21,4 @@ admin.site.register(BlockedUser)
 admin.site.register(ArticleStatus)
 admin.site.register(IntergalacticUser)
 admin.site.register(Comment)
+admin.site.register(Sorting)

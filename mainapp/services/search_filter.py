@@ -1,7 +1,7 @@
 import django_filters
 from django_filters import DateFilter, CharFilter, NumberFilter
 
-from .models import Article
+from mainapp.models import Article
 from django import forms
 
 
