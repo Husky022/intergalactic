@@ -4,16 +4,15 @@ from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from mainapp.models import Article, ArticleStatus
-# from mainapp.services.activity.parse import RenderArticle
+from mainapp.models import Article, ArticleStatus, Sorting
 from mainapp.forms import ArticleCreationForm, CommentForm
 
-from .search_filter import ArticleFilter
+from .services.search_filter import ArticleFilter
 
-# from .services.activity.parse import get_sorted
 from .services.articlepage.get import get_article_page
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
+from .services.sorting import get_sorted_queryset
 
 
 class Main(ListView):
@@ -22,6 +21,10 @@ class Main(ListView):
     template_name = 'mainapp/articles.html'
     paginate_by = 5
     extra_context = {'title': 'Главная'}
+
+    def get_queryset(self):
+        article = Article.objects.all()
+        return get_sorted_queryset(self, article)
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -47,6 +50,14 @@ class Articles(ListView):
     extra_context = {'title': 'Статьи'}
     context_object_name = 'articles'
     paginate_by = 5
+
+    def get_queryset(self):
+        if self.kwargs["pk"] == 0:
+            article = Article.objects.all()
+        else:
+            article = Article.objects.filter(hub=self.kwargs["pk"])
+
+        return get_sorted_queryset(self, article)
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -178,17 +189,20 @@ class DraftArticle(View):
 
 
 class Search(ListView):
-    model = Article
+    # model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Поиск'}
     paginate_by = 5
+
+    def get_queryset(self, article):
+        return get_sorted_queryset(self, article)
 
     def get(self, request, page_num=1, *args, **kwargs):
         article = Article.objects.filter(
             article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
-        self.object_list = article
+        self.object_list = self.get_queryset(article)
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
@@ -207,3 +221,13 @@ class Search(ListView):
         context['search_filter'] = search_filter
         context['filter'] = request.GET.dict()
         return render(request, 'mainapp/articles.html', context)
+
+
+def set_sorted_type(request, sorting_type):
+    sorting = Sorting.objects.all()
+    if request.user.is_anonymous:
+        request.session['sorting'] = sorting_type
+    else:
+        sorting_by_user = sorting.filter(user=request.user.id)
+        sorting_by_user.update(sorting_type=sorting_type)
+    return  HttpResponseRedirect(request.META.get('HTTP_REFERER'))

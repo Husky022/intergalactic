@@ -64,13 +64,13 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-if DEBUG:
-   def show_toolbar(request):
-       return True
-
-   DEBUG_TOOLBAR_CONFIG = {
-       'SHOW_TOOLBAR_CALLBACK': show_toolbar,
-   }
+# if DEBUG:
+#    def show_toolbar(request):
+#        return True
+#
+#    DEBUG_TOOLBAR_CONFIG = {
+#        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+#    }
 DEBUG_TOOLBAR_PANELS = [
    'debug_toolbar.panels.versions.VersionsPanel',
    'debug_toolbar.panels.timer.TimerPanel',
@@ -103,6 +103,7 @@ TEMPLATES = [
                 'mainapp.context_processors.category',
                 'mainapp.context_processors.search_filter',
                 'mainapp.context_processors.notification',
+                'mainapp.context_processors.get_sorted_type',
 
             ],
         },

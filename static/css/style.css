@@ -1056,6 +1056,9 @@ textarea {
 .is_admin_text{
     color: #9b3838 ;
 }
+#sorting_filter{
+    margin-bottom: -15px!important;
+}
 
 
 
