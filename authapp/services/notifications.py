@@ -233,17 +233,6 @@ class Notification:
             notification.save()
 
             if recipient.send_to_email:
-                # context = {
-                #     'recipient': str(notification.recipient),
-                #     'add_datetime': str(datetime.datetime.now()),
-                #     'sender': str(notification.sender),
-                #     'action': notification.action,
-                #     'target': notification.target,
-                #     'text': notification.text,
-                #     'theme': self.theme,
-                #
-                # }
-
                 context = {
                     'recipient': str(notification.recipient),
                     'add_datetime': str(datetime.datetime.now()),
