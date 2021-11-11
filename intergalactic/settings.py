@@ -47,10 +47,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'background_task',
     'mptt',
-
     'debug_toolbar',
     'template_profiler_panel',
     'moneyapp',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +106,7 @@ TEMPLATES = [
                 'mainapp.context_processors.notification',
                 'mainapp.context_processors.transactions_not_read',
                 'mainapp.context_processors.get_sorted_type',
+                'social_django.context_processors.backends',
 
             ],
         },
@@ -211,3 +212,18 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Модерация
 MODERATION_STATUS = True
+
+# версия API VK
+API_VERSION = '5.131'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+)
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7998337'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'a17ekvXEJv5Z1jR0Ehwt'
+
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
