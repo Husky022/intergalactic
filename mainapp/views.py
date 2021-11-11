@@ -18,14 +18,18 @@ from .services.sorting import get_sorted_queryset
 class Main(ListView):
     """ CBV Главной страницы """
     model = Article
-    template_name = 'mainapp/articles.html'
-    paginate_by = 5
+    template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
 
-    def get_queryset(self):
-        status = ArticleStatus.objects.get(name='Опубликована')
-        article = Article.objects.filter(article_status_new=status)
-        return get_sorted_queryset(self, article)
+    def get(self, request, *args, **kwargs):
+        article_all = self.get_queryset()
+        self.object_list = article_all
+
+        context = self.get_context_data()
+        context['top_news'] = article_all.order_by('-add_datetime')[:3]
+        context['top_popular'] = article_all.order_by('-rating')[:3]
+        context['top_views'] = article_all.order_by('-views')[:3]
+        return self.render_to_response(context)
 
 
 class Articles(ListView):
