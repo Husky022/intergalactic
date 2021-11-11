@@ -1025,6 +1025,17 @@ textarea {
 
 }
 
+.login-box {
+    background-color: white;
+    margin-top: 10%;
+    margin-bottom: 1%;
+    padding: 10% 15% 15% 15%;
+    box-shadow: 0 0 3px 3px silver;
+    border-radius: 10px;
+    width: 400px;
+
+}
+
 .first-line {
     display: flex;
 }
