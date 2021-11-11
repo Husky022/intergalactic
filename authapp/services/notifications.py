@@ -1,4 +1,6 @@
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from authapp.models import NotificationModel, IntergalacticUser
 from intergalactic import settings
@@ -224,5 +226,9 @@ class Notification:
                 else:
                     text = ''
                 mail_text = f'{username} {self.action} {article.name} {text}'
-                send_mail(self.theme, mail_text, settings.EMAIL_HOST_USER, [
-                          'test-intergalactic@mail.ru'])
+                html_message = render_to_string('authapp/email/notifications.html', {'item': notification})
+                msg = strip_tags(html_message)
+                send_mail(self.theme, msg, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'], html_message=html_message)
+
+
+

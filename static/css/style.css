@@ -309,6 +309,11 @@ button::-moz-focus-inner {
 .text{
     margin-left:5%;
     font-size: 18px;
+    height: auto;
+}
+
+.margin-left{
+    float: right;
 }
 
 .content-wrapper {
@@ -712,9 +717,9 @@ a.article-anchor {
 }
 
 .users_list {
-    width: 40%;
-    margin-left: 30%;
-    margin-right: 30%;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
 }
 
 .users_list a {
@@ -869,6 +874,8 @@ a.article-anchor {
     justify-content: space-between;
     align-content: center;
     align-items: baseline;
+    float: right;
+    margin-bottom: 2%;
 }
 
 
@@ -1113,5 +1120,43 @@ textarea {
     margin-bottom: -15px!important;
 }
 
+table.users {
+    margin-top: 3%;
+    background-color: white;
+    border: 1px solid grey;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+/* границы ячеек первого ряда таблицы */
+th.users {
+    border: 1px solid grey;
+    background-color: lightgray;
+    padding: 1% 0 1% 0;
+}
+/* границы ячеек тела таблицы */
+td.users {
+    border: 1px solid grey;
+}
 
+.user-balance-box{
+    margin: 5% 0 5% 0;
+    font-weight: bold;
+}
 
+.float-right{
+    margin-right: 0;
+}
+
+.transaction-buttons{
+    padding: 2px 2px 2px 2px !important;
+    margin: 0 0 0 0 !important;
+}
+
+.transaction-buttons-form{
+    display: table-cell
+}
+
+.transaction-actions-box{
+    display: table
+}
