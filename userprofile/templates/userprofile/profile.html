@@ -153,7 +153,7 @@
                                                         <a href="{% url 'article_page' art.pk %}" class="article-anchor">
                                                             <p>{{ art.name }}</p>
                                                         </a>
-                                                    {% elif art.article_status_new.name == 'На модерации' %}
+                                                    {% elif art.article_status_new.name == 'На модерации' or art.article_status_new.name == 'Требует исправления'  %}
                                                     <a href="{% url 'moderation:article' art.pk %}" class="article-anchor">
                                                         <p>{{ art.name }}</p>
                                                     </a>
