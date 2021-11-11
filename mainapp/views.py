@@ -77,7 +77,7 @@ class ArticlePage(DetailView):
         # Рендер обычного гет запроса
         return self.render_to_response(context)
 
-    def post(self):
+    def post(self, *args, **kwargs):
         # Взаимодействие активити
         post_article_page(self)
 
@@ -85,8 +85,6 @@ class ArticlePage(DetailView):
 
         if 'donation' in self.request.POST.dict():
             make_donations(self, self.request.POST)
-        # CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        # CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 

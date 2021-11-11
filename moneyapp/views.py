@@ -45,7 +45,7 @@ class UserFinanceView(LoginRequiredMixin, ListView):
                                                                        recipient=self.request.user.id).count(),
             'transactions_is_read': Transaction.objects.filter(is_read=True, status='CREATED').order_by('-datetime'),
             'transactions_not_read': Transaction.objects.filter(is_read=False, status='CREATED').order_by('-datetime'),
-            'transactions_not_read_count': Transaction.objects.filter(is_read=False, status='REG').count(),
+            'transactions_not_read_count': Transaction.objects.filter(is_read=False, status='CREATED').count(),
         }
         return context
 

@@ -1,7 +1,7 @@
 from authapp.models import NotificationModel
 from mainapp.models import Hub, Article, ArticleStatus, Sorting
 from .services.search_filter import ArticleFilter
-
+from moneyapp.models import Transaction
 
 def category(request):
     return {"category_menu": Hub.objects.all()}
@@ -19,6 +19,13 @@ def notification(request):
         return {'notifications_not_read': notifications_not_read}
     else:
         return {'notifications_not_read': NotificationModel}
+
+def transactions_not_read_count(request):
+    if request.user.is_authenticated:
+        transactions_not_read_count = Transaction.objects.filter(is_read=False, status='CREATED').count(),
+        return {'transactions_not_read_count': transactions_not_read_count}
+    else:
+        return {'transactions_not_read_count': Transaction}
 
 
 def get_sorted_type(request):
