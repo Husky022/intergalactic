@@ -286,7 +286,6 @@ button::-moz-focus-inner {
 
 .header,
 .content-wrapper,
-.container,
 .content {
     display: -webkit-flex;
     display: -moz-flex;
@@ -331,6 +330,7 @@ button::-moz-focus-inner {
 .container {
     flex-wrap: nowrap;
     flex: 1 0 auto;
+    margin-bottom: 30px;
 }
 
 .content {
@@ -346,6 +346,10 @@ button::-moz-focus-inner {
     margin-left: 5%;
     padding-top: 20px;
     width: 80%;
+}
+
+.soc-buttons{
+
 }
 
 .footer-menu {
@@ -1033,6 +1037,7 @@ textarea {
     box-shadow: 0 0 3px 3px silver;
     border-radius: 10px;
     width: 400px;
+    text-align: center;
 
 }
 

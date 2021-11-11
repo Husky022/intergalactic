@@ -47,6 +47,9 @@ class UserProfileView(View):
         return JsonResponse({'status': 'success'})
 
     def get(self, request):
+        if not UserBalance.objects.filter(user_id=request.user.id):
+            new_balance = UserBalance.objects.create(user_id=request.user.id)
+            new_balance.save()
         return render(request, self.template_name, self.get_context_data(request))
 
 

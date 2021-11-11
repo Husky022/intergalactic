@@ -25,9 +25,9 @@ class LoginView(FormView):
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
-            if not UserBalance.objects.filter(user_id=user.id):
-                new_balance = UserBalance.objects.create(user_id=user.id)
-                new_balance.save()
+            # if not UserBalance.objects.filter(user_id=user.id):
+            #     new_balance = UserBalance.objects.create(user_id=user.id)
+            #     new_balance.save()
             blocked = BlockedUser.objects.all()
             if blocked:
                 for b_usr in blocked:
