@@ -218,6 +218,7 @@ API_VERSION = '5.131'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'social_core.backends.google.GoogleOAuth2',          # бекенд авторизации через Google
     'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
 )
 
@@ -225,5 +226,8 @@ LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = '7998337'
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'a17ekvXEJv5Z1jR0Ehwt'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1048709715494-5nu5ro08ec53hflml5djl4vin8vapdcu.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']

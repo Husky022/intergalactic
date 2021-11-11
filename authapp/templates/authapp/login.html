@@ -31,6 +31,7 @@
             <p>Авторизация через:</p>
             <div class="soc-buttons">
                 <a href="/login/vk-oauth2"><img src="{% static 'img/vk_logo.svg' %}" class="soc-icon" data-toggle="tooltip" title="VK"></a>
+                <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'img/google_logo.png' %}" class="soc-icon" data-toggle="tooltip" title=""></a>
             </div>
         </div>
     </div>
