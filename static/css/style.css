@@ -1036,6 +1036,14 @@ textarea {
 
 }
 
+.soc-box{
+    margin-top: 10% ;
+}
+
+.soc-icon{
+    width: 20%;
+}
+
 .first-line {
     display: flex;
 }
