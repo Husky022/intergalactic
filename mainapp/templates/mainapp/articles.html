@@ -69,8 +69,8 @@
                                     </svg>
                                     {{item.count_comment}}
                                 </a>
-                                <button class="btn-likess">
-                                    <a class="btn-likess" href="{% url 'article_page' item.pk %}">
+                                <button class="btn-likes">
+                                    <a class="btn-likes" href="{% url 'article_page' item.pk %}">
                                         <svg id={{item.pk}} xmlns="http://www.w3.org/2000/svg" width="20px"
                                              height="20px" fill="currentColor"
                                              class="btn_liked"
@@ -81,8 +81,8 @@
                                         <span>{{ item.count_like }}</span>
                                     </a>
                                 </button>
-                                <button class="btn-dislikess">
-                                    <a class="btn-dislikess" href="{% url 'article_page' item.pk %}">
+                                <button class="btn-dislikes">
+                                    <a class="btn-dislikes" href="{% url 'article_page' item.pk %}">
                                         <svg id={{article.pk}} width="20px" height="20px" viewBox="0 0 16 16"
                                              fill="currentColor"
                                              class="btn_disliked"
