@@ -58,15 +58,16 @@ class Article(models.Model):
     tag = models.CharField(verbose_name='Тэг статьи', max_length=64, blank=True)
     hub = models.ForeignKey(Hub, verbose_name='Хаб', on_delete=models.PROTECT, blank=True)
     author = models.ForeignKey(IntergalacticUser, verbose_name='Автор статьи',
-                               on_delete=models.CASCADE, null=True, blank=True,)
+                               on_delete=models.CASCADE, null=True, blank=True, )
     is_active = models.BooleanField(verbose_name='Актуальность статьи', default=True, db_index=True)
     add_datetime = models.DateTimeField(verbose_name='Время добавления', auto_now_add=True)
     article_status_new = models.ForeignKey(ArticleStatus, verbose_name='Статус публикации (новый)',
-                                           null=True, on_delete=models.SET_NULL,)
+                                           null=True, on_delete=models.SET_NULL, )
 
     # Activity block
     count_like = models.IntegerField(default=0, verbose_name='количество лайков')
     count_dislike = models.IntegerField(default=0, verbose_name='количество дизлайков')
+    status_like_dislike = models.CharField(max_length=8, default="UND", verbose_name='рейтинг')
     count_comment = models.IntegerField(default=0, verbose_name='количество комментариев')
     views = models.IntegerField(default=0, verbose_name='количество просмотров')
     rating = models.IntegerField(default=0, verbose_name='рейтинг')

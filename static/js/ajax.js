@@ -28,44 +28,43 @@ window.onload = function () {
 
 
 
-    $(".likes-dislikes-comments-box").on('click', '.btn-likes', function(event){
+    $(".ajax_activity").on('click', '.btn-likes', function(event){
         if($("nav").hasClass('username')){
             $.ajax({
                 data: {status: "LK"},
                 url: "/article_page/" + event.target.id + '/',
                 success: function(data) {
-                    document.querySelector('.likes-dislikes-comments-box').innerHTML = data.result;
+                    document.querySelector('.ajax_activity_'+ event.target.id).innerHTML = data.result_activity;
                     }
             });
         }else{
-            alert("Вы не авторизированы");
+            alert("Вы не авторизованы");
             }
     })
 
-    $(".likes-dislikes-comments-box").on('click', '.btn-dislikes', function(event){
+    $(".ajax_activity").on('click', '.btn-dislikes', function(event){
             if($("nav").hasClass('username')){
                 $.ajax({
                     data: {status: "DZ"},
                     url: "/article_page/" + event.target.id + '/',
                     success: function(data) {
-                        document.querySelector('.likes-dislikes-comments-box').innerHTML = data.result;
+                        document.querySelector('.ajax_activity_'+ event.target.id).innerHTML = data.result_activity;
                         }
                 });
         }else{
-            alert("Вы не авторизированы");
+            alert("Вы не авторизованы");
             }
     })
 
-    $('.likes-dislikes-comments-box').on('click', '.submit_comment', function () {
+    $('.ajax_comment').on('click', '.submit_comment', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
                 url: "/article_page/" + target_href.name + "/",
                 data: {text_comment: $('.textarea').val()},
                 success: function (data) {
-                    $('.ajax_activity').remove();
-                    $('.likes-dislikes-comments-box').html(data.result);
-
+                    document.querySelector('.ajax_activity').innerHTML = data.result_activity;
+                    document.querySelector('.ajax_comment').innerHTML = data.result_comment;
                 },
             });
 
@@ -73,7 +72,7 @@ window.onload = function () {
         event.preventDefault();
     });
 
-    $('.likes-dislikes-comments-box').on('click', '.submit_subcomment', function () {
+    $('.ajax_comment').on('click', '.submit_subcomment', function () {
 
         let target_href = event.target;
         if (target_href) {
@@ -83,8 +82,8 @@ window.onload = function () {
                          text_comment: $('.textarea_subcomment_' + target_href.value).val(),
                       },
                 success: function (data) {
-                    $('.ajax_activity').remove();
-                    $('.likes-dislikes-comments-box').html(data.result);
+                    document.querySelector('.ajax_activity').innerHTML = data.result_activity;
+                    document.querySelector('.ajax_comment').innerHTML = data.result_comment;
 
                 },
             });
@@ -93,7 +92,7 @@ window.onload = function () {
         event.preventDefault();
     });
 
-    $('.likes-dislikes-comments-box').on('click', '.com_delete', function () {
+    $('.ajax_comment').on('click', '.com_delete', function () {
         let target_href = event.target;
         if (target_href) {
             $.ajax({
@@ -102,8 +101,8 @@ window.onload = function () {
                          com_delete: target_href.value,
                       },
                 success: function (data) {
-                    $('.ajax_activity').remove();
-                    $('.likes-dislikes-comments-box').html(data.result);
+                    document.querySelector('.ajax_activity').innerHTML = data.result_activity;
+                    document.querySelector('.ajax_comment').innerHTML = data.result_comment;
 
                 },
             });

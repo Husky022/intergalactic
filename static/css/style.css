@@ -880,7 +880,6 @@ textarea {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    margin-bottom: 10%;
 }
 
 .likes-dislikes-comments-box-article {

@@ -9,7 +9,7 @@ from mainapp.forms import ArticleCreationForm, CommentForm
 
 from .services.search_filter import ArticleFilter
 
-from .services.articlepage.get import get_article_page
+from .services.articlepage.get import get_article_page, if_get_ajax
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 from .services.sorting import get_sorted_queryset
@@ -26,7 +26,6 @@ class Main(ListView):
         status = ArticleStatus.objects.get(name='Опубликована')
         article = Article.objects.filter(article_status_new=status)
         return get_sorted_queryset(self, article)
-
 
 
 class Articles(ListView):
@@ -47,7 +46,6 @@ class Articles(ListView):
         return get_sorted_queryset(self, article)
 
 
-
 class ArticlePage(DetailView):
     """CBV одной статьи"""
     template_name = 'mainapp/article_page.html'
@@ -63,10 +61,7 @@ class ArticlePage(DetailView):
 
         # Проверка на аякс
         if self.request.is_ajax():
-            result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
-
-            # Отправка аяксу результата
-            return JsonResponse({"result": result})
+            return if_get_ajax(self, context)
 
         # Рендер обычного гет запроса
         return self.render_to_response(context)

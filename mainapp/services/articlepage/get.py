@@ -1,3 +1,6 @@
+from compat import render_to_string
+from django.http import JsonResponse
+
 from mainapp.models import VoiceArticle
 from mainapp.services.activity.comment import Comments
 from mainapp.services.activity.likes import LikeDislike
@@ -20,18 +23,13 @@ def get_article_page(self):
     get_dict = self.request.GET.dict()
 
     # Валидация на добавление или удаление дизлайков или лайков
-    if get_dict.get("text_comment"):
-        Comments(user, article, get_dict).add_get_or_post()
-    elif get_dict.get("com_delete"):
-        Comments(user, article, get_dict).delete_get_or_post()
-    elif get_dict.get("status"):
-        context['article'] = LikeDislike(user, article).status_like(get_dict.get("status"))
-
-    # Рендер статуса лайка
-    context['likes'] = LikeDislike(user, article).like
+    change_activity(user, article, get_dict, context)
 
     # Рендер комментарий и их количества
     context = Comments(user, article).render_context(context)
+
+    # Рендер количества лайков
+    context = LikeDislike(user, article, get_dict).render_like_and_dislike(context)
 
     # Рендер рейтинга
     context["article"] = total_rating(article, user)
@@ -39,5 +37,26 @@ def get_article_page(self):
     # Рендер аудио
     context['audio'] = VoiceArticle.objects.filter(article=article).first()
 
-    #Возвращаем контекст
+    # Возвращаем контекст
     return context
+
+
+def if_get_ajax(self, context):
+    """Рендер json для ajax запроса"""
+    result_activity = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
+    get_dict = self.request.GET.dict()
+    if get_dict.get("text_comment", "com_delete"):
+        result_comment = render_to_string('mainapp/includes/inc__comment.html', context, request=self.request)
+        return JsonResponse({"result_activity": result_activity, "result_comment": result_comment})
+    # Отправка аяксу результата
+    return JsonResponse({"result_activity": result_activity})
+
+
+def change_activity(user, article, get_dict, context):
+    """Валидация выбора события на странице"""
+    if get_dict.get("text_comment"):
+        Comments(user, article, get_dict).add_get_or_post()
+    elif get_dict.get("com_delete"):
+        Comments(user, article, get_dict).delete_get_or_post()
+    elif get_dict.get("status"):
+        LikeDislike(user, article, get_dict).status_like()
