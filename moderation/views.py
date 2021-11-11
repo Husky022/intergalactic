@@ -91,10 +91,10 @@ class RejectArticle(ModerationMixin):
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
-# class BlockedArticle(ModerationMixin):
-#     def get(self, request, pk):
-#         article = get_object_or_404(Article, pk=pk)
-#         article.article_status_new = ArticleStatus.objects.get(name='Заблокированна')
-#         article.is_active = False
-#         article.save()
-#         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+class BlockedArticle(ModerationMixin):
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='В архиве')
+        article.is_active = False
+        article.save()
+        return HttpResponseRedirect(reverse_lazy('moderation:main'))
