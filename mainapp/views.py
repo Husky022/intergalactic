@@ -23,7 +23,8 @@ class Main(ListView):
     extra_context = {'title': 'Главная'}
 
     def get_queryset(self):
-        article = Article.objects.all()
+        status = ArticleStatus.objects.get(name='Опубликована')
+        article = Article.objects.all(article_status_new=status)
         return get_sorted_queryset(self, article)
 
     def get(self, request, *args, **kwargs):
@@ -52,10 +53,11 @@ class Articles(ListView):
     paginate_by = 5
 
     def get_queryset(self):
+        status = ArticleStatus.objects.get(name='Опубликована')
         if self.kwargs["pk"] == 0:
-            article = Article.objects.all()
+            article = Article.objects.filter(article_status_new=status)
         else:
-            article = Article.objects.filter(hub=self.kwargs["pk"])
+            article = Article.objects.filter(article_status_new=status, hub=self.kwargs["pk"])
 
         return get_sorted_queryset(self, article)
 
@@ -100,7 +102,6 @@ class ArticlePage(DetailView):
         return self.render_to_response(context)
 
     def post(self):
-
         # Взаимодействие активити
         post_article_page(self)
 
@@ -230,4 +231,4 @@ def set_sorted_type(request, sorting_type):
     else:
         sorting_by_user = sorting.filter(user=request.user.id)
         sorting_by_user.update(sorting_type=sorting_type)
-    return  HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -84,8 +84,10 @@ class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
-        play_text(pk)
+        if request.user.rating_author >= 7:
+            article.article_status_new = ArticleStatus.objects.get(name='Опубликована')
         article.save()
+        play_text(pk)
         notification = Notification(article, context='moderation')
         notification.send()
         return HttpResponseRedirect(reverse('profile:main'))

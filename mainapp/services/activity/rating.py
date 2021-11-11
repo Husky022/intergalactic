@@ -16,5 +16,9 @@ def sum_rating_author(article):
     sum_article_rating = []
     for item in article:
         sum_article_rating.append(item.rating)
-    author.rating_author = sum(sum_article_rating) / 10
+    point = sum(sum_article_rating) / 10
+    if point >= 10:
+        author.rating_author = 10
+    else:
+        author.rating_author = point
     author.save()
