@@ -27,7 +27,11 @@
                               <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
                               <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
                             </svg>
+                            {% if transactions_not_read_count %}
+                                <span class="badge transaction-icon">{{ transactions_not_read_count }}</span>
+                            {% endif %}
                         </a>
+
                     </div>
                     <div class="menu-icon-box">
                         <a id="menu-icon" href="{% url 'moderation:main' %}">
@@ -91,7 +95,7 @@
                     {% endif %}
                 </a>
                     <div class="menu-icon-box">
-                        <a id="menu-icon" class="user-panel-button" title="Личный кабинет" href="{% url 'auth:profile' %}">
+                        <a id="menu-icon" class="user-panel-button" title="Личный кабинет" href="{% url 'profile:main' %}">
                         <svg width="25" height="25" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -117,12 +121,12 @@
     <nav>
     <div>
         <ul class="menu_category nav-pills d-flex justify-content-center">
-            <li {% if request.resolver_match.url_name == "hub_category_scroll" %} class="active" {% endif %}>
-            <a class="nav-link black" href="{% url 'hub_category_scroll' 0 %}">Все хабы</a>
+            <li {% if request.resolver_match.url_name == "hub_category" and not request.resolver_match.kwargs.pk %} class="active" {% endif %}>
+            <a class="nav-link black" href="{% url 'hub_category' 0 %}">Все хабы</a>
             </li>
             {% for item in category_menu %}
-            <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category_scroll" == request.resolver_match.url_name  %} class="active" {% endif %}>
-            <a class="nav-link black" href="{% url 'hub_category_scroll' item.pk %}">{{ item.name }}</a>
+            <li {% if request.resolver_match.kwargs.pk == item.pk and "hub_category" == request.resolver_match.url_name  %} class="active" {% endif %}>
+            <a class="nav-link black" href="{% url 'hub_category' item.pk %}">{{ item.name }}</a>
             </li>
             {% endfor %}
         </ul>

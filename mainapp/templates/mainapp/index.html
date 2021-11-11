@@ -3,7 +3,94 @@
 {% load project_tags %}
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
-    <h1 class="display-heading text-center">Intergalactic Entertainment</h1>
-    <div class=data_articles></div>
-    <script src="{% static 'js/infinite_scroll.js' %}"></script>
+
+<h1 class="display-heading text-center">Intergalactic Entertainment</h1>
+
+<h4 class="display-heading text-center">Топ-3 Новинки</h4>
+   <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in top_news %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body main-img" height="170">
+                            <a href="{% url 'profile:main' %}">
+                                <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                        alt="profile_image" height="24">
+                                    {{ item.author }}
+                                </span>
+                            </a>
+                            <span class="font-weight-light">
+                                {{ item.add_datetime }}</span>
+
+                            <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                            <h6 class="text-center" >{{ item.name|truncatewords:7 }}</h6>
+                            </a>
+                        </div>
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="170"  src="{{ item.image|media_folder_article }}" alt="">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+
+<h4 class="display-heading text-center">Топ-3 Популярные</h4>
+  <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in top_popular %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body main-img" height="170">
+                            <a href="{% url 'profile:main' %}">
+                                <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                        alt="profile_image" height="24">
+                                    {{ item.author }}
+                                </span>
+                            </a>
+                            <span class="font-weight-light">
+                                {{ item.add_datetime }}</span>
+
+                            <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                            <h6 class="text-center" >{{ item.name|truncatewords:7 }}</h6>
+                            </a>
+                        </div>
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="170"  src="{{ item.image|media_folder_article }}" alt="">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+
+
+<h4 class="display-heading text-center">Топ-3 Просмотры</h4>
+  <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in top_views %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body main-img" height="170">
+                            <a href="{% url 'profile:main' %}">
+                                <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                        alt="profile_image" height="24">
+                                    {{ item.author }}
+                                </span>
+                            </a>
+                            <span class="font-weight-light">
+                                {{ item.add_datetime }}</span>
+
+                            <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                            <h6 class="text-center" >{{ item.name|truncatewords:7 }}</h6>
+                            </a>
+                        </div>
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="170"  src="{{ item.image|media_folder_article }}" alt="">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
 {% endblock %}

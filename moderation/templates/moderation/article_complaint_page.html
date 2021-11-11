@@ -1,0 +1,78 @@
+{% extends "mainapp/base.html" %}
+{% load project_tags %}
+{% load static %}
+{% block title %}{{ page_title|title }} {{ article.pk }}: {{ article }}{% endblock %}
+{% block content %}
+<div class="moderation-article-box">
+    {% csrf_token %}
+    <div class="details">
+        <div class="moderation-details-articles">
+            <h4 class="text-center">{{ article.name }}</h4>
+            <div class="img-box">
+                <img class="img-thumbnail" src="{{ article.image|media_folder_article }}" alt="">
+            </div>
+            <div class="text">
+                <p>{{ article.add_datatime }}</p>
+                {{ article.text|safe|linebreaks }}
+                <hr>
+                <p>#{{ article.tag }}</p>
+                <p>{{ article.hub }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 moderation-chat">
+        <div class="card-header">
+            {% if user.is_stuff or user.is_superuser %}
+            <p>Общение с подателем жалобы ({{ complainant|title }})</p>
+            {% else %}
+            <p>Общение с Модератором</p>
+            {% endif %}
+            {% if user.is_stuff or user.is_superuser %}
+            {% if article.article_status_new.short_name == 'PB' %}
+            <a class="btn btn-primary btn-sm" href="{% url 'moderation:reject_article' article.pk %}"
+                role="button">Снять с публикации</a>
+            {% else %}
+            <p style="color:red"><i> Статья снята с публикации</i></p>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <textarea class="form-control" placeholder="Введите сообщение сюда" aria-label="Recipient's username"
+                    aria-describedby="send_message" id="message"></textarea>
+                <button class="btn btn-outline-secondary" type="button" id="send_message"
+                    name="{{ article.pk }}">Отправить</button>
+            </div>
+            <div class="moderation-messages">
+
+                {% for message in messages %}
+                {% if user.pk == message.message_from.pk %}
+                <div class="complaint-message" style="background-color: springgreen; margin-left: 5%;">
+                    {% else %}
+                    <div class="complaint-message" style="background-color: thistle; margin-right: 5%;">
+                        {% endif %}
+                        <div class="first-line">
+                            <div class="author">
+                                {% if message.message_from.is_stuff or message.message_from.is_superuser %}
+                                <p>{{ message.message_from.username|title }} (модератор)</p>
+                                {% else %}
+                                <p>{{ message.message_from.username|title }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="datetime">
+                                <p>{{ message.datetime | date:"d-m-Y H:i" }}</p>
+                            </div>
+                        </div>
+                        <div class="second-line">
+                            <p>{{ message.text }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/moderate_complaints.js' %}"></script>
+    {% endblock %}

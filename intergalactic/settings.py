@@ -16,7 +16,6 @@ from intergalactic.secrets import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -40,11 +39,18 @@ INSTALLED_APPS = [
     'django_summernote',
     'mainapp',
     'authapp',
+    'userprofile',
     'adminapp',
     'moderation',
     'django_filters',
     'widget_tweaks',
     'corsheaders',
+    'background_task',
+    'mptt',
+    'debug_toolbar',
+    'template_profiler_panel',
+    'moneyapp',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -56,8 +62,32 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
+# if DEBUG:
+#    def show_toolbar(request):
+#        return True
+#
+#    DEBUG_TOOLBAR_CONFIG = {
+#        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+#    }
+DEBUG_TOOLBAR_PANELS = [
+   'debug_toolbar.panels.versions.VersionsPanel',
+   'debug_toolbar.panels.timer.TimerPanel',
+   'debug_toolbar.panels.settings.SettingsPanel',
+   'debug_toolbar.panels.headers.HeadersPanel',
+   'debug_toolbar.panels.request.RequestPanel',
+   'debug_toolbar.panels.sql.SQLPanel',
+   'debug_toolbar.panels.templates.TemplatesPanel',
+   'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+   'debug_toolbar.panels.cache.CachePanel',
+   'debug_toolbar.panels.signals.SignalsPanel',
+   'debug_toolbar.panels.logging.LoggingPanel',
+   'debug_toolbar.panels.redirects.RedirectsPanel',
+   'debug_toolbar.panels.profiling.ProfilingPanel',
+   'template_profiler_panel.panels.template.TemplateProfilerPanel',
+]
 ROOT_URLCONF = 'intergalactic.urls'
 
 TEMPLATES = [
@@ -73,13 +103,17 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'mainapp.context_processors.category',
                 'mainapp.context_processors.search_filter',
+                'mainapp.context_processors.notification',
+                'mainapp.context_processors.transactions_not_read',
+                'mainapp.context_processors.get_sorted_type',
+                'social_django.context_processors.backends',
+
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'intergalactic.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -90,7 +124,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -110,13 +143,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'  # UTC +3
 
 USE_I18N = True
 
@@ -124,12 +156,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
@@ -169,6 +199,36 @@ SUMMERNOTE_CONFIG = {
     'attachment_filesize_limit': 20000000
 }
 
+# отправление уведомлений на почту
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "test-intergalactic@mail.ru"
+EMAIL_HOST_PASSWORD = "jthgp5GC2L4Bx99WDJdx"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Модерация
 MODERATION_STATUS = True
+
+# версия API VK
+API_VERSION = '5.131'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'social_core.backends.google.GoogleOAuth2',          # бекенд авторизации через Google
+    'social_core.backends.instagram.InstagramOAuth2',          # бекенд авторизации через Инстаграмм
+    'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+)
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7998337'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'a17ekvXEJv5Z1jR0Ehwt'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1048709715494-5nu5ro08ec53hflml5djl4vin8vapdcu.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']

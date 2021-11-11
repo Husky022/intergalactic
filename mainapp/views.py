@@ -1,49 +1,41 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from django.views.generic import View, CreateView, ListView, DetailView
+from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from authapp.models import NotificationModel
-from mainapp.models import Article, ArticleStatus
-from mainapp.services.activity.render_context import RenderArticle, fill_context, article_views
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
-from .search_filter import ArticleFilter
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from authapp.models import NotificationModel, IntergalacticUser
+from mainapp.models import Article, ArticleStatus, VoiceArticle
 
-from .services.activity.comment import CommentSubcomment
-from .services.activity.likes import LikeDislike
+from mainapp.forms import ArticleCreationForm, CommentForm
+from moneyapp.services.moneys import make_donations
+
+from mainapp.models import Article, ArticleStatus, Sorting
+from mainapp.forms import ArticleCreationForm, CommentForm
+
+from .services.search_filter import ArticleFilter
+
+from .services.articlepage.get import get_article_page, if_get_ajax
+from .services.articlepage.post import post_article_page
+from .services.audio import play_text
+from .services.sorting import get_sorted_queryset
+from moneyapp.models import Transaction
 
 
 class Main(ListView):
     """ CBV Главной страницы """
+    model = Article
     template_name = 'mainapp/index.html'
-    paginate_by = 5
     extra_context = {'title': 'Главная'}
 
-    def get_queryset(self):
-        queryset = RenderArticle(self.kwargs).queryset_activity()
-        return queryset
-
     def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        allow_empty = self.get_allow_empty()
+        article_all = self.get_queryset()
+        self.object_list = article_all
 
-        if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
-            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
-                is_empty = not self.object_list.exists()
-            else:
-                is_empty = not self.object_list
-            if is_empty:
-                raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
-                    'class_name': self.__class__.__name__,
-                })
         context = self.get_context_data()
-        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                             recipient=self.request.user.id).count()
+        context['top_news'] = article_all.order_by('-add_datetime')[:3]
+        context['top_popular'] = article_all.order_by('-rating')[:3]
+        context['top_views'] = article_all.order_by('-views')[:3]
         return self.render_to_response(context)
 
 
@@ -53,38 +45,16 @@ class Articles(ListView):
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Статьи'}
     context_object_name = 'articles'
-    ordering = ['add_datetime']
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = RenderArticle(self.kwargs).queryset_activity()
-        return queryset
+        status = ArticleStatus.objects.get(name='Опубликована')
+        if self.kwargs["pk"] == 0:
+            article = Article.objects.filter(article_status_new=status)
+        else:
+            article = Article.objects.filter(article_status_new=status, hub=self.kwargs["pk"])
 
-    def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        allow_empty = self.get_allow_empty()
-
-        if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
-            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
-                is_empty = not self.object_list.exists()
-            else:
-                is_empty = not self.object_list
-            if is_empty:
-                raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
-                    'class_name': self.__class__.__name__,
-                })
-        context = self.get_context_data()
-        context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                             recipient=self.request.user.id).count()
-        return self.render_to_response(context)
-
-
-def articles_scroll(request, pk=0):
-    context = {'num_hub': pk}
-    return render(request, "mainapp/articles_scroll.html", context)
+        return get_sorted_queryset(self, article)
 
 
 class ArticlePage(DetailView):
@@ -94,31 +64,27 @@ class ArticlePage(DetailView):
     extra_context = {
         'page_title': 'Статья',
         'CommentForm': CommentForm,
-        'SubCommentForm': SubCommentForm
     }
 
     def get(self, request, *args, **kwargs):
-        # Добавление и валидация просмотра
-        article_views(self)
-        # Набор контекста
-        context = fill_context(self)
-        # Валидация на добавление или удаление дизлайков или лайков
+        # Сбор контекста и взаимодействие активити
+        context = get_article_page(self)
+
+        # Проверка на аякс
         if self.request.is_ajax():
-            if self.request.GET.dict().get("text_comment") or self.request.GET.dict().get("text_subcomment"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).set(context)
-            elif self.request.GET.dict().get("com_delete") or self.request.GET.dict().get("sub_com_delete"):
-                context = CommentSubcomment(self.request, self.kwargs, self.request.GET.dict()).delete(context)
-            else:
-                context = LikeDislike(self.request, self.kwargs, ).set_like(context)
-            result = render_to_string('mainapp/includes/inc__activity.html', context, request=self.request)
-            # Отправка аяксу результата
-            return JsonResponse({"result": result})
+            return if_get_ajax(self, context)
+
         # Рендер обычного гет запроса
         return self.render_to_response(context)
 
-    def post(self):
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()
-        CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).delete_get_or_post()
+    def post(self, *args, **kwargs):
+        # Взаимодействие активити
+        post_article_page(self)
+
+        # Рендер обычного гет запроса
+
+        if 'donation' in self.request.POST.dict():
+            make_donations(self, self.request.POST)
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
@@ -132,7 +98,8 @@ class ArticleCreationView(CreateView):
         """If the form is valid, save the associated model."""
         self.object = form.save(commit=False)
         self.object.author = self.request.user
-        self.object.article_status_new = ArticleStatus.objects.get(name='Черновик')
+        self.object.article_status_new = ArticleStatus.objects.get(
+            name='Черновик')
         self.object.save()
         return super().form_valid(form)
 
@@ -145,9 +112,11 @@ class ArticleChangeActiveView(View):
         target_article.is_active = False if target_article.is_active else True
 
         if target_article.article_status_new.name == 'В архиве':
-            target_article.article_status_new = ArticleStatus.objects.get(name='Черновик')
+            target_article.article_status_new = ArticleStatus.objects.get(
+                name='Черновик')
         else:
-            target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
+            target_article.article_status_new = ArticleStatus.objects.get(
+                name='В архиве')
 
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -174,7 +143,8 @@ class ArticleEditView(View):
         if article_form.is_valid():
             article_form.save()
             if article.article_status_new == ArticleStatus.objects.get(name='Опубликована'):
-                article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+                article.article_status_new = ArticleStatus.objects.get(
+                    name='На модерации')
                 article.save()
 
         return HttpResponseRedirect(reverse(self.redirect_to))
@@ -183,7 +153,9 @@ class ArticleEditView(View):
 class SendToModeration(View):
     def post(self, request, pk):
         article = Article.objects.get(pk=pk)
-        article.article_status_new = ArticleStatus.objects.get(name='На модерации')
+        article.article_status_new = ArticleStatus.objects.get(
+            name='На модерации')
+        play_text(pk)
         article.save()
         return HttpResponseRedirect(reverse('auth:profile'))
 
@@ -197,15 +169,20 @@ class DraftArticle(View):
 
 
 class Search(ListView):
-    model = Article
+    # model = Article
     template_name = 'mainapp/articles.html'
     extra_context = {'title': 'Поиск'}
+    paginate_by = 5
+
+    def get_queryset(self, article):
+        return get_sorted_queryset(self, article)
 
     def get(self, request, page_num=1, *args, **kwargs):
-        article = Article.objects.filter(article_status='PB')
+        article = Article.objects.filter(
+            article_status_new=ArticleStatus.objects.get(name='Опубликована'))
         search_filter = ArticleFilter(request.GET, queryset=article)
         article = search_filter.qs
-        self.object_list = article
+        self.object_list = self.get_queryset(article)
         allow_empty = self.get_allow_empty()
 
         if not allow_empty:
@@ -224,3 +201,13 @@ class Search(ListView):
         context['search_filter'] = search_filter
         context['filter'] = request.GET.dict()
         return render(request, 'mainapp/articles.html', context)
+
+
+def set_sorted_type(request, sorting_type):
+    sorting = Sorting.objects.all()
+    if request.user.is_anonymous:
+        request.session['sorting'] = sorting_type
+    else:
+        sorting_by_user = sorting.filter(user=request.user.id)
+        sorting_by_user.update(sorting_type=sorting_type)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

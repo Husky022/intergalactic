@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css">
+
+
+    </style>
+
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body style="background-color: #dedede">
+    <div class="article-box"
+        style="display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        align-items: center;
+        align-content: space-around;background-color: #dedede">
+        <div style="
+            margin-top: 5%;
+            ">
+            <h3 style="
+            color: DimGrey;
+            ">Приветствуем, {{ item.recipient }}!</h3>
+        </div>
+        <div class="block-notification"
+            style="
+            background-color: white;
+            width: 60%;
+            margin-top: 5%;
+            margin-bottom: 5%;
+            padding: 2%;
+            box-shadow: 0 0 3px 3px silver;
+            border-radius: 10px;
+            ">
+            {{ item.add_datetime }}
+            {% if item.sender %}
+                <a style="
+                text-decoration: none"
+                    href="http://127.0.0.1:8000/">
+                    <span class="font-weight-bold" style="
+                    color: maroon;
+                    font-weight: bold;
+                    cursor: pointer">
+                        {{ item.sender }}
+                    </span>
+                </a>
+            {% endif %}
+            {{ item.action }}
+            {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
+                <a style="
+                text-decoration: none"
+                   href="http://127.0.0.1:8000/">
+            {% else %}
+                <a style="
+                text-decoration: none" href="http://127.0.0.1:8000/">
+            {% endif %}
+            {% if item.target %}
+                <span class="font-weight-bold" style="
+                color: maroon;
+                font-weight: bold;
+                cursor: pointer">
+                    {{ item.target }}
+                </span>
+            {% endif %}
+            </a>
+            {% if item.text %}
+                <hr>
+                {{ item.text }}
+            {% endif %}
+        </div>
+        <div class="box-btn-read" style="
+        margin-bottom: 5%;
+        cursor: pointer">
+            <a class="btn-read-article" style="
+                border: 1px solid maroon;
+                border-radius: 5px;
+                background: maroon;
+                padding: 5px 5px;
+                text-decoration: none;
+                color: white;"
+                href="http://127.0.0.1:8000/">
+                Перейти на сайт
+            </a>
+        </div>
+        <div class="box-about" style="
+        margin-bottom: 5%">
+            <p class="about" style="
+                color: maroon;">
+                <span>intergalctic.com</span>
+            </p>
+            <p class="about" style="
+                color: maroon;">
+                <span>support@ie.com</span>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

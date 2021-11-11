@@ -1,0 +1,69 @@
+{% load mptt_tags %}
+<div class="ajax_comment">
+    <h2 class="comment_h2">Последние комментарии:</h2>
+    <div class="comment-main ">
+        <div class="block-comment">
+            {% if not comments %}
+            Комментариев пока что нет...
+            {% endif %}
+            {% recursetree comments %}
+            <div class="text">
+                <p style="color: maroon">
+                    <a href="{% url 'profile:user' node.author.pk %}">
+                            <span class="font-weight-bold">
+                                {{ node.author }}
+                            </span>
+                    </a>
+                    оставил комментарий {{ node.add_datetime }}:
+                </p>
+                <p>{{ node.text }}</p>
+                {% if request.user.username == node.author.username or request.user.is_superuser %}
+                <button class="btn-comments-answer com_delete" name="{{article.id}}" value="{{node.id}}">
+                    Удалить
+                </button>
+
+                <button class="btn-comments-answer" onclick="show('subcomment_block_{{ node.id }}')">
+                    Ответить
+                </button>
+                {% endif %}
+                <div class="subcomment_block" id="subcomment_block_{{ node.id }}">
+                    <form class="form-horizontal" action="" method="post">
+                        {% csrf_token %}
+                        <textarea class="textarea_subcomment_{{node.id}}" name="text_subcomment" rows="3"
+                                  style="width: 80%"></textarea>
+                        <div class="text-right">
+                            <button class="submit_subcomment submit_subcomment_{{node.id}}"
+                                    name="{{article.pk}}" value="{{node.id}}" type="submit">Отправить
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+                <hr>
+                {% if not node.is_leaf_node %}
+                {{ children }}
+                {% endif %}
+            </div>
+            {% endrecursetree %}
+        </div>
+        {% if request.user.is_authenticated %}
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <br>
+            {% if not comments %}
+            <label>Будьте первым:</label>
+            {% else %}
+            <label>Оставьте комментарий:</label>
+            {% endif %}
+            <textarea class="textarea" name="text_comment"
+                      title="Для подачи жалобы администрации начните сообщение тегом @moderator - ваше сообщение автоматически скроется от пользователей"
+                      rows="5" style="width: 100%"></textarea>
+            <div class="text-right">
+                <input class="submit_comment" name="{{article.pk}}" type="submit" value="Отправить">
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+

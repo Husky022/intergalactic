@@ -3,21 +3,38 @@
 
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'auth:login' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
-        {% endif %}
-        <input class="form-control" type="submit" value="Войти">
-    </form>
+    <div class="login-box">
+        <div style="margin-bottom: 15%; text-align: center; display: flex; align-items: center">
+            <div style="display:inline-block; width: 25%;">
+                <img src="{% static 'img/logo.png' %}" style="" width="40" height="40" class="d-inline-block align-top" alt="">
+            </div>
+            <div style="display:inline-block; width: 65%">
+                <h3 class="text-center" style=" color: #6c757d;">Intergalactic Entertainment</h3>
+            </div>
+        </div>
+        <form class="form-horizontal" action="{% url 'auth:login' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            <input class="form-control" type="submit" value="Войти">
+        </form>
 
-    <button class="btn btn-round form-control">
-        <a href="{% url 'auth:register' %}" class="">
-            Зарегистрироваться
-        </a>
-    </button>
+        <button class="btn btn-round form-control">
+            <a href="{% url 'auth:register' %}" class="">
+                Зарегистрироваться
+            </a>
+        </button>
+        <div class="soc-box">
+            <p>Авторизация через:</p>
+            <div class="soc-buttons">
+                <a href="/login/vk-oauth2"><img src="{% static 'img/vk_logo.svg' %}" class="soc-icon" data-toggle="tooltip" title="VK"></a>
+                <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'img/google_logo.png' %}" class="soc-icon" data-toggle="tooltip" title=""></a>
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}

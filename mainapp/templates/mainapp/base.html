@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
     <head>
         <meta charset="UTF-8">
@@ -15,7 +15,6 @@
                 {% include 'mainapp/includes/inc__main_menu.html' %}
             {% endblock %}
         </header>
-
         <section class="main-content">
             {% block content %}{% endblock %}
         </section>
@@ -24,6 +23,7 @@
             {% include 'mainapp/includes/inc__footer.html' %}
         {% endblock %}
 
+        {% block js %}
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -40,6 +40,8 @@
                 crossorigin="anonymous"></script>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/ajax.js' %}"></script>
+        <script type="text/javascript"> var csrf_token = '{{ csrf_token }}';</script>
+        {% endblock %}
 
     </body>
 </html>

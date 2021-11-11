@@ -30,6 +30,7 @@
                 {% if user.is_stuff or user.is_superuser %}
                 <a class="btn btn-primary btn-sm" href="{% url 'moderation:approve_article' article.pk %}" role="button">Разрешить публикацию</a>
                 <a class="btn btn-primary btn-sm" href="{% url 'moderation:reject_article' article.pk %}" role="button">Вернуть на доработку</a>
+{#                <a class="btn btn-primary btn-sm" href="{% url 'moderation:blocked_article' article.pk %}" role="button">Заблокировать</a>#}
                 {% endif %}
             </div>
             <div class="card-body">
@@ -39,7 +40,7 @@
                     <button class="btn btn-outline-secondary" type="button" id="send_message" name="{{ article.pk }}">Отправить</button>
                 </div>
                 {% if not messages %}
-                <p class="card-text">
+                <p class="card-text" id="no_message">
                     Пока нет ни одного сообщения.
                 </p>
                 {% endif %}

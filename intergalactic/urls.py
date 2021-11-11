@@ -16,17 +16,24 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
-
     path('', include('mainapp.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('authapp.urls', namespace='auth')),
+    path('profile/', include('userprofile.urls', namespace='profile')),
     path('blog_admin/', include('adminapp.urls', namespace='adminapp')),
     path('moderation/', include('moderation.urls', namespace='moderation')),
+    path('moneyapp/', include('moneyapp.urls', namespace='moneyapp')),
+    path('', include('social_django.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+   import debug_toolbar
+
+   urlpatterns += [re_path(r'^__debug__/', include(debug_toolbar.urls))]

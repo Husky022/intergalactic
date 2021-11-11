@@ -1,0 +1,16 @@
+<div class="dropdown">
+    <select class="btn btn-secondary dropdown-menu-dark" name="by_date" id="sorting_by_date" onchange="top.location=this.value">
+        <option {% if sorting_type == 'NEWEST' %} selected {% endif %}
+                value={% url 'set_sorting' 'NEWEST' %} class="dropdown-item">Сначала новые</option>
+        <option {% if sorting_type == 'ELDEST' %} selected {% endif %}
+                value={% url 'set_sorting' 'ELDEST' %} class="dropdown-item">Сначала старые</option>
+        <option {% if sorting_type == 'LK_MORE' %} selected {% endif %}
+                value={% url 'set_sorting' 'LK_MORE' %} class="dropdown-item">По лайкам &#9660</option>
+        <option {% if sorting_type == 'LK_LESS' %} selected {% endif %}
+                value={% url 'set_sorting' 'LK_LESS' %} class="dropdown-item">по лайкам &#9650</option>
+        <option {% if sorting_type == 'COM_MORE' %} selected {% endif %}
+                value={% url 'set_sorting' 'COM_MORE' %} class="dropdown-item">По комментариям &#9660</option>
+        <option {% if sorting_type == 'COM_LESS' %} selected {% endif %}
+                value={% url 'set_sorting' 'COM_LESS' %} class="dropdown-item">По комментариям &#9650</option>
+    </select>
+</div>
