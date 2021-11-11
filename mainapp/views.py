@@ -6,11 +6,11 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Article, ArticleStatus, VoiceArticle
-from mainapp.services.activity.parse import RenderArticle
-from mainapp.forms import ArticleCreationForm, CommentForm, SubCommentForm
+# from mainapp.services.activity.parse import RenderArticle
+from mainapp.forms import ArticleCreationForm, CommentForm
 from moneyapp.models import Transaction
 from moneyapp.services.moneys import make_donations
-from .search_filter import ArticleFilter
+# from .search_filter import ArticleFilter
 from mainapp.models import Article, ArticleStatus, Sorting
 from mainapp.forms import ArticleCreationForm, CommentForm
 
@@ -82,7 +82,7 @@ class ArticlePage(DetailView):
         post_article_page(self)
 
         # Рендер обычного гет запроса
-    def post(self, *args, **kwargs):
+
         if 'donation' in self.request.POST.dict():
             make_donations(self, self.request.POST)
         # CommentSubcomment(self.request, self.kwargs, self.request.POST.dict()).add_get_or_post()

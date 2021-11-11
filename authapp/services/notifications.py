@@ -1,3 +1,5 @@
+import time
+
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -7,7 +9,8 @@ from intergalactic import settings
 
 from mainapp.models import Comment, Article, Likes
 from moderation.models import ArticleMessage, Complaint, ComplaintMessage
-
+import datetime
+from background_task import background
 
 
 def notifications_read(self):
@@ -18,6 +21,13 @@ def notifications_not_read_quantity(self):
     print(NotificationModel.objects.filter(
         recipient_id=self.request.user.id, is_read=0).count())
     return NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
+
+@background(schedule=5)
+def send_to_email(data):
+    theme = data['theme']
+    html_message = render_to_string('authapp/email/notifications.html', {'item': data})
+    msg = strip_tags(html_message)
+    send_mail(theme, msg, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'], html_message=html_message)
 
 
 class Notification:
@@ -214,21 +224,20 @@ class Notification:
             notification.save()
 
             if recipient.send_to_email:
-                if self.sender_id:
-                    user = IntergalacticUser.objects.filter(
-                        id=self.sender_id).first()
-                    username = user.username
-                else:
-                    username = ''
-                article = Article.objects.filter(id=self.article_id).first()
-                if self.text:
-                    text = self.text
-                else:
-                    text = ''
-                mail_text = f'{username} {self.action} {article.name} {text}'
-                html_message = render_to_string('authapp/email/notifications.html', {'item': notification})
-                msg = strip_tags(html_message)
-                send_mail(self.theme, msg, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'], html_message=html_message)
+                context = {
+                    'recipient': str(notification.recipient),
+                    'add_datetime': str(datetime.datetime.now()),
+                    'sender': str(notification.sender),
+                    'action': notification.action,
+                    'target': notification.target,
+                    'text': notification.text,
+                    'theme': self.theme,
+
+                }
+                send_to_email(context)
+
+
+
 
 
 
