@@ -6,11 +6,11 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Article, ArticleStatus, VoiceArticle
-# from mainapp.services.activity.parse import RenderArticle
+
 from mainapp.forms import ArticleCreationForm, CommentForm
 from moneyapp.models import Transaction
 from moneyapp.services.moneys import make_donations
-# from .search_filter import ArticleFilter
+
 from mainapp.models import Article, ArticleStatus, Sorting
 from mainapp.forms import ArticleCreationForm, CommentForm
 

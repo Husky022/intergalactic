@@ -11,6 +11,7 @@ from mainapp.models import Comment, Article, Likes
 from moderation.models import ArticleMessage, Complaint, ComplaintMessage
 import datetime
 from background_task import background
+from moneyapp.models import Transaction
 
 
 def notifications_read(self):
@@ -114,14 +115,20 @@ class Notification:
             action = 'оставил сообщение при обжаловании статьи '
             self.theme = 'Модерация'
             return action
+        if isinstance(self.object, Transaction):
+            action = 'Вам отправили вознаграждение! Так держать!'
+            self.theme = 'Вознаграждение'
+            return action
         else:
             return None
 
     def get_text(self):
-
         for instance in (Comment, ArticleMessage, Complaint, ComplaintMessage):
             if isinstance(self.object, instance):
                 return self.object.text
+        if isinstance(self.object, Transaction):
+            return f'{self.object.coins} руб. Сообщение {self.object.message}'
+
         else:
             return None
 
@@ -182,6 +189,8 @@ class Notification:
             else:
                 recipient = IntergalacticUser.objects.get(
                     pk=1)  # смотри *1 чуть выше
+        if isinstance(self.object, Transaction):
+            recipient = self.object.to_user
         recipients.append(recipient)
         return recipients
 

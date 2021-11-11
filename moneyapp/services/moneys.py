@@ -1,6 +1,7 @@
 from authapp.models import IntergalacticUser
 from mainapp.models import Article
 from moneyapp.models import Transaction, UserBalance
+from authapp.services.notifications import Notification
 
 
 def make_donations(self, donation_data):
@@ -27,4 +28,6 @@ def transaction_action(self, transaction_data):
         user_balance.save()
         transaction.status = 'DONE'
         transaction.save()
+        notification = Notification(transaction)
+        notification.send()
 
