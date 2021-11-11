@@ -57,12 +57,14 @@
                 <a style="
                 text-decoration: none" href="http://127.0.0.1:8000/">
             {% endif %}
-            <span class="font-weight-bold" style="
-            color: maroon;
-            font-weight: bold;
-            cursor: pointer">
-                {{ item.target }}
-            </span>
+            {% if item.target %}
+                <span class="font-weight-bold" style="
+                color: maroon;
+                font-weight: bold;
+                cursor: pointer">
+                    {{ item.target }}
+                </span>
+            {% endif %}
             </a>
             {% if item.text %}
                 <hr>
