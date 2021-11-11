@@ -316,6 +316,10 @@ button::-moz-focus-inner {
     float: right;
 }
 
+.transaction-icon{
+    background-color: dodgerblue;
+}
+
 .content-wrapper {
     margin: 0 auto;
     flex-direction: column;

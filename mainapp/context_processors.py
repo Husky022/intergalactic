@@ -20,12 +20,15 @@ def notification(request):
     else:
         return {'notifications_not_read': NotificationModel}
 
-def transactions_not_read_count(request):
+def transactions_not_read(request):
     if request.user.is_authenticated:
-        transactions_not_read_count = Transaction.objects.filter(is_read=False, status='CREATED').count(),
-        return {'transactions_not_read_count': transactions_not_read_count}
+        transactions_not_read = Transaction.objects.filter(is_read=False, status='CREATED'),
+        transactions_not_read_count = Transaction.objects.filter(is_read=False, status='CREATED').count()
+        return {'transactions_not_read': transactions_not_read,
+                'transactions_not_read_count': transactions_not_read_count,
+                }
     else:
-        return {'transactions_not_read_count': Transaction}
+        return {'transactions_not_read': Transaction}
 
 
 def get_sorted_type(request):

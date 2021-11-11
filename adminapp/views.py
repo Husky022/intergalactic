@@ -10,6 +10,7 @@ from authapp.forms import IntergalacticUserRegisterForm
 from authapp.models import IntergalacticUser
 from moderation.models import BlockedUser
 from authapp.models import IntergalacticUser, NotificationModel
+from moneyapp.models import Transaction
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -27,7 +28,10 @@ class UsersListView(LoginRequiredMixin, ListView):
         context = super(UsersListView, self).get_context_data(**kwargs)
         context['title'] = 'пользователи'
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                       recipient=self.request.user.id).count()
+                                                                           recipient=self.request.user.id).count()
+        context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
+        context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
+
         return context
 
 

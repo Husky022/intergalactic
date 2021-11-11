@@ -9,6 +9,7 @@ from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from mainapp.services.audio import play_text
 from moneyapp.models import UserBalance
+from moneyapp.models import Transaction
 
 
 class UserProfileView(View):
@@ -31,7 +32,9 @@ class UserProfileView(View):
             'articles': articles_with_status,
             'notifications_not_read': NotificationModel.objects.filter(is_read=0,
                                                                          recipient=self.request.user.id).count(),
-            'balance': round(UserBalance.objects.filter(user_id=self.request.user.id).first().amount,2)
+            'balance': round(UserBalance.objects.filter(user_id=self.request.user.id).first().amount,2),
+            'transactions_not_read': Transaction.objects.filter(is_read=False, status='CREATED'),
+            'transactions_not_read_count': Transaction.objects.filter(is_read=False, status='CREATED').count(),
         }
         return context
 

@@ -14,6 +14,9 @@
                 <li class="nav-item">
                     <a href="{% url 'moneyapp:finance' %}" class="btn btn-secondary btn-sm active"
                         role="button" aria-disabled="true">Финансы
+                        {% if transactions_not_read %}
+                            <span class="badge transaction-icon">{{ transactions_not_read_count }}</span>
+                        {% endif %}
                     </a>
                 </li>
             </ul>
@@ -49,7 +52,7 @@
                         <div class="col-3 align-baseline">
                             <img src="{{ object.avatar|media_folder_users }}" class="rounded mx-auto d-block" alt="{{ object.username }}" height="50 px">
                         </div>
-                    </td class="users">
+                    <td class="users">
                     <td class="users">{{ object.username }}</td>
                     <td class="users">{{ object.first_name|title }}</td>
                     <td class="users">{{ object.last_name|title }}</td>

@@ -104,6 +104,7 @@ TEMPLATES = [
                 'mainapp.context_processors.category',
                 'mainapp.context_processors.search_filter',
                 'mainapp.context_processors.notification',
+                'mainapp.context_processors.transactions_not_read',
                 'mainapp.context_processors.get_sorted_type',
 
             ],

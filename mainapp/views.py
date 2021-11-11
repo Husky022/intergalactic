@@ -8,7 +8,6 @@ from authapp.models import NotificationModel, IntergalacticUser
 from mainapp.models import Article, ArticleStatus, VoiceArticle
 
 from mainapp.forms import ArticleCreationForm, CommentForm
-from moneyapp.models import Transaction
 from moneyapp.services.moneys import make_donations
 
 from mainapp.models import Article, ArticleStatus, Sorting
@@ -20,6 +19,7 @@ from .services.articlepage.get import get_article_page, if_get_ajax
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 from .services.sorting import get_sorted_queryset
+from moneyapp.models import Transaction
 
 
 class Main(ListView):

@@ -27,7 +27,11 @@
                               <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
                               <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
                             </svg>
+                            {% if transactions_not_read %}
+                                <span class="badge transaction-icon">{{ transactions_not_read_count }}</span>
+                            {% endif %}
                         </a>
+
                     </div>
                     <div class="menu-icon-box">
                         <a id="menu-icon" href="{% url 'moderation:main' %}">
