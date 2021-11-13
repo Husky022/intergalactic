@@ -8,7 +8,7 @@ def category(request):
 
 
 def search_filter(request):
-    article = Article.objects.filter(article_status_new=ArticleStatus.objects.get(name='Опубликована'))
+    article = Article.objects.all()
     search_filter = ArticleFilter(request.GET, queryset=article)
     return {'search_filter': search_filter}
 

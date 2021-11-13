@@ -10,11 +10,10 @@ from mainapp.models import Article, VoiceArticle
 
 @background()
 def play_text(pk):
-    print('start play_text')
+    print("render_audio")
     article = Article.objects.get(pk=pk)
     if VoiceArticle.objects.filter(article=article).exists():
         path = str(VoiceArticle.objects.get(article=article).audio_file)
-        print(path)
         try:
             os.remove(f"./.{MEDIA_URL}{path}")
         except FileNotFoundError:
