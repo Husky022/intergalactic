@@ -73,20 +73,20 @@ MIDDLEWARE = [
 #        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 #    }
 DEBUG_TOOLBAR_PANELS = [
-   'debug_toolbar.panels.versions.VersionsPanel',
-   'debug_toolbar.panels.timer.TimerPanel',
-   'debug_toolbar.panels.settings.SettingsPanel',
-   'debug_toolbar.panels.headers.HeadersPanel',
-   'debug_toolbar.panels.request.RequestPanel',
-   'debug_toolbar.panels.sql.SQLPanel',
-   'debug_toolbar.panels.templates.TemplatesPanel',
-   'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-   'debug_toolbar.panels.cache.CachePanel',
-   'debug_toolbar.panels.signals.SignalsPanel',
-   'debug_toolbar.panels.logging.LoggingPanel',
-   'debug_toolbar.panels.redirects.RedirectsPanel',
-   'debug_toolbar.panels.profiling.ProfilingPanel',
-   'template_profiler_panel.panels.template.TemplateProfilerPanel',
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingPanel',
+    'template_profiler_panel.panels.template.TemplateProfilerPanel',
 ]
 ROOT_URLCONF = 'intergalactic.urls'
 
@@ -120,13 +120,13 @@ WSGI_APPLICATION = 'intergalactic.wsgi.application'
 
 DATABASES = {
     'default': {
-    	'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    	'NAME': 'dbms_db',
-    	'USER' : 'dbms',
-    	'PASSWORD' : 'some_password',
-    	'HOST' : '127.0.0.1',
-    	'PORT' : '5432',
-	}
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbms_db',
+        'USER': 'dbms',
+        'PASSWORD': 'some_password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
 }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -222,10 +222,11 @@ MODERATION_STATUS = True
 API_VERSION = '5.131'
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
-    'social_core.backends.google.GoogleOAuth2',          # бекенд авторизации через Google
-    'social_core.backends.instagram.InstagramOAuth2',          # бекенд авторизации через Инстаграмм
-    'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+    'social_core.backends.vk.VKOAuth2',  # бекенд авторизации через ВКонтакте
+    'social_core.backends.google.GoogleOAuth2',  # бекенд авторизации через Google
+    'social_core.backends.instagram.InstagramOAuth2',  # бекенд авторизации через Инстаграмм
+    'django.contrib.auth.backends.ModelBackend',
+# бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
 )
 
 LOGIN_REDIRECT_URL = '/'
