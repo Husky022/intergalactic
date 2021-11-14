@@ -23,12 +23,15 @@ def notifications_not_read_quantity(self):
         recipient_id=self.request.user.id, is_read=0).count())
     return NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
 
+
 @background(schedule=5)
 def send_to_email(data):
     theme = data['theme']
-    html_message = render_to_string('authapp/email/notifications.html', {'item': data})
+    html_message = render_to_string(
+        'authapp/email/notifications.html', {'item': data})
     msg = strip_tags(html_message)
-    send_mail(theme, msg, settings.EMAIL_HOST_USER, ['test-intergalactic@mail.ru'], html_message=html_message)
+    send_mail(theme, msg, settings.EMAIL_HOST_USER, [
+              'test-intergalactic@mail.ru'], html_message=html_message)
 
 
 class Notification:
@@ -73,7 +76,7 @@ class Notification:
             action = 'оставил комментарий к статье '
             self.theme = 'Комментарий'
             return action
-        if  isinstance(self.object, Likes):
+        if isinstance(self.object, Likes):
             if self.object.status == "LK":
                 action = 'поставил лайк статье '
                 self.theme = 'Уведомление о лайке'
@@ -108,8 +111,12 @@ class Notification:
             self.theme = 'Модерация'
             return action
         if isinstance(self.object, Complaint):
-            action = 'подал жалобу на: '
-            self.theme = 'Модерация'
+            if self.object.comment:
+                action = 'подал жалобу на комментарий: '
+                self.theme = ':Жалоба на комментарий'
+            else:
+                action = 'подал жалобу на статью: '
+                self.theme = ':Жалоба на статью'
             return action
         if isinstance(self.object, ComplaintMessage):
             action = 'оставил сообщение при обжаловании статьи '
@@ -138,9 +145,16 @@ class Notification:
             target = article.name
             return target
 
-        elif  isinstance(self.object, Article):
+        elif isinstance(self.object, Article):
             return self.object.name
-        for instance in (ArticleMessage, Complaint, ComplaintMessage):
+        elif isinstance(self.object, Complaint):
+            if self.object.comment:
+                return self.object.comment.text
+            else:
+                print(f'зашёл на артикл {self.object.article.name}')
+                return self.object.article.name
+
+        for instance in (ArticleMessage, ComplaintMessage):
             if isinstance(self.object, instance):
                 return self.object.article.name
         else:
@@ -166,7 +180,8 @@ class Notification:
                     id=self.object.article_id).first()
                 recipient_id = article.author_id
 
-                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                recipient = IntergalacticUser.objects.filter(
+                    id=recipient_id).first()
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
                 recipient = IntergalacticUser.objects.filter(
@@ -180,6 +195,7 @@ class Notification:
             recipient = IntergalacticUser.objects.filter(
                 id=recipient_id).first()
         if isinstance(self.object, Complaint):
+            return self.get_stuff_users()
             # *1: пока выбираем для рассмотрения жалобы админа,
             # позже надо всех модераторов добавить (Дмитрий)
             recipient = IntergalacticUser.objects.get(pk=1)
@@ -197,6 +213,8 @@ class Notification:
     def get_comment_id(self):
         if isinstance(self.object, Comment):
             return self.object.id
+        if isinstance(self.object, Complaint) and self.object.comment:
+            return self.object.comment.id
         else:
             return None
 
@@ -216,6 +234,11 @@ class Notification:
 
     def get_theme(self):
         return None
+
+    def get_stuff_users(self):
+        result = IntergalacticUser.objects.filter(is_staff=True)
+        print(f'РЕЗУЛЬТАТ: {result} тип {type(result)}')
+        return result
 
     def send(self):
 
@@ -249,9 +272,3 @@ class Notification:
                     })
 
                 send_to_email(context)
-
-
-
-
-
-
