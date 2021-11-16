@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from authapp.models import IntergalacticUser
 from mainapp.models import Article
 from moneyapp.models import Transaction, UserBalance
@@ -15,17 +17,21 @@ def make_donations(self, donation_data):
                                                  coins=donation['cash'])
     new_transaction.save()
 
-def transaction_action(self, transaction_data):
+def transaction_action(self, transaction_data, moneymaker_id):
     data = transaction_data.dict()
     if 'transaction-reject' in data:
         transaction = Transaction.objects.filter(id=data['transaction-reject']).first()
         transaction.status = 'CANCELLED'
         transaction.save()
     if 'transaction-approve' in data:
+        percent = Decimal('0.1')
         transaction = Transaction.objects.filter(id=data['transaction-approve']).first()
         user_balance = UserBalance.objects.filter(user_id=transaction.to_user_id).first()
-        user_balance.amount += transaction.coins
+        user_balance.amount += transaction.coins * (1 - percent)
         user_balance.save()
+        moneymaker_balance = UserBalance.objects.filter(user_id=moneymaker_id).first()
+        moneymaker_balance.amount += transaction.coins * percent
+        moneymaker_balance.save()
         transaction.status = 'DONE'
         transaction.save()
         notification = Notification(transaction)
