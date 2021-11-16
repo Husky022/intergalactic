@@ -32,7 +32,7 @@ def get_article_page(self):
     context = Comments(user, article).render_context(context)
 
     # Рендер количества лайков
-    context = LikeDislike(user, article, get_dict).render_like_and_dislike(context)
+    context = LikeDislike(user, article, status=get_dict.get('status')).render_like_and_dislike(context)
 
     # Рендер рейтинга
     context["article"] = total_rating(article, user)
@@ -62,4 +62,4 @@ def change_activity(user, article, get_dict, context):
     elif get_dict.get("com_delete"):
         Comments(user, article, get_dict).delete_get_or_post()
     elif get_dict.get("status"):
-        LikeDislike(user, article, get_dict).status_like()
+        LikeDislike(user, article, status=get_dict.get('status')).status_like()

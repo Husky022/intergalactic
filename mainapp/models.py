@@ -93,6 +93,10 @@ class Comment(MPTTModel):
     add_datetime = models.DateTimeField(
         'Время добавления комментария', auto_now_add=True)
 
+    count_like = models.IntegerField(default=0, verbose_name='количество лайков')
+    count_dislike = models.IntegerField(default=0, verbose_name='количество дизлайков')
+    status_like_dislike = models.CharField(max_length=8, default="UND", verbose_name='статус лайка')
+
     def __str__(self):
         return f'{self.article.name}: {self.text}'
 
@@ -115,6 +119,7 @@ class Likes(models.Model):
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     status = models.CharField(verbose_name='Статус лайка статьи', max_length=3,
                               choices=LIKE_STATUS_CHOICES, default=LIKE_DEFAULT_STATUS)
 
