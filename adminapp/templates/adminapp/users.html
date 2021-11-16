@@ -33,7 +33,7 @@
               <th class="users">Аватар</th>
               <th class="users">Логин</th>
               <th class="users">Имя</th>
-              <th class="users">Фамилия</th>
+{#              <th class="users">Фамилия</th>#}
               <th class="users">Возраст</th>
               <th class="users">Почта</th>
               <th class="users">Последний вход</th>
@@ -43,7 +43,7 @@
               <th class="users">Действия с пользователем</th>
             </tr>
             {% for object in object_list %}
-                <tr>
+                <tr class = '{% if not object.is_active %}user_blocked_card{% endif %}'>
                     <td class="users">{{ object.id }}</td>
                     <td class="users">
                         {% if object.is_superuser %}Администратор{% else %}Пользователь{% endif %}
@@ -52,12 +52,14 @@
                         <div class="col-3 align-baseline">
                             <img src="{{ object.avatar|media_folder_users }}" class="rounded mx-auto d-block" alt="{{ object.username }}" height="50 px">
                         </div>
-                    <td class="users">{{ object.username }}</td>
+                    <td class="users">
+                        <a href = {% url 'adminapp:user_update' object.pk %} role="button" class="btn btn-outline-warning mx-2 my-3">
+                            {{ object.username }}</a></td>
                     <td class="users">{{ object.first_name|title }}</td>
-                    <td class="users">{{ object.last_name|title }}</td>
+{#                    <td class="users">{{ object.last_name|title }}</td>#}
                     <td class="users">{{ object.age }}</td>
                     <td class="users">{{ object.email }}</td>
-                    <td class="users">{{ object.last_login }}</td>
+                    <td class="users">{{ object.last_login|date:'d.m.Y' }}</td>
                     <td class="users">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >
@@ -75,19 +77,20 @@
                     </td>
                     <td class="users">
                         <div>
-                            <a href = {% url 'adminapp:user_update' object.pk %} role="button" class="btn btn-outline-warning button_hovertext mx-2 my-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                </svg>
-                            </a>
-                            <a href = {% url 'adminapp:user_blocked' object.pk %} role="button" class="btn btn-outline-secondary button_hovertext mx-2 my-3">
+{#                            <a href = {% url 'adminapp:user_update' object.pk %} role="button" class="btn btn-outline-warning mx-2 my-3">#}
+{#                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">#}
+{#                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>#}
+{#                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>#}
+{#                                </svg>#}
+{#                            </a>#}
+
+                            <a href = {% url 'adminapp:user_blocked' object.pk %} role="button" class="btn btn-outline-secondary  mx-2 my-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
                                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                                     <path fill-rule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
                                 </svg>
                             </a>
-                            <a href = {% url 'adminapp:user_delete' object.pk %} role="button" class="btn btn-outline-danger button_hovertext mx-2 my-3">
+                            <a href = {% url 'adminapp:user_delete' object.pk %} role="button" class="btn btn-outline-danger  mx-2 my-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>

@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -23,16 +24,17 @@ class UsersListView(LoginRequiredMixin, ListView):
     model = IntergalacticUser
     template_name = "adminapp/users.html"
 
-
     def get_context_data(self, **kwargs):
         context = super(UsersListView, self).get_context_data(**kwargs)
         context['title'] = 'пользователи'
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                           recipient=self.request.user.id).count()
+                                                                             recipient=self.request.user.id).count()
         context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
         context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
 
         return context
+
+
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -89,18 +91,16 @@ def user_delete(request, pk):
 
     return render(request, "adminapp/user_delete.html", content)
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def user_blocked(request, pk):
     title = "пользователи/блокировка"
 
     user = get_object_or_404(IntergalacticUser, pk=pk)
 
-
-
-    blockedusers = BlockedUser.objects.create(user = user, text = 'text')
+    blockedusers = BlockedUser.objects.create(user=user, text='text')
     blockedusers.save()
     return HttpResponseRedirect(reverse("adminapp:users"))
-
 
 
 def db_profile_by_type(prefix, type, queries):
