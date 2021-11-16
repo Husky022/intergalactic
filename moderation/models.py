@@ -1,7 +1,7 @@
 from django.db import models
 
 from authapp.models import IntergalacticUser
-from mainapp.models import Article
+from mainapp.models import Article, Comment
 
 
 class ArticleMessage(models.Model):
@@ -38,7 +38,9 @@ class BlockedUser(models.Model):
 
 class Complaint(models.Model):
     article = models.ForeignKey(
-        Article, verbose_name='Статья', on_delete=models.CASCADE)
+        Article, verbose_name='Статья', null=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        Comment, null=True, verbose_name='Комментарий', on_delete=models.CASCADE)
     complainant = models.ForeignKey(
         IntergalacticUser,
         verbose_name='Жалоба от',
@@ -64,7 +66,9 @@ class ComplaintMessage(models.Model):
     complaint = models.ForeignKey(
         Complaint, verbose_name='Жалоба', on_delete=models.CASCADE)
     article = models.ForeignKey(
-        Article, verbose_name='Статья', on_delete=models.CASCADE)
+        Article, verbose_name='Статья', null=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        Comment, verbose_name='Комментарий', null=True, on_delete=models.CASCADE)
     message_from = models.ForeignKey(
         IntergalacticUser,
         verbose_name='Сообщение от',

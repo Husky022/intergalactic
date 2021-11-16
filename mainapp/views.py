@@ -14,7 +14,10 @@ from .services.articlepage.get import get_article_page, if_get_ajax
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 from .services.sorting import get_sorted_queryset
+#from moneyapp.models import Transaction # конфликт при слиянии ie-173, на всякий случай пока просто закомментил
+from .services.activity.comment import add_comment_complaint
 from .services.mainpage.get_context import get_context_main_page
+
 
 
 class Main(ListView):
@@ -41,7 +44,8 @@ class Articles(ListView):
         if self.kwargs["pk"] == 0:
             article = Article.objects.filter(article_status_new=status)
         else:
-            article = Article.objects.filter(article_status_new=status, hub=self.kwargs["pk"])
+            article = Article.objects.filter(
+                article_status_new=status, hub=self.kwargs["pk"])
 
         return get_sorted_queryset(self, article)
 
@@ -74,6 +78,13 @@ class ArticlePage(DetailView):
 
         if 'donation' in self.request.POST.dict():
             make_donations(self, self.request.POST)
+        if 'comment_complaint' in self.request.POST.dict():
+            add_comment_complaint(
+                self.request.user.id, self.request.POST['comment_complaint'], self.request.POST['text_complaint'])
+            # print(self.request.POST.dict())
+            print(self.request)
+            # print(user.id)
+            # make_donations(self, self.request.POST)
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 

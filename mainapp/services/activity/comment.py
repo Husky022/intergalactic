@@ -1,7 +1,7 @@
-from authapp.models import NotificationModel
+from authapp.models import IntergalacticUser, NotificationModel
 from authapp.services.notifications import Notification
 
-from mainapp.models import Comment
+from mainapp.models import Article, Comment
 from moderation.models import Complaint, ComplaintMessage
 
 
@@ -58,3 +58,19 @@ class Comments:
             text__startswith='@moderator')
         context["article"] = self.article_count_comment(context)
         return context
+
+
+def add_comment_complaint(complainant_id, comment_complaint_id, text_complaint):
+    """Создание жалобы"""
+    comment_complaint = Comment.objects.get(pk=comment_complaint_id)
+    article = Article.objects.get(pk=comment_complaint.article.id)
+    complainant = IntergalacticUser.objects.get(pk=complainant_id)
+    complaint = Complaint.objects.create(article=article, comment=comment_complaint, complainant=complainant,
+                                         text=text_complaint)
+    complaint.save()
+    first_complaint_message = ComplaintMessage.objects.create(
+        complaint=complaint, comment=comment_complaint, message_from=complainant,
+        text=text_complaint)
+    first_complaint_message.save()
+    notification = Notification(complaint)
+    notification.send()

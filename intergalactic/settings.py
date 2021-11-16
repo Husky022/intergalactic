@@ -128,6 +128,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -224,9 +225,10 @@ API_VERSION = '5.131'
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',  # бекенд авторизации через ВКонтакте
     'social_core.backends.google.GoogleOAuth2',  # бекенд авторизации через Google
-    'social_core.backends.instagram.InstagramOAuth2',  # бекенд авторизации через Инстаграмм
+    # бекенд авторизации через Инстаграмм
+    'social_core.backends.instagram.InstagramOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-# бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+    # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
 )
 
 LOGIN_REDIRECT_URL = '/'
