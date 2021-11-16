@@ -6,6 +6,6 @@ db.sqlite3
 intergalactic/secrets.py
 **/media/*
 
-mainapp/migrations/0005_auto_20211113_1734.py
 
-authapp/migrations/0002_alter_notificationmodel_target.py
+
+
