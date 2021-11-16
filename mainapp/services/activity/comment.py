@@ -1,8 +1,7 @@
 from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
-
-from mainapp.models import Comment
 from moderation.models import Complaint, ComplaintMessage
+from mainapp.models import Comment
 
 
 class Comments:
@@ -58,3 +57,5 @@ class Comments:
             text__startswith='@moderator')
         context["article"] = self.article_count_comment(context)
         return context
+
+

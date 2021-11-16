@@ -12,6 +12,8 @@ from moneyapp.services.moneys import make_donations
 
 from mainapp.models import Article, ArticleStatus, Sorting
 from mainapp.forms import ArticleCreationForm, CommentForm
+from mainapp.models import Comment
+from mainapp.services.activity.likes import LikeDislike
 
 from .services.search_filter import ArticleFilter
 
@@ -211,3 +213,14 @@ def set_sorted_type(request, sorting_type):
         sorting_by_user = sorting.filter(user=request.user.id)
         sorting_by_user.update(sorting_type=sorting_type)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def like_dislike_comment(request, pk):
+    get_dict = request.GET.dict()
+    comment = Comment.objects.get(pk=pk)
+    like_dislike = LikeDislike(comment.author, comment.article, get_dict.get('status'), comment=comment)
+    like_dislike.status_like()
+    like_dislike.define_count_like()
+    return JsonResponse({"count_like": comment.count_like,
+                         "count_dislike": comment.count_dislike,
+                         "status": like_dislike.like.status})
