@@ -6,12 +6,15 @@ from mainapp.services.activity.comment import Comments
 from mainapp.services.activity.likes import LikeDislike
 from mainapp.services.activity.rating import total_rating
 from mainapp.services.activity.views import view_views
+from mainapp.services.activity.recommendations import set_recommendations
 
 
 def get_article_page(self):
     """Сбор контекста и взаимодействие активити"""
     # Добавление и валидация просмотра
     view_views(self)
+    # Добавление статистики просмотров у юзера
+    set_recommendations(self)
 
     # Создание контекста
     self.object = self.get_object()

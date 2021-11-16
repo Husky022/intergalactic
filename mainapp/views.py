@@ -1,13 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from django.template.loader import render_to_string
 from django.views.generic import View, ListView, DetailView, CreateView
-from django.http import HttpResponseRedirect, Http404, JsonResponse
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
-from authapp.models import NotificationModel, IntergalacticUser
-from mainapp.models import Article, ArticleStatus, VoiceArticle
 
-from mainapp.forms import ArticleCreationForm, CommentForm
 from moneyapp.services.moneys import make_donations
 
 from mainapp.models import Article, ArticleStatus, Sorting
@@ -16,12 +12,14 @@ from mainapp.models import Comment
 from mainapp.services.activity.likes import LikeDislike
 
 from .services.search_filter import ArticleFilter
-
 from .services.articlepage.get import get_article_page, if_get_ajax
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 from .services.sorting import get_sorted_queryset
-from moneyapp.models import Transaction
+#from moneyapp.models import Transaction # конфликт при слиянии ie-173, на всякий случай пока просто закомментил
+from .services.activity.comment import add_comment_complaint
+from .services.mainpage.get_context import get_context_main_page
+
 
 
 class Main(ListView):
@@ -30,15 +28,9 @@ class Main(ListView):
     template_name = 'mainapp/index.html'
     extra_context = {'title': 'Главная'}
 
-    def get(self, request, *args, **kwargs):
-        article_all = self.get_queryset()
-        self.object_list = article_all
-
-        context = self.get_context_data()
-        context['top_news'] = article_all.order_by('-add_datetime')[:3]
-        context['top_popular'] = article_all.order_by('-rating')[:3]
-        context['top_views'] = article_all.order_by('-views')[:3]
-        return self.render_to_response(context)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return get_context_main_page(self, context)
 
 
 class Articles(ListView):
@@ -54,7 +46,8 @@ class Articles(ListView):
         if self.kwargs["pk"] == 0:
             article = Article.objects.filter(article_status_new=status)
         else:
-            article = Article.objects.filter(article_status_new=status, hub=self.kwargs["pk"])
+            article = Article.objects.filter(
+                article_status_new=status, hub=self.kwargs["pk"])
 
         return get_sorted_queryset(self, article)
 
@@ -87,6 +80,13 @@ class ArticlePage(DetailView):
 
         if 'donation' in self.request.POST.dict():
             make_donations(self, self.request.POST)
+        if 'comment_complaint' in self.request.POST.dict():
+            add_comment_complaint(
+                self.request.user.id, self.request.POST['comment_complaint'], self.request.POST['text_complaint'])
+            # print(self.request.POST.dict())
+            print(self.request)
+            # print(user.id)
+            # make_donations(self, self.request.POST)
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
