@@ -14,25 +14,21 @@
         {{ item.add_datetime }}
 
         {% if item.sender %}
-        <a href="{% url 'profile:user' item.sender.id %}">
-            <span class="font-weight-bold">
-                {{ item.sender }}
-            </span>
-        </a>
+            <a href="{% url 'profile:user' item.sender.id %}">
+                <span class="font-weight-bold">
+                    {{item.sender }}
+                </span>
+            </a>
         {% endif %}
 
         {{ item.action }}
 
-        {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
+        {% if item.action == 'для публикации требуется иправить(доработать) статью ' or item.action == 'отправил на модерацию статью ' or item.action == 'оставил сообщение при модерации статьи ' %}
             <a href="{% url 'moderation:article' item.article_id %}">
-        {% elif item.action == 'подал жалобу на статью: ' %}
+        {% elif item.action == 'подал жалобу на статью: ' or item.action == 'оставил сообщение при обжаловании статьи '  %}
             <a href="{% url 'moderation:complaint' item.complaint_id %}">
         {% elif item.action == 'подал жалобу на комментарий: ' %}
             <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
-        {% elif item.action == 'оставил сообщение при обжаловании статьи ' %}
-            <a href="{% url 'moderation:complaint' item.complaint_id %}">
-        {% elif item.action == 'отправил на модерацию статью' %}
-            <a href="{% url 'moderation:article' item.article_id %}">
         {% else %}
             <a href="{% url 'article_page' item.article_id %}">
                             {% endif %}
@@ -57,23 +53,21 @@
     {% for item in notifications_read %}
     <div class="block-notification">
         {{ item.add_datetime }}
-        <a href="{% url 'profile:user' item.sender.id %}">
-            <span class="font-weight-bold">
-                {{item.sender }}
-            </span>
-        </a>
+        {% if item.sender %}
+            <a href="{% url 'profile:user' item.sender.id %}">
+                <span class="font-weight-bold">
+                    {{item.sender }}
+                </span>
+            </a>
+        {% endif %}
         {{ item.action }}
 
-        {% if item.action == 'для публикации требуется иправить(доработать) статью ' %}
+        {% if item.action == 'для публикации требуется иправить(доработать) статью ' or item.action == 'отправил на модерацию статью ' or item.action == 'оставил сообщение при модерации статьи ' %}
             <a href="{% url 'moderation:article' item.article_id %}">
-        {% elif item.action == 'подал жалобу на статью: ' %}
+        {% elif item.action == 'подал жалобу на статью: ' or item.action == 'оставил сообщение при обжаловании статьи '  %}
             <a href="{% url 'moderation:complaint' item.complaint_id %}">
         {% elif item.action == 'подал жалобу на комментарий: ' %}
             <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
-        {% elif item.action == 'оставил сообщение при обжаловании статьи ' %}
-            <a href="{% url 'moderation:complaint' item.complaint_id %}">
-        {% elif item.action == 'отправил на модерацию статью ' %}
-            <a href="{% url 'moderation:article' item.article_id %}">
         {% else %}
             <a href="{% url 'article_page' item.article_id %}">
         {% endif %}
