@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import View, CreateView
 from django.shortcuts import render, get_object_or_404
@@ -8,6 +10,7 @@ from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from mainapp.services.audio import play_text
+from userprofile.models import Message, Chat, NewMessage
 
 
 class UserProfileView(View):
@@ -28,8 +31,10 @@ class UserProfileView(View):
             'user': self.request.user,
             'creation_form': ArticleCreationForm(),
             'articles': articles_with_status,
-            'notifications_not_read': NotificationModel.objects.filter(is_read=0,
-                                                                         recipient=self.request.user.id).count()
+            'notifications_not_read': NotificationModel.objects.filter(
+                is_read=0,
+                recipient=self.request.user.id
+            ).count()
         }
         return context
 
@@ -73,8 +78,6 @@ class ArticleChangeActiveView(View):
             target_article.article_status_new = ArticleStatus.objects.get(name='В архиве')
             notification = Notification(target_article, context='archive')
             notification.send()
-
-
 
         target_article.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -145,3 +148,81 @@ class OtherUserProfile(View):
             )
         }
         return render(request, self.template_name, context)
+
+
+class CorrespondenceView(View):
+
+    def get_context_data(self, request):
+        chats = self.get_chats(request)
+
+        members = []
+        context = {
+            'chats': chats
+        }
+        return context
+
+    def get(self, request):
+        return render(request, 'userprofile/correspondence.html', context=self.get_context_data(request))
+
+    @staticmethod
+    def get_chats(request):
+        chats = Chat.objects.filter(user=request.user)
+        members_and_last_messages = []
+        for chat in chats:
+            for user in chat.user.all():
+                if user != request.user:
+                    members_and_last_messages.append({
+                        'chat_item': chat,
+                        'member': user,
+                        'last_message': Message.objects.filter(chat=chat).last(),
+                    })
+
+        return members_and_last_messages
+
+
+class Messages(View):
+    def get(self, request, pk):
+        """Получить все сообщения чата и отрендерить их"""
+        if request.is_ajax():
+            chat = Chat.objects.get(pk=pk)
+            context = {'messages': Message.objects.filter(chat=chat)}
+            messages = Message.objects.filter(chat=chat, was_call=False)
+            for msg in messages:
+                msg.was_call = True
+                msg.save()
+            new_messages = NewMessage.objects.filter(to_user=request.user)
+            for msg in new_messages:
+                msg.delete()
+            return render(request, 'userprofile/messages.html', context)
+
+    def post(self, request):
+        """Сохранить новое сообщение"""
+        if request.is_ajax():
+            ajax = json.loads(request.body.decode('utf-8'))
+            chat = Chat.objects.get(pk=ajax.get('chat'))
+            message = Message(
+                chat=chat,
+                author=request.user,
+                text=ajax.get('text')
+            )
+            message.save()
+            for user in chat.user.all():
+                NewMessage(message=message, to_user=user).save() if user != request.user else 0
+
+            result = {
+                'datetime': message.datetime.strftime('%d %M %Y г. %H:%M'),
+                'text': message.text,
+                'chat': ajax.get('chat')
+            }
+            print(result)
+            return JsonResponse(result)
+
+
+class CreateChat(View):
+    def get(self, request, pk):
+        addressee = IntergalacticUser.objects.get(pk=pk)
+        chat = Chat()
+        chat.save()
+        request.user.chat_set.add(chat)
+        addressee.chat_set.add(chat)
+        return HttpResponseRedirect(reverse('profile:correspondence'))

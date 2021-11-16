@@ -57,12 +57,9 @@ class NotificationModel(models.Model):
     like_id = models.PositiveIntegerField(verbose_name='ID лайка', null=True)
     add_datetime = models.DateTimeField('Время уведомления', auto_now_add=True)
 
-
     def __str__(self):
         return f'Уведомление: {self.text}'
 
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'
-
-

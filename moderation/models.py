@@ -28,6 +28,5 @@ class BlockedUser(models.Model):
     text = models.TextField(verbose_name='Причина блокировки', blank=True)
     datetime = models.DateTimeField(verbose_name='Дата и время блокировки', auto_now_add=True)
 
-
     def __str__(self):
         return f'{self.user}'

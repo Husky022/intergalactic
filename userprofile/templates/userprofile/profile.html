@@ -27,6 +27,9 @@
                             <a class="btn-red-profile-block" href="{% url 'auth:edit' %}">
                                 Редактировать профиль
                             </a>
+                            <a class="btn-red-profile-block" href="{% url 'profile:correspondence' %}">
+                                Переписки
+                            </a>
                             <div class="admin-moder-buttons">
                                 {% if user.is_superuser %}
                                     <hr>
@@ -43,16 +46,6 @@
                         </div>
                     </div>
                     <div class="info-about-user">
-{#                        <form method="post" style="text-align: center;margin: auto;" target="frameforform">#}
-{#                            {% csrf_token %}#}
-{#                            <div class="form-check form-switch">#}
-{#                                <input class="form-check-input" name="formDoor[]" type="checkbox" value="Gang zones"#}
-{#                                onclick="this.closest('form').submit();console.log('submitted - ',this.checked);" />#}
-{#                                <label>#}
-{#                                    Получать уведомления на {{ user.email  }}#}
-{#                                </label>#}
-{#                            </div>#}
-{#                        </form>#}
                         <form action="" method="post">
                         {% csrf_token %}
                             <div class="form-check form-switch">
