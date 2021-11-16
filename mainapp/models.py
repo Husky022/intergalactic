@@ -156,3 +156,14 @@ class Sorting(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.sorting_type}'
+
+
+class Recommendations(models.Model):
+    """Рекомендации статей для просмотра"""
+    user = models.ForeignKey(IntergalacticUser, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
+    view_count = models.PositiveIntegerField(default=0, verbose_name='Количество просмотров статей')
+
+    def __str__(self):
+        return f'статья: {self.article.id}, хаб: {self.article.hub}, просмотры: {self.view_count}'
+
