@@ -133,7 +133,7 @@
                         <form class="form-horizontal" action="" method="post">
                             {% csrf_token %}
                             <textarea class="textarea_subcomment_{{ node.id }}" name="text_subcomment" rows="3"
-                                      style="width: 80%"></textarea>
+                                      style="width: 80%; margin-top: 20px;"></textarea>
                             <div class="text-right">
                                 <button class="submit_subcomment submit_subcomment_{{ node.id }}"
                                         name="{{ article.pk }}"

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, ListView, DetailView, CreateView
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 

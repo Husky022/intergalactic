@@ -59,14 +59,14 @@ window.onload = function () {
         });
     });
 
-
     $(".ajax_activity").on('click', '.btn-likes', function (event) {
+        let svg = event.currentTarget.querySelector('svg');
         if ($("nav").hasClass('username')) {
             $.ajax({
                 data: {status: "LK"},
-                url: "/article_page/" + event.target.id + '/',
+                url: "/article_page/" + svg.id + '/',
                 success: function (data) {
-                    document.querySelector('.ajax_activity_' + event.target.id).innerHTML = data.result_activity;
+                    document.querySelector('.ajax_activity_' + svg.id).innerHTML = data.result_activity;
                 }
             });
         } else {
@@ -75,12 +75,13 @@ window.onload = function () {
     })
 
     $(".ajax_activity").on('click', '.btn-dislikes', function (event) {
+        let svg = event.currentTarget.querySelector('svg');
         if ($("nav").hasClass('username')) {
             $.ajax({
                 data: {status: "DZ"},
-                url: "/article_page/" + event.target.id + '/',
+                url: "/article_page/" + svg.id + '/',
                 success: function (data) {
-                    document.querySelector('.ajax_activity_' + event.target.id).innerHTML = data.result_activity;
+                    document.querySelector('.ajax_activity_' + svg.id).innerHTML = data.result_activity;
                 }
             });
         } else {
@@ -88,31 +89,38 @@ window.onload = function () {
         }
     })
 
-    $(".ajax_comment_likes").on('click', '.btn-likes', function (event) {
+    let clickCommentLikes = function (event) {
         let svg = event.currentTarget.querySelector('svg');
         if ($("nav").hasClass('username')) {
             $.ajax({
                 data: {status: "LK"},
                 url: "/comment/" + svg.id + '/',
-                success: function (data) {likesDislikeComment(data, 'likes', svg.id)}
+                success: function (data) {
+                    likesDislikeComment(data, 'likes', svg.id)
+                }
             });
         } else {
-            alert("Вы не авторизованы");
+            alert("Вы не авторизованы")
         }
-    })
+    }
 
-    $(".ajax_comment_dislikes").on('click', '.btn-dislikes', function (event) {
+    let clickCommentDislikes = function (event) {
         let svg = event.currentTarget.querySelector('svg');
         if ($("nav").hasClass('username')) {
             $.ajax({
                 data: {status: "DZ"},
                 url: "/comment/" + svg.id + '/',
-                success: function (data) {likesDislikeComment(data, 'dislikes', svg.id)}
+                success: function (data) {
+                    likesDislikeComment(data, 'dislikes', svg.id)
+                }
             });
         } else {
-            alert("Вы не авторизованы");
+            alert("Вы не авторизованы")
         }
-    })
+    }
+
+    $(".ajax_comment_likes").on('click', '.btn-likes', clickCommentLikes)
+    $(".ajax_comment_dislikes").on('click', '.btn-dislikes', clickCommentDislikes)
 
     $('.ajax_comment').on('click', '.submit_comment', function () {
         let target_href = event.target;
@@ -123,6 +131,9 @@ window.onload = function () {
                 success: function (data) {
                     document.querySelector('.ajax_activity').innerHTML = data.result_activity;
                     document.querySelector('.ajax_comment').innerHTML = data.result_comment;
+
+                    $(".ajax_comment_likes").on('click', '.btn-likes', clickCommentLikes)
+                    $(".ajax_comment_dislikes").on('click', '.btn-dislikes', clickCommentDislikes)
                 },
             });
 
@@ -143,6 +154,9 @@ window.onload = function () {
                 success: function (data) {
                     document.querySelector('.ajax_activity').innerHTML = data.result_activity;
                     document.querySelector('.ajax_comment').innerHTML = data.result_comment;
+
+                    $(".ajax_comment_likes").on('click', '.btn-likes', clickCommentLikes)
+                    $(".ajax_comment_dislikes").on('click', '.btn-dislikes', clickCommentDislikes)
 
                 },
             });
