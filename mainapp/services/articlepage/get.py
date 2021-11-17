@@ -6,12 +6,15 @@ from mainapp.services.activity.comment import Comments
 from mainapp.services.activity.likes import LikeDislike
 from mainapp.services.activity.rating import total_rating
 from mainapp.services.activity.views import view_views
+from mainapp.services.activity.recommendations import set_recommendations
 
 
 def get_article_page(self):
     """Сбор контекста и взаимодействие активити"""
     # Добавление и валидация просмотра
     view_views(self)
+    # Добавление статистики просмотров у юзера
+    set_recommendations(self)
 
     # Создание контекста
     self.object = self.get_object()
@@ -29,7 +32,7 @@ def get_article_page(self):
     context = Comments(user, article).render_context(context)
 
     # Рендер количества лайков
-    context = LikeDislike(user, article, get_dict).render_like_and_dislike(context)
+    context = LikeDislike(user, article, status=get_dict.get('status')).render_like_and_dislike(context)
 
     # Рендер рейтинга
     context["article"] = total_rating(article, user)
@@ -59,4 +62,4 @@ def change_activity(user, article, get_dict, context):
     elif get_dict.get("com_delete"):
         Comments(user, article, get_dict).delete_get_or_post()
     elif get_dict.get("status"):
-        LikeDislike(user, article, get_dict).status_like()
+        LikeDislike(user, article, status=get_dict.get('status')).status_like()

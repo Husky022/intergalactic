@@ -5,7 +5,111 @@
 {% block content %}
 
 <h1 class="display-heading text-center">Intergalactic Entertainment</h1>
+{% if request.user.is_authenticated %}
+    {% if recommend_articles_by_hub or recommend_articles_by_author or recommend_hubs or recommend_authors %}
+        <h4 class="display-heading text-center">Рекомендации</h4>
+    {% endif %}
+    {% if recommend_articles_by_hub or recommend_articles_by_author %}
+        <h5 class="display- text-center">Статьи</h5>
+    {% endif %}
+    <div class="album">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for item in recommend_articles_by_hub %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body main-img" height="170">
+                                <a href="{% url 'profile:main' %}">
+                                    <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                            alt="profile_image" height="24">
+                                        {{ item.author }}
+                                    </span>
+                                </a>
+                                <span class="font-weight-light">
+                                    {{ item.add_datetime }}</span>
 
+                                <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                                    <h6 class="text-center" >{{ item.name|truncatewords:7 }}</h6>
+                                </a>
+                            </div>
+                            <img class="bd-placeholder-img card-img-top" width="100%" height="170"  src="{{ item.image|media_folder_article }}" alt="">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in recommend_articles_by_author %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body main-img" height="170">
+                            <a href="{% url 'profile:main' %}">
+                                <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                        alt="profile_image" height="24">
+                                    {{ item.author }}
+                                </span>
+                            </a>
+                            <span class="font-weight-light">
+                                {{ item.add_datetime }}</span>
+
+                            <a class="a_link_article" href="{% url 'article_page' item.pk %}">
+                            <h6 class="text-center" >{{ item.name|truncatewords:7 }}</h6>
+                            </a>
+                        </div>
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="170"  src="{{ item.image|media_folder_article }}" alt="">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+    {% if recommend_hubs %}
+        <h5 class="display- text-center">Хабы</h5>
+    {% endif %}
+    <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in recommend_hubs %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <a href="{% url 'hub_category' item.pk %}">
+                                <h6 class="text-center" >{{ item.name}}</h6>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+    {% if recommend_authors %}
+        <h5 class="display- text-center">Авторы</h5>
+   {% endif %}
+    <div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for item in recommend_authors %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <a href="{% url 'profile:user' item.pk %}">
+                                <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
+                                        alt="profile_image" height="24">
+                                    {{ item.username }}
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+{% endif %}
 <h4 class="display-heading text-center">Топ-3 Новинки</h4>
    <div class="album">
     <div class="container">
@@ -14,7 +118,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body main-img" height="170">
-                            <a href="{% url 'profile:main' %}">
+                            <a href="{% url 'profile:user' item.author.pk %}">
                                 <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
                                         alt="profile_image" height="24">
                                     {{ item.author }}
@@ -43,7 +147,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body main-img" height="170">
-                            <a href="{% url 'profile:main' %}">
+                            <a href="{% url 'profile:user' item.author.pk %}">
                                 <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
                                         alt="profile_image" height="24">
                                     {{ item.author }}
@@ -73,7 +177,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body main-img" height="170">
-                            <a href="{% url 'profile:main' %}">
+                            <a href="{% url 'profile:user' item.author.pk %}">
                                 <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
                                         alt="profile_image" height="24">
                                     {{ item.author }}

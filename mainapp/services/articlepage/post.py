@@ -16,4 +16,4 @@ def post_article_page(self):
     elif post_dict.get("com_delete"):
         Comments(user, article, post_dict).delete_get_or_post()
     elif post_dict.get("status"):
-        post_dict['article'] = LikeDislike(user, article).status_like(post_dict.get("status"))
+        post_dict['article'] = LikeDislike(user, article, status=post_dict.get('status')).status_like()
