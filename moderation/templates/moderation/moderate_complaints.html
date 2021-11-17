@@ -28,14 +28,16 @@
                             <div class="block-moder-article">
                                 <table>
                                     <tr>
-                                        <!-- <td class="hub-name">
-                                                <p>ПОДАЛ: {{ complaint.complainant|title }}</p>
-                                            </td> -->
                                         <td colspan="2">
-                                            <a href="{% url 'moderation:complaint' complaint.pk %}"
+                                            {% if complaint.comment %}
+                                            <a href="{% url 'article_page' complaint.article.id %}#{{complaint.comment.pk}}"
                                                 class="article-anchor">
-                                                <p><b><i>ЖАЛОБА:</i></b> &nbsp &nbsp {{ complaint.text }}</p>
-                                            </a>
+                                                {% else %}
+                                                <a href="{% url 'moderation:complaint' complaint.pk %}"
+                                                    class="article-anchor">
+                                                    {% endif %}
+                                                    <p><b><i>ЖАЛОБА:</i></b> &nbsp &nbsp {{ complaint.text }}</p>
+                                                </a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -45,10 +47,18 @@
                                             </p>
                                         </td>
                                         <td class="article-name">
+                                            {% if complaint.comment %}
+                                            <a href="{% url 'article_page' complaint.article.id %}#{{complaint.comment.pk}}"
+                                                class="article-anchor">
+                                                <p><i><u>НА КОММЕНТАРИЙ:</u></i><br> {{ complaint.comment.text }}</p>
+                                                <p><i>К СТАТЬЕ:</i><br> {{ complaint.article.name }}</p>
+                                            </a>
+                                            {% else %}
                                             <a href="{% url 'moderation:complaint' complaint.pk %}"
                                                 class="article-anchor">
-                                                <p><i>НА СТАТЬЮ:</i><br> {{ complaint.article.name }}</p>
+                                                <p><i><u>НА СТАТЬЮ:</u></i><br> {{ complaint.article.name }}</p>
                                             </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 </table>
