@@ -1,3 +1,4 @@
+from compat import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, ListView, DetailView, CreateView
 from django.http import HttpResponseRedirect, Http404
