@@ -12,7 +12,7 @@
                     <div class="img-role-redaction-block">
                         <div class="profile-img-block">
                             <img class="profile_image" src="{{ user.avatar|media_folder_users }}"
-                                  alt="profile_image">
+                                 alt="profile_image">
                         </div>
                         <div class="profile-role-block">
                             {% if user.is_superuser %}
@@ -48,10 +48,12 @@
                                     <hr>
                                     <div class="btn-profile-admin-block">
                                         <a class="btn-red-profile-block" href="{% url 'adminapp:users' %}">Админка</a>
-                                        <a class="btn-red-profile-block" href="{% url 'moderation:main' %}">Модерация</a>
+                                        <a class="btn-red-profile-block"
+                                           href="{% url 'moderation:main' %}">Модерация</a>
                                     </div>
                                 {% elif user.is_staff %}
-                                    <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Модерация</a></div>
+                                    <div><a class="btn btn-secondary" href="{% url 'moderation:main' %}">Модерация</a>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
