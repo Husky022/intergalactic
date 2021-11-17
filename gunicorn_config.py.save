@@ -6,5 +6,6 @@ user = 'intergalactic'
 limit_request_fields = 32000
 limit_request_field_size = 0
 raw_env = 'DJANGO_SETTINGS_MODULE=intergalactic.settings'
-accesslog = '/var/log/gunicorn/access.log'
-errorlog = '/var/log/gunicorn/error.log'
+accesslog = /var/log/gunicorn/access.log
+errorlog = 
+/var/log/gunicorn/error.log'
