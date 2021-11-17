@@ -44,7 +44,7 @@ function likesDislikeComment(data, btn, id) {
 
 window.onload = function () {
 
-    $('body').on('click',function(event) {
+    $('form').on('click',function(event) {
         checkbox = document.getElementById(event.target.id)
         $.ajax({
             type: "POST",
