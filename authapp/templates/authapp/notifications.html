@@ -26,15 +26,17 @@
             <a href="{% url 'moderation:complaint' item.complaint_id %}">
         {% elif item.action == 'подал жалобу на комментарий: ' %}
             <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
+        {% elif item.action == 'оставил комментарий к статье ' %}
+            <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
         {% elif item.article_id %}
             <a href="{% url 'article_page' item.article_id %}">
+        {% endif %}
             {% if item.target %}
                 <span class="font-weight-bold">
                     {{ item.target }}
                 </span>
             {% endif %}
             </a>
-        {% endif %}
         {% if item.text %}
             <hr>
             {{ item.text }}
@@ -62,15 +64,17 @@
             <a href="{% url 'moderation:complaint' item.complaint_id %}">
         {% elif item.action == 'подал жалобу на комментарий: ' %}
             <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
+        {% elif item.action == 'оставил комментарий к статье ' %}
+            <a href="{% url 'article_page' item.article_id %}#{{item.comment_id}}">
         {% elif item.article_id %}
             <a href="{% url 'article_page' item.article_id %}">
+        {% endif %}
             {% if item.target %}
                 <span class="font-weight-bold">
                     {{ item.target }}
                 </span>
             {% endif %}
             </a>
-        {% endif %}
         {% if item.text %}
             <hr>
             {{ item.text }}
