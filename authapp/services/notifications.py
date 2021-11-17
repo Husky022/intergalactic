@@ -173,6 +173,7 @@ class Notification:
             return None
 
     def get_recipient(self):
+        global recipient
         recipients = []
         for instance in (Comment, Likes):
             if isinstance(self.object, instance):
@@ -184,16 +185,21 @@ class Notification:
                     id=recipient_id).first()
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
-                recipient = IntergalacticUser.objects.filter(
-                    is_superuser=True).first()
+                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
             else:
                 recepient_id = self.object.author_id
                 recipient = IntergalacticUser.objects.filter(
                     id=recepient_id).first()
         if isinstance(self.object, ArticleMessage):
-            recipient_id = self.object.article.author_id
-            recipient = IntergalacticUser.objects.filter(
-                id=recipient_id).first()
+
+            if IntergalacticUser.objects.filter(id=self.object.message_from.id).first().is_superuser or IntergalacticUser.objects.filter(id=self.object.message_from.id).first().is_staff:
+                recipient_id = self.object.article.author_id
+                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+            else:
+                users = IntergalacticUser.objects.all()
+                for user in users:
+                    if user.is_staff or user.is_superuser:
+                        recipients.append(user)
         if isinstance(self.object, Complaint):
             return self.get_stuff_users()
             # *1: пока выбираем для рассмотрения жалобы админа,
