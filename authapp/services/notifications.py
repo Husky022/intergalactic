@@ -173,6 +173,7 @@ class Notification:
             return None
 
     def get_recipient(self):
+        global recipient
         recipients = []
         for instance in (Comment, Likes):
             if isinstance(self.object, instance):
@@ -184,21 +185,26 @@ class Notification:
                     id=recipient_id).first()
         if isinstance(self.object, Article):
             if self.context == 'moderation' or self.context == 'moderate_after_edit':
-                recipient = IntergalacticUser.objects.filter(
-                    is_superuser=True).first()
+                recipient = IntergalacticUser.objects.filter(is_superuser=True).first()
             else:
                 recepient_id = self.object.author_id
                 recipient = IntergalacticUser.objects.filter(
                     id=recepient_id).first()
         if isinstance(self.object, ArticleMessage):
-            recipient_id = self.object.article.author_id
-            recipient = IntergalacticUser.objects.filter(
-                id=recipient_id).first()
+
+            if IntergalacticUser.objects.filter(id=self.object.message_from.id).first().is_superuser or IntergalacticUser.objects.filter(id=self.object.message_from.id).first().is_staff:
+                recipient_id = self.object.article.author_id
+                recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+            else:
+                users = IntergalacticUser.objects.all()
+                for user in users:
+                    if user.is_staff or user.is_superuser:
+                        recipients.append(user)
         if isinstance(self.object, Complaint):
             return self.get_stuff_users()
             # *1: пока выбираем для рассмотрения жалобы админа,
             # позже надо всех модераторов добавить (Дмитрий)
-            recipient = IntergalacticUser.objects.get(pk=1)
+            # recipient = IntergalacticUser.objects.get(pk=1)
         if isinstance(self.object, ComplaintMessage):
             if self.object.message_from.id == 1:  # смотри *1 чуть выше
                 recipient = self.object.complaint.complainant
@@ -243,32 +249,33 @@ class Notification:
     def send(self):
 
         for recipient in self.recipients:
-            notification = NotificationModel.objects.create(recipient=recipient,
-                                                            sender_id=self.sender_id,
-                                                            action=self.action,
-                                                            text=self.text,
-                                                            target=self.target,
-                                                            article_id=self.article_id,
-                                                            comment_id=self.comment_id,
-                                                            like_id=self.like_id,
-                                                            complaint_id=self.complaint_id)
+            if recipient.id != self.sender_id:
+                notification = NotificationModel.objects.create(recipient=recipient,
+                                                                sender_id=self.sender_id,
+                                                                action=self.action,
+                                                                text=self.text,
+                                                                target=self.target,
+                                                                article_id=self.article_id,
+                                                                comment_id=self.comment_id,
+                                                                like_id=self.like_id,
+                                                                complaint_id=self.complaint_id)
 
-            notification.save()
+                notification.save()
 
-            if recipient.send_to_email:
-                context = {
-                    'recipient': str(notification.recipient),
-                    'add_datetime': str(datetime.datetime.now()),
-                    'action': notification.action,
-                    'text': notification.text,
-                    'theme': self.theme,
+                if recipient.send_to_email:
+                    context = {
+                        'recipient': str(notification.recipient),
+                        'add_datetime': str(datetime.datetime.now()),
+                        'action': notification.action,
+                        'text': notification.text,
+                        'theme': self.theme,
 
-                }
+                    }
 
-                if notification.sender and notification.target:
-                    context.update({
-                        'sender': str(notification.sender),
-                        'target': notification.target,
-                    })
+                    if notification.sender and notification.target:
+                        context.update({
+                            'sender': str(notification.sender),
+                            'target': notification.target,
+                        })
 
-                send_to_email(context)
+                    send_to_email(context)

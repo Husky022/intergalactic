@@ -1,10 +1,11 @@
 function show(id) {
     elem = document.getElementById(id);
     state = elem.style.display;
-    if (state == 'block')
-        elem.style.display = 'none';
-    else
-        elem.style.display = 'block';
+    if (state == 'block') {
+        elem.style.display = 'none'
+    } else {
+        elem.style.display = 'block'
+    }
 }
 
 function likesDislikeComment(data, btn, id) {
@@ -41,9 +42,29 @@ function likesDislikeComment(data, btn, id) {
     return ''
 }
 
+
 window.onload = function () {
 
-    $('#send_email').change(function () {
+    $('form').on('click',function(event) {
+        checkbox = document.getElementById(event.target.id)
+        $.ajax({
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': csrf_token,
+                id: event.target.id,
+                checked: checkbox.checked
+            },
+            url: "/blog_admin/users/read/",
+        // если успешно, то
+        success: function (data) {
+            console.log(data)
+            },
+        });
+    });
+
+
+
+    $('#send_email').change(function() {
         checkbox = document.getElementById('send_email')
         $.ajax({
             type: "POST",

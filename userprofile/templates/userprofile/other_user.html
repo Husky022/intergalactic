@@ -11,7 +11,7 @@
                 <div class="block-profile">
                     <div class="img-role-redaction-block">
                         <div class="profile-img-block">
-                            <img class="profile_image" src="{{ user.avatar|media_folder_users }}"
+                            <img class="profile_image" src="{{ target_user.avatar|media_folder_users }}"
                                   alt="profile_image">
                         </div>
                         <div class="profile-role-block">
@@ -22,6 +22,11 @@
                             {% else %}
                                 Пользователь
                             {% endif %}
+                        </div>
+                        <div class="user-admin-moder-buttons">
+                            <a class="btn-red-profile-block" href="{% url 'profile:new_chat' target_user.pk %}">
+                                Написать пользователю
+                            </a>
                         </div>
                     </div>
                     <div class="info-about-user">
