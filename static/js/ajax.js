@@ -1,10 +1,11 @@
 function show(id) {
     elem = document.getElementById(id);
     state = elem.style.display;
-    if (state == 'block')
-        elem.style.display = 'none';
-    else
-        elem.style.display = 'block';
+    if (state == 'block') {
+        elem.style.display = 'none'
+    } else {
+        elem.style.display = 'block'
+    }
 }
 
 function likesDislikeComment(data, btn, id) {
@@ -44,7 +45,7 @@ function likesDislikeComment(data, btn, id) {
 
 window.onload = function () {
 
-    $('body').on('click',function(event) {
+    $('form').on('click',function(event) {
         checkbox = document.getElementById(event.target.id)
         $.ajax({
             type: "POST",

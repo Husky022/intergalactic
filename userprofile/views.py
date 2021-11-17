@@ -95,6 +95,8 @@ class SendToModeration(View):
         article.article_status_new = ArticleStatus.objects.get(name='На модерации')
         if request.user.rating_author >= 7:
             article.article_status_new = ArticleStatus.objects.get(name='Опубликована')
+            notification = Notification(article, context='published')
+            notification.send()
         article.save()
         play_text(pk)
         notification = Notification(article, context='moderation')
