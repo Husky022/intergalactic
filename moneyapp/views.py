@@ -52,7 +52,7 @@ class UserFinanceView(LoginRequiredMixin, ListView):
     def post(self, *args, **kwargs):
         print(self.request.POST.dict())
         if 'transaction-approve' in self.request.POST.dict() or 'transaction-reject' in self.request.POST.dict():
-            transaction_action(self, self.request.POST)
+            transaction_action(self, self.request.POST, self.request.user.id)
         return HttpResponseRedirect(reverse_lazy('moneyapp:finance'))
 
 

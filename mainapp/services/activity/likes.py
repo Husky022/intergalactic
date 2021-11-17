@@ -2,6 +2,7 @@
 from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Likes
+from authapp.services.debugger import timing
 
 
 class LikeDislike(object):
@@ -42,6 +43,8 @@ class LikeDislike(object):
                 self.article.status_like_dislike = self.like.status
             self.article.save()
 
+
+    @timing
     def status_like(self):
         """Сохранение статуса лайка и дизлайка"""
         if self.like.status == self.status:

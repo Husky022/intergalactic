@@ -58,21 +58,36 @@
                     <td class="users">{{ object.age }}</td>
                     <td class="users">{{ object.email }}</td>
                     <td class="users">{{ object.last_login }}</td>
-                    <td class="users">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >
-                        </div>
-                    </td>
-                    <td class="users">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="chk" id="messages-{{ object.id }}" {% if object.send_messages %} checked {% endif %} >
-                        </div>
-                    </td>
-                    <td class="users">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="chk" id="notifications_to_email-{{ object.id }}" {% if object.send_to_email %} checked {% endif %} >
-                        </div>
-                    </td>
+                    {% if not object.is_superuser %}
+                        <td class="users">
+                            <form action="" method="post">
+                            {% csrf_token %}
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >
+                                </div>
+                            </form>
+                        </td>
+                        <td class="users">
+                            <form action="" method="post">
+                            {% csrf_token %}
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="chk" id="send_messages-{{ object.id }}" {% if object.send_messages %} checked {% endif %} >
+                                </div>
+                            </form>
+                        </td>
+                        <td class="users">
+                            <form action="" method="post">
+                            {% csrf_token %}
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="chk" id="send_to_email-{{ object.id }}" {% if object.send_to_email %} checked {% endif %} >
+                                </div>
+                            </form>
+                        </td>
+                    {% else %}
+                    <td class="users"></td>
+                    <td class="users"></td>
+                    <td class="users"></td>
+                    {% endif %}
                     <td class="users">
                         <div>
                             <a href = {% url 'adminapp:user_update' object.pk %} role="button" class="btn btn-outline-warning button_hovertext mx-2 my-3">

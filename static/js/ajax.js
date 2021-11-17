@@ -41,9 +41,29 @@ function likesDislikeComment(data, btn, id) {
     return ''
 }
 
+
 window.onload = function () {
 
-    $('#send_email').change(function () {
+    $('body').on('click',function(event) {
+        checkbox = document.getElementById(event.target.id)
+        $.ajax({
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': csrf_token,
+                id: event.target.id,
+                checked: checkbox.checked
+            },
+            url: "/blog_admin/users/read/",
+        // если успешно, то
+        success: function (data) {
+            console.log(data)
+            },
+        });
+    });
+
+
+
+    $('#send_email').change(function() {
         checkbox = document.getElementById('send_email')
         $.ajax({
             type: "POST",

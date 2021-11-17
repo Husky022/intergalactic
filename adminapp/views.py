@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic.list import ListView
 
 from adminapp.forms import IntergalacticUserAdminEditForm
+from adminapp.user_management import set_user_parameter
 from authapp.forms import IntergalacticUserRegisterForm
-from authapp.models import IntergalacticUser
 from moderation.models import BlockedUser
 from authapp.models import IntergalacticUser, NotificationModel
 from moneyapp.models import Transaction
@@ -22,7 +23,12 @@ def admin_main(request):
 class UsersListView(LoginRequiredMixin, ListView):
     model = IntergalacticUser
     template_name = "adminapp/users.html"
+    ordering = ['id']
 
+    def post(self, request):
+        data = request.POST.dict()
+        set_user_parameter(data)
+        return JsonResponse({'status': 'success'})
 
     def get_context_data(self, **kwargs):
         context = super(UsersListView, self).get_context_data(**kwargs)
