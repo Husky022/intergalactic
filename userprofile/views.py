@@ -214,8 +214,6 @@ class Messages(View):
                 text=ajax.get('text')
             )
             message.save()
-            for user in chat.user.all():
-                NewMessage(message=message, to_user=user).save() if user != request.user else 0
 
             result = {
                 'datetime': message.datetime.strftime('%d %M %Y г. %H:%M'),
