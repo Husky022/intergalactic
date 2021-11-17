@@ -17,10 +17,9 @@ from .services.articlepage.get import get_article_page, if_get_ajax
 from .services.articlepage.post import post_article_page
 from .services.audio import play_text
 from .services.sorting import get_sorted_queryset
-#from moneyapp.models import Transaction # конфликт при слиянии ie-173, на всякий случай пока просто закомментил
-from .services.activity.comment import add_comment_complaint
+# from moneyapp.models import Transaction # конфликт при слиянии ie-173, на всякий случай пока просто закомментил
+from .services.activity.comment import add_comment_complaint, add_article_complaint
 from .services.mainpage.get_context import get_context_main_page
-
 
 
 class Main(ListView):
@@ -84,10 +83,11 @@ class ArticlePage(DetailView):
         if 'comment_complaint' in self.request.POST.dict():
             add_comment_complaint(
                 self.request.user.id, self.request.POST['comment_complaint'], self.request.POST['text_complaint'])
-            # print(self.request.POST.dict())
-            print(self.request)
-            # print(user.id)
-            # make_donations(self, self.request.POST)
+        if 'article_complaint' in self.request.POST.dict():
+            print(self.request.POST)
+            add_article_complaint(
+                self.request.user.id, self.request.POST['article_complaint'], self.request.POST['text_complaint'])
+
         return HttpResponseRedirect(reverse_lazy('article_page', args=(int(self.kwargs["pk"]),)))
 
 
@@ -219,7 +219,8 @@ def set_sorted_type(request, sorting_type):
 def like_dislike_comment(request, pk):
     get_dict = request.GET.dict()
     comment = Comment.objects.get(pk=pk)
-    like_dislike = LikeDislike(comment.author, comment.article, get_dict.get('status'), comment=comment)
+    like_dislike = LikeDislike(
+        comment.author, comment.article, get_dict.get('status'), comment=comment)
     like_dislike.status_like()
     like_dislike.define_count_like()
     return JsonResponse({"count_like": comment.count_like,

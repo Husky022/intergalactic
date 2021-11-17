@@ -74,3 +74,19 @@ def add_comment_complaint(complainant_id, comment_complaint_id, text_complaint):
     first_complaint_message.save()
     notification = Notification(complaint)
     notification.send()
+
+
+def add_article_complaint(complainant_id, article_complaint_id, text_complaint):
+    """Создание жалобы"""
+    article = Article.objects.get(pk=article_complaint_id)
+    complainant = IntergalacticUser.objects.get(pk=complainant_id)
+    complaint = Complaint.objects.create(article=article, complainant=complainant,
+                                         text=text_complaint)
+    complaint.save()
+    print(f'жалоба создана')
+    first_complaint_message = ComplaintMessage.objects.create(
+        complaint=complaint, article=article, message_from=complainant,
+        text=text_complaint)
+    first_complaint_message.save()
+    notification = Notification(complaint)
+    notification.send()
