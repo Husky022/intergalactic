@@ -1,21 +1,25 @@
 $(document).ready(function (){
   let csrf = $('input[name=csrfmiddlewaretoken]')[0].value;
 
-  $('.chat_list').click(function(event) {
-    console.log(event.target.id)
+  function get_messages(id) {
     $.ajax({
-      url:`/profile/get_messages/${event.target.id}`,
+      url:`/profile/get_messages/${id}`,
       headers: {
          'X-CSRFToken': csrf
        },
       success: function(data) {
         let msgs = $('.msg_history')
         msgs[0].innerHTML = data;
-        msgs.attr('id', event.target.id)
-        $('.msg_send_btn').attr('id', event.target.id)
+        msgs.attr('id', id)
+        $('.msg_send_btn').attr('id', id)
         msgs[0].scrollTop = msgs[0].scrollHeight;
       }
     });
+  }
+
+  $('.chat_list').click(function(event) {
+    get_messages(event.target.id)
+    let update_messages = setInterval(() => get_messages(event.target.id), 1000);
   });
 
   $('.msg_send_btn').click(function (event) {
