@@ -2,9 +2,6 @@ $(document).ready(function (){
   $('button#send_message').click(function(event){
     let text = $('textarea#message')[0].value;
     let csrf = $('input[name=csrfmiddlewaretoken]')[0].value;
-    console.log(text)
-    console.log(event.target.name)
-    console.log(csrf)
     $('textarea#message')[0].value = '';
 
     $.ajax({
