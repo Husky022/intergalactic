@@ -42,11 +42,17 @@
               <th class="users">Уведомления на почту</th>
               <th class="users">Действия с пользователем</th>
             </tr>
-            {% for object in object_list %}
+
+{#                {% for user,status in blocked %}#}
+{#                    {{status}}#}
+{#                {% endfor %}#}
+
+                {% for object in object_list %}
                 <tr class = '{% if not object.is_active %}user_blocked_card{% endif %}'>
-                    <td class="users">{{ object.id }}</td>
+                    <td class="users"> {{ object.id }}</td>
                     <td class="users">
                         {% if object.is_superuser %}Администратор{% else %}Пользователь{% endif %}
+
                     </td>
                     <td class="users">
                         <div class="col-3 align-baseline">
@@ -59,7 +65,7 @@
 {#                    <td class="users">{{ object.last_name|title }}</td>#}
                     <td class="users">{{ object.age }}</td>
                     <td class="users">{{ object.email }}</td>
-                    <td class="users">{{ object.last_login|date:'d.m.Y' }}</td>
+                    <td class="users">{{ object.last_login|date:'d.m.Y'}}</td>
                     <td class="users">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >

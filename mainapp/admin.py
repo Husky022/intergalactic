@@ -5,6 +5,8 @@ from mainapp.models import Article, Hub, Comment, Likes, ArticleStatus, Sorting,
 from authapp.models import IntergalacticUser
 from moderation.models import BlockedUser
 
+# from moderation.models import BlockedUserStatus
+
 
 class ArticleAdmin(SummernoteModelAdmin):
     summernote_fields = ('text',)
@@ -23,3 +25,4 @@ admin.site.register(IntergalacticUser)
 admin.site.register(Comment)
 admin.site.register(Sorting)
 admin.site.register(VoiceArticle)
+# admin.site.register(BlockedUserStatus)

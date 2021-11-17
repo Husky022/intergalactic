@@ -30,22 +30,17 @@ class ModerationMixin(View):
             handler = self.http_method_not_allowed
         return handler(request, *args, **kwargs)
 
-class BlockedManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(article_status_new=ArticleStatus.objects.get(name='Заблокирована'))
-
 
 class Moderator(ModerationMixin, ListView):
     model = Article
     template_name = 'moderation/moderator.html'
     paginate_by = 5
 
+
 #    def get_queryset(self):
 #        queryset = Article.objects.filter(
 #            article_status_new=ArticleStatus.objects.get(name='На модерации'))
 #        return queryset # ie-178 Dmitrij
-
-    blocked = BlockedManager()
 
     def get_context_data(self, **kwargs):
         context = super(Moderator, self).get_context_data(**kwargs)
@@ -54,6 +49,9 @@ class Moderator(ModerationMixin, ListView):
             article_status_new=ArticleStatus.objects.get(name='На модерации'))
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
+        context['blocked'] = Article.objects.filter(
+            article_status_new=ArticleStatus.objects.get(short_name='AB'))
+
         return context
 
 

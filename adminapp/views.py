@@ -12,12 +12,19 @@ from authapp.models import IntergalacticUser
 from moderation.models import BlockedUser
 from authapp.models import IntergalacticUser, NotificationModel
 from moneyapp.models import Transaction
+from django.db import models
+# from moderation.models import BlockedUserStatus
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_main(request):
     response = redirect('adminapp:users')
     return response
+
+
+# class BlockedUsers(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().all()
 
 
 class UsersListView(LoginRequiredMixin, ListView):
@@ -31,7 +38,7 @@ class UsersListView(LoginRequiredMixin, ListView):
                                                                              recipient=self.request.user.id).count()
         context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
         context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
-
+        context['blocked'] = BlockedUserStatus.objects.all()
         return context
 
 

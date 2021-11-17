@@ -36,6 +36,19 @@ class BlockedUser(models.Model):
         return f'{self.user}'
 
 
+# class BlockedUserStatus(models.Model):
+#     user = models.OneToOneField(IntergalacticUser,
+#                                   verbose_name='Пользователь',
+#                                   primary_key=True,
+#                                   on_delete=models.CASCADE)
+#
+#     blocked = models.BooleanField(verbose_name='Заблокирован',
+#                                   default=False)
+#
+#     def __str__(self):
+#         return '%s (%s)' % (self.user, self.blocked)
+
+
 class Complaint(models.Model):
     article = models.ForeignKey(
         Article, verbose_name='Статья', on_delete=models.CASCADE)

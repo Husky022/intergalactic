@@ -19,6 +19,13 @@
                         </span>
 
             </p>
+                     <div>
+                        {% if user.is_superuser or user.is_staff %}
+                          <button type="button" class="btn btn-link">
+                              <a href = {% url 'moderation:reject_article' object.pk %}>на доработку >></a>
+                          </button>
+                        {% endif %}
+                    </div>
 
             <h4 class="text-center">{{ article.name }}</h4>
 

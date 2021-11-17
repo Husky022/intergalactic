@@ -62,20 +62,19 @@
                     {% for article in blocked %}
                         <tr>
                             <td>
-                                <div class="block-moder-article">
-
+                                <div class="block-moder-article" style="background-color: #ffdede">
                                     <table>
                                         <tr>
                                             <td rowspan="2" class="article-name">
-                                                <a href="{% url 'moderation:article' article.pk %}" class="article-anchor">
+                                                <a href="{% url 'moderation:article' article.pk %}" class="article-anchor" style="color: #707070">
                                                     <p>{{ article.name }}</p>
                                                 </a>
                                             </td>
-                                            <td class="hub-name"><p>{{ article.hub.name }}</p></td>
+                                            <td class="hub-name" style="color: #707070"><p>{{ article.hub.name }}</p></td>
 
                                         </tr>
                                         <tr>
-                                            <td class="hub-name"><p>{{ article.add_datetime }}</p></td>
+                                            <td class="hub-name" style="color: #707070"><p>{{ article.add_datetime }}</p></td>
                                         </tr>
                                     </table>
                                 </div>
