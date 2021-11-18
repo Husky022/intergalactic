@@ -103,6 +103,13 @@ def user_blocked(request, pk):
     return HttpResponseRedirect(reverse("adminapp:users"))
 
 
+# @user_passes_test(lambda u: u.is_superuser)
+# def user_unblocked(request, pk):
+#     user = get_object_or_404(IntergalacticUser, pk=pk)
+#     BlockedUser.objects.filter(user=user).delete()
+#     return HttpResponseRedirect(reverse("adminapp:users"))
+
+
 def db_profile_by_type(prefix, type, queries):
     update_queries = list(filter(lambda x: type in x["sql"], queries))
     print(f"db_profile {type} for {prefix}:")
