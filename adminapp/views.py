@@ -22,11 +22,6 @@ def admin_main(request):
     return response
 
 
-# class BlockedUsers(models.Manager):
-#     def get_queryset(self):
-#         return super().get_queryset().all()
-
-
 class UsersListView(LoginRequiredMixin, ListView):
     model = IntergalacticUser
     template_name = "adminapp/users.html"
@@ -38,10 +33,8 @@ class UsersListView(LoginRequiredMixin, ListView):
                                                                              recipient=self.request.user.id).count()
         context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
         context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
-        context['blocked'] = BlockedUserStatus.objects.all()
+        context['blocked_user'] = BlockedUser.objects.all()
         return context
-
-
 
 
 @user_passes_test(lambda u: u.is_superuser)

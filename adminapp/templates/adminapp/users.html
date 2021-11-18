@@ -43,10 +43,6 @@
               <th class="users">Действия с пользователем</th>
             </tr>
 
-{#                {% for user,status in blocked %}#}
-{#                    {{status}}#}
-{#                {% endfor %}#}
-
                 {% for object in object_list %}
                 <tr class = '{% if not object.is_active %}user_blocked_card{% endif %}'>
                     <td class="users"> {{ object.id }}</td>
