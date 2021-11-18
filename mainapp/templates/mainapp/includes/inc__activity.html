@@ -3,20 +3,20 @@
         <div class="ajax_like_total">
             <button class="btn-views">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-eye"
-                     viewBox="0 0 16 16">
+                    viewBox="0 0 16 16">
                     <path
-                            d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                 </svg>
                 {{ article.views }}
             </button>
             <button class="btn-comments">
                 <svg width="19px" height="20px" viewBox="0 0 16 16" class="bi bi-chat-left-text" fill="currentColor"
-                     xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
-                          d="M14 1H2a1 1 0 0 0-1 1v11.586l2-2A2 2 0 0 1 4.414 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        d="M14 1H2a1 1 0 0 0-1 1v11.586l2-2A2 2 0 0 1 4.414 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                     <path fill-rule="evenodd"
-                          d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                        d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
                 </svg>
                 {{ article.count_comment }}
             </button>
@@ -24,9 +24,9 @@
             <div id="picture_btn_likes">
                 <button class="btn-likes">
                     <svg id={{ article.pk }} xmlns="http://www.w3.org/2000/svg" width="19px" height="25px"
-                         fill="currentColor"
-                         class="btn_liked {% if not article.status_like_dislike == 'LK' %}like_colour{% endif %}"
-                         viewBox="0 0 16 16">
+                        fill="currentColor"
+                        class="btn_liked {% if not article.status_like_dislike == 'LK' %}like_colour{% endif %}"
+                        viewBox="0 0 16 16">
                         <path id={{ article.pk }} d=""></path>
                     </svg>
                     <span class="{% if not article.status_like_dislike == 'LK' %}like_colour{% endif %}">
@@ -38,8 +38,8 @@
             <div id="picture_btn_dislikes">
                 <button class="btn-dislikes">
                     <svg id={{ article.pk }} width="20px" height="19px" viewBox="0 0 16 16" fill="currentColor"
-                         class="btn_disliked {% if not article.status_like_dislike == 'DZ' %} like_colour {% endif %}"
-                         xmlns="http://www.w3.org/2000/svg">
+                        class="btn_disliked {% if not article.status_like_dislike == 'DZ' %} like_colour {% endif %}"
+                        xmlns="http://www.w3.org/2000/svg">
                         <path id={{ article.pk }} fill-rule="evenodd" d=""></path>
                     </svg>
                     <span class="{% if not article.status_like_dislike == 'DZ' %}like_colour{% endif %}">
@@ -47,17 +47,45 @@
                     </span>
                 </button>
             </div>
+            <button type="button" class="btn-comments-answer margin-left" data-bs-toggle="modal"
+                href="#complaintModalToggle">
+                Пожаловаться
+            </button>
+            <div class="modal fade" id="complaintModalToggle" aria-hidden="true" aria-labelledby="complModalToggleLabel"
+                tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="complaintModalToggle">
+                                Жалоба на содержание статьи </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <p style="margin-bottom: 20px;">"{{ article.name }}"</p>
+                                <textarea class=" textarea_complaint_{{ article.id }}"
+                                    placeholder="изложите здесь суть жалобы" name="text_complaint" rows="3"
+                                    style="width: 100%"></textarea>
+                                <button class="btn btn-primary" name="article_complaint" value="{{ article.pk }}"
+                                    type="submit" style="width: 100%">Отправить!
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
         <div>
             <div class="rating">
                 <svg width="20px" height="30px" viewBox="0 0 16 16" class="bi bi-bar-chart-line-fill"
-                     fill="currentColor"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <rect width="4" height="5" x="1" y="10" rx="1"/>
-                    <rect width="4" height="9" x="6" y="6" rx="1"/>
-                    <rect width="4" height="14" x="11" y="1" rx="1"/>
-                    <path fill-rule="evenodd" d="M0 14.5a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="4" height="5" x="1" y="10" rx="1" />
+                    <rect width="4" height="9" x="6" y="6" rx="1" />
+                    <rect width="4" height="14" x="11" y="1" rx="1" />
+                    <path fill-rule="evenodd" d="M0 14.5a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
                 </svg>
                 <div style="padding-left: 5px; padding-top:2px">
                     {{ article.rating }}

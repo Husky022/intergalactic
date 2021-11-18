@@ -4,110 +4,94 @@
     <div class="comment-main ">
         <div class="block-comment">
             {% if not comments %}
-                Комментариев пока что нет...
+            Комментариев пока что нет...
             {% endif %}
             {% recursetree comments %}
-                <div class="text">
-                    <a name={{ node.pk }}></a>
-                    <p style="color: maroon">
-                        <a href="{% url 'profile:user' node.author.pk %}">
+            <div class="text">
+                <a name={{ node.pk }}></a>
+                <p style="color: maroon">
+                    <a href="{% url 'profile:user' node.author.pk %}">
                         <span class="font-weight-bold">
                             {{ node.author }}
                         </span>
-                        </a>
-                        оставил комментарий {{ node.add_datetime }}:
-                    </p>
-                    <p>{{ node.text }}</p>
-                    <div class="ajax_like_total">
+                    </a>
+                    оставил комментарий {{ node.add_datetime }}:
+                </p>
+                <p>{{ node.text }}</p>
+                <div class="ajax_like_total">
 
-                        {% if request.user.username == node.author.username or request.user.is_superuser %}
-                            <button class="btn-comments-answer com_delete" name="{{ article.id }}"
-                                    value="{{ node.id }}">
-                                Удалить
-                            </button>
-                        {% endif %}
+                    {% if request.user.username == node.author.username or request.user.is_superuser %}
+                    <button class="btn-comments-answer com_delete" name="{{ article.id }}" value="{{ node.id }}">
+                        Удалить
+                    </button>
+                    {% endif %}
 
-                        <button class="btn-comments-answer" onclick="show('subcomment_block_{{ node.id }}')">
-                            Ответить
+                    <button class="btn-comments-answer" onclick="show('subcomment_block_{{ node.id }}')">
+                        Ответить
+                    </button>
+
+                    <button type="button" class="btn-comments-answer" data-bs-toggle="modal" href="#complModalToggle">
+                        Пожаловаться
+                    </button>
+
+                    <div id="picture_btn_likes" class="ajax_comment_likes">
+                        <button id="comment_like_{{ node.pk }}" class="btn-likes">
+                            <svg id={{ node.pk }} xmlns="http://www.w3.org/2000/svg" width="19px" height="25px"
+                                fill="currentColor"
+                                class="btn_liked {% if not node.status_like_dislike == 'LK' %}like_colour{% endif %}"
+                                viewBox="0 0 16 16">
+                                <path d=""></path>
+                            </svg>
+                            <span class="{% if not node.status_like_dislike == 'LK' %}like_colour{% endif %}">
+                                {{ node.count_like }}
+                            </span>
                         </button>
-
-                        <button type="button" class="btn-comments-answer" data-bs-toggle="modal"
-                                href="#complModalToggle">
-                            Пожаловаться
-                        </button>
-
-                        <div id="picture_btn_likes" class="ajax_comment_likes">
-                            <button id="comment_like_{{ node.pk }}" class="btn-likes">
-                                <svg id={{ node.pk }} xmlns="http://www.w3.org/2000/svg" width="19px" height="25px"
-                                     fill="currentColor"
-                                     class="btn_liked {% if not node.status_like_dislike == 'LK' %}like_colour{% endif %}"
-                                     viewBox="0 0 16 16">
-                                    <path d=""></path>
-                                </svg>
-                                <span class="{% if not node.status_like_dislike == 'LK' %}like_colour{% endif %}">
-                                        {{ node.count_like }}
-                                    </span>
-                            </button>
-                        </div>
-
-                        <div id="picture_btn_dislikes" class="ajax_comment_dislikes">
-                            <button id="comment_dislike_{{ node.pk }}" class="btn-dislikes">
-                                <svg id={{ node.pk }} width="20px" height="19px" viewBox="0 0 16 16"
-                                     fill="currentColor"
-                                     class="btn_disliked {% if not node.status_like_dislike == 'DZ' %} like_colour {% endif %}"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d=""></path>
-                                </svg>
-                                <span class="{% if not node.status_like_dislike == 'DZ' %}like_colour{% endif %}">
-                                         {{ node.count_dislike }}
-                                    </span>
-                            </button>
-                        </div>
                     </div>
 
-                    <!-- {#        Модальное окно#} -->
-                    <div class="modal fade" id="complModalToggle" aria-hidden="true"
-                         aria-labelledby="complModalToggleLabel"
-                         tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="complModalToggleLabel">
-                                        Жалоба на комментарий ползователя {{ node.author.username|title }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- <p>Текст комментария:</p>
-                                <p>{{ node.text }}</p> -->
+                    <div id="picture_btn_dislikes" class="ajax_comment_dislikes">
+                        <button id="comment_dislike_{{ node.pk }}" class="btn-dislikes">
+                            <svg id={{ node.pk }} width="20px" height="19px" viewBox="0 0 16 16" fill="currentColor"
+                                class="btn_disliked {% if not node.status_like_dislike == 'DZ' %} like_colour {% endif %}"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d=""></path>
+                            </svg>
+                            <span class="{% if not node.status_like_dislike == 'DZ' %}like_colour{% endif %}">
+                                {{ node.count_dislike }}
+                            </span>
+                        </button>
+                    </div>
+                </div>
 
-                                    <form action="" method="post">
-                                        {% csrf_token %}
-                                        <p style="margin-bottom: 0px;">Текст комментария:</p>
-                                        <div style="padding-bottom: 10px;">
-                                            <p class="block-comment"> {{ node.text }}</p>
-                                        </div>
-                                        <!-- <p>Кто отправляет?</p>
-                                    <p>{{ user.username }}</p> -->
-                                        <!-- <p>Изложите суть жалобы:</p> -->
-                                        <!-- <input hidden name="complainant" value="{{ user.id }}"></input> -->
-
-                                        <textarea class=" textarea_complaint_{{ node.id }}"
-                                                  placeholder="изложите здесь суть жалобы" name="text_complaint"
-                                                  rows="3"
-                                                  style="width: 100%"></textarea>
-                                        <!-- <input type="text" name="message"> -->
-                                        <!-- {# <button class="btn btn-primary" data-bs-target="#exampleModalToggle2"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal">Open second modal</button>#} -->
-                                        <button class="btn btn-primary" name="comment_complaint" value="{{ node.pk }}"
-                                                type="submit" style="width: 100%">Отправить!
-                                        </button>
-                                    </form>
-                                </div>
+                <!-- {#        Модальное окно#} -->
+                <div class="modal fade" id="complModalToggle" aria-hidden="true" aria-labelledby="complModalToggleLabel"
+                    tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="complModalToggleLabel">
+                                    Жалоба на комментарий ползователя {{ node.author.username|title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <p style="margin-bottom: 0px;">Текст комментария:</p>
+                                    <div style="padding-bottom: 10px;">
+                                        <p class="block-comment"> {{ node.text }}</p>
+                                    </div>
+                                    <textarea class=" textarea_complaint_{{ node.id }}"
+                                        placeholder="изложите здесь суть жалобы" name="text_complaint" rows="3"
+                                        style="width: 100%"></textarea>
+                                    <button class="btn btn-primary" name="comment_complaint" value="{{ node.pk }}"
+                                        type="submit" style="width: 100%">Отправить!
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="modal fade" id="exampleModalToggle2" aria-hidden="true"
+                </div>
+                <!-- <div class="modal fade" id="exampleModalToggle2" aria-hidden="true"
                         aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -126,46 +110,45 @@
                             </div>
                         </div>
                     </div> -->
-                    <!-- {#        Модальное окно#} -->
+                <!-- {#        Модальное окно#} -->
 
 
-                    <div class="subcomment_block" id="subcomment_block_{{ node.id }}">
-                        <form class="form-horizontal" action="" method="post">
-                            {% csrf_token %}
-                            <textarea class="textarea_subcomment_{{ node.id }}" name="text_subcomment" rows="3"
-                                      style="width: 80%"></textarea>
-                            <div class="text-right">
-                                <button class="submit_subcomment submit_subcomment_{{ node.id }}"
-                                        name="{{ article.pk }}"
-                                        value="{{ node.id }}" type="submit">Отправить
-                                </button>
+                <div class="subcomment_block" id="subcomment_block_{{ node.id }}">
+                    <form class="form-horizontal" action="" method="post">
+                        {% csrf_token %}
+                        <textarea class="textarea_subcomment_{{ node.id }}" name="text_subcomment" rows="3"
+                            style="width: 80%; margin-top: 20px;"></textarea>
+                        <div class="text-right">
+                            <button class="submit_subcomment submit_subcomment_{{ node.id }}" name="{{ article.pk }}"
+                                value="{{ node.id }}" type="submit">Отправить
+                            </button>
 
-                            </div>
-                        </form>
-                    </div>
-                    <hr>
-                    {% if not node.is_leaf_node %}
-                        {{ children }}
-                    {% endif %}
+                        </div>
+                    </form>
                 </div>
+                <hr>
+                {% if not node.is_leaf_node %}
+                {{ children }}
+                {% endif %}
+            </div>
             {% endrecursetree %}
         </div>
         {% if request.user.is_authenticated %}
-            <form class="form-horizontal" action="" method="post">
-                {% csrf_token %}
-                <br>
-                {% if not comments %}
-                    <label>Будьте первым:</label>
-                {% else %}
-                    <label>Оставьте комментарий:</label>
-                {% endif %}
-                <textarea class="textarea" name="text_comment"
-                          title="Для подачи жалобы администрации начните сообщение тегом @moderator - ваше сообщение автоматически скроется от пользователей"
-                          rows="5" style="width: 100%"></textarea>
-                <div class="text-right">
-                    <input class="submit_comment" name="{{ article.pk }}" type="submit" value="Отправить">
-                </div>
-            </form>
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <br>
+            {% if not comments %}
+            <label>Будьте первым:</label>
+            {% else %}
+            <label>Оставьте комментарий:</label>
+            {% endif %}
+            <textarea class="textarea" name="text_comment"
+                title="Для подачи жалобы администрации начните сообщение тегом @moderator - ваше сообщение автоматически скроется от пользователей"
+                rows="5" style="width: 100%"></textarea>
+            <div class="text-right">
+                <input class="submit_comment" name="{{ article.pk }}" type="submit" value="Отправить">
+            </div>
+        </form>
         {% endif %}
     </div>
 </div>
