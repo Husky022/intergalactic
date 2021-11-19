@@ -4,14 +4,15 @@
 {% block title %}{{ title|title }}{% endblock %}
 {% block content %}
 
-<div class="text-center" id="sorting_filter">
-    {% include 'mainapp/includes/inc__sorting_filter.html' %}
-</div>
+
 <div class="article-box">
     <div class="details">
         <div class="related">
             <div class="related-articles">
                 {% if object_list %}
+                <div class="text-center" id="sorting_filter">
+                    {% include 'mainapp/includes/inc__sorting_filter.html' %}
+                </div>
                 {% for article in object_list %}
                 <div class="block-article">
                     <p><a href="{% url 'profile:user' article.author.pk %}">
@@ -46,7 +47,7 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <p>Нет опубликованных статей</p>#}
+                <p class="no-article">Нет опубликованных статей</p>
                 {% endif %}
             </div>
         </div>

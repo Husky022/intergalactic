@@ -875,6 +875,11 @@ a.article-anchor {
     width: 100%;
 }
 
+.no-article{
+    text-align: center;
+    padding-top:40px;
+}
+
 
 .flex-block-profile {
     margin-top: 10px;
