@@ -55,7 +55,7 @@ document.addEventListener('scroll', async (e) => {
         } else {
             bePages = false;
             data_articles.innerHTML += `
-                    <div id="${animation_scroll_id}" class="d-flex justify-content-center" style="display:none;">
+                    <div id="${animation_scroll_id}" class="d-flex justify-content-center" style="display:none;padding-bottom:40px">
                         Больше статей нету
                     </div>`
         }

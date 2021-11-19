@@ -151,8 +151,9 @@ window.onload = function () {
                 data: {text_comment: $('.textarea').val()},
                 success: function (data) {
                     document.querySelector('.ajax_activity').innerHTML = data.result_activity;
+                    if(data.result_comment){
                     document.querySelector('.ajax_comment').innerHTML = data.result_comment;
-
+                    }
                     $(".ajax_comment_likes").on('click', '.btn-likes', clickCommentLikes)
                     $(".ajax_comment_dislikes").on('click', '.btn-dislikes', clickCommentDislikes)
                 },
@@ -174,8 +175,9 @@ window.onload = function () {
                 },
                 success: function (data) {
                     document.querySelector('.ajax_activity').innerHTML = data.result_activity;
+                    if(data.result_comment){
                     document.querySelector('.ajax_comment').innerHTML = data.result_comment;
-
+                    }
                     $(".ajax_comment_likes").on('click', '.btn-likes', clickCommentLikes)
                     $(".ajax_comment_dislikes").on('click', '.btn-dislikes', clickCommentDislikes)
 

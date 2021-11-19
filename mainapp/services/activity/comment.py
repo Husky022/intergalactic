@@ -29,9 +29,10 @@ class Comments:
     def delete_get_or_post(self):
         """Сохранение удаление комментариев и их комментариев"""
         comment = Comment.objects.get(id=self.get_post["com_delete"])
+
         notification = NotificationModel.objects.filter(comment_id=comment.id)
         notification.delete()
-        comment.is_active = False
+        comment.text = "Этот комментарий был удален"
         comment.save()
 
     def add_complaint(self):
