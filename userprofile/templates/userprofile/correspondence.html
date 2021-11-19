@@ -20,12 +20,6 @@
                         <div class="recent_heading">
                             <h4>Recent</h4>
                         </div>
-                        <div class="srch_bar">
-                            <div class="stylish-input-group">
-                                <input type="text" class="search-bar" placeholder="Search">
-                                <span class="input-group-addon"><button type="button"> <i class="fa fa-search" aria-hidden="true"></i></button></span>
-                            </div>
-                        </div>
                     </div>
                     <div class="inbox_chat">
                         {% if chats %}
@@ -36,7 +30,7 @@
                                         <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" id="{{ chat.chat_item.pk }}">
                                     </div>
                                     <div class="chat_ib" id="{{ chat.chat_item.pk }}">
-                                        <h5 id="{{ chat.chat_item.pk }}">{{ chat.member.username }}<span class="chat_date">Dec 25</span></h5>
+                                        <h5 id="{{ chat.chat_item.pk }}">{{ chat.member.username }}<span class="chat_date">{{ chat.last_message.datetime }}</span></h5>
                                         <p style="min-width: 400px" id="{{ chat.chat_item.pk }}">
                                             {% if chat.last_message %}
                                                 {{ chat.last_message.text }}

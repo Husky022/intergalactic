@@ -1,5 +1,6 @@
 $(document).ready(function (){
   let csrf = $('input[name=csrfmiddlewaretoken]')[0].value;
+  let update_item = NaN
 
   function get_messages(id) {
     $.ajax({
@@ -18,8 +19,12 @@ $(document).ready(function (){
   }
 
   $('.chat_list').click(function(event) {
+    if (update_item) {
+      clearInterval(update_item);
+    }
     get_messages(event.target.id)
     let update_messages = setInterval(() => get_messages(event.target.id), 1000);
+    update_item = update_messages
   });
 
   $('.msg_send_btn').click(function (event) {
