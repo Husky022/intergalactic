@@ -10,7 +10,7 @@ driver = webdriver.Chrome(executable_path=r'C:\chromedriver.exe', options=chrome
 
 users_data = []
 
-for i in range(1000):
+for i in range(10):
     users_data.append({
         'user': f'user{i}',
         'first_name': f'first_name{i}',

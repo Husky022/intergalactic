@@ -8,7 +8,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <br>
-            <input class="form-control" type="submit" value="зарегистрироваться">
+            <input id="register" class="form-control" type="submit" value="зарегистрироваться">
         </form>
         <a class="btn btn-outline-success" style="width: 100%; margin-top: 10px" href="{% url 'auth:login' %}">Вход</a>
         <a class="btn btn-outline-primary" style="width: 100%; margin-top: 10px" href="{% url 'main' %}">На главную</a>
