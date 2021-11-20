@@ -19,7 +19,7 @@
                     <div class="col">
                         <div class="card shadow-sm">
                             <div class="card-body main-img" height="170">
-                                <a href="{% url 'profile:main' %}">
+                                <a href="{% url 'profile:user' item.author.id%}">
                                     <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
                                             alt="profile_image" height="24">
                                         {{ item.author }}
@@ -46,7 +46,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body main-img" height="170">
-                            <a href="{% url 'profile:main' %}">
+                            <a href="{% url 'profile:user' item.author.id%}">
                                 <span class="font-weight-bold"><img class="mr-2" src="{{ item.author.avatar|media_folder_users }}"
                                         alt="profile_image" height="24">
                                     {{ item.author }}
