@@ -1129,6 +1129,7 @@ textarea {
     }
 
 .user_blocked_card {
+    background: #eeeeee;
     opacity: 0.5;
 }
 
@@ -1187,4 +1188,9 @@ td.users {
 
 .transaction-actions-box{
     display: table
+}
+
+.blocked_moderation{
+    background: #fdeeee;
+    opacity: 0.7;
 }
