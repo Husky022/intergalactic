@@ -33,7 +33,7 @@ class UsersListView(LoginRequiredMixin, ListView):
                                                                              recipient=self.request.user.id).count()
         context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
         context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
-        context['blocked_user'] = BlockedUser.objects.all()
+        context['blocked_users'] = BlockedUser.objects.all()
         return context
 
 
@@ -103,11 +103,11 @@ def user_blocked(request, pk):
     return HttpResponseRedirect(reverse("adminapp:users"))
 
 
-# @user_passes_test(lambda u: u.is_superuser)
-# def user_unblocked(request, pk):
-#     user = get_object_or_404(IntergalacticUser, pk=pk)
-#     BlockedUser.objects.filter(user=user).delete()
-#     return HttpResponseRedirect(reverse("adminapp:users"))
+@user_passes_test(lambda u: u.is_superuser)
+def user_unblocked(request, pk):
+    user = get_object_or_404(IntergalacticUser, pk=pk)
+    BlockedUser.objects.filter(user=user).delete()
+    return HttpResponseRedirect(reverse("adminapp:users"))
 
 
 def db_profile_by_type(prefix, type, queries):
