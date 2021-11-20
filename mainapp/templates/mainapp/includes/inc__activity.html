@@ -47,6 +47,8 @@
                     </span>
                 </button>
             </div>
+
+            {% if request.user.is_authenticated %}
             <button type="button" class="btn-comments-answer margin-left" data-bs-toggle="modal"
                 href="#complaintModalToggle">
                 Пожаловаться
@@ -75,7 +77,7 @@
                     </div>
                 </div>
             </div>
-
+            {% endif %}
 
         </div>
         <div>
