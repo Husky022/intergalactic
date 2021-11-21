@@ -48,7 +48,7 @@
                 </button>
             </div>
 
-            {% if request.user.is_authenticated %}
+            {% if request.user.is_authenticated and request.resolver_match.url_name != "hub_category" %}
             <button type="button" class="btn-comments-answer margin-left" data-bs-toggle="modal"
                 href="#complaintModalToggle">
                 Пожаловаться
