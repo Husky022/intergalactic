@@ -19,12 +19,43 @@ $(document).ready(function (){
   }
 
   $('.chat_list').click(function(event) {
-    if (update_item) {
-      clearInterval(update_item);
-    }
+    // if (update_item) {
+    //   clearInterval(update_item);
+    // }
     get_messages(event.target.id)
-    let update_messages = setInterval(() => get_messages(event.target.id), 1000);
-    update_item = update_messages
+    // let update_messages = setInterval(() => get_messages(event.target.id), 1000);
+    // update_item = update_messages
+    $.ajax({
+      url:`/profile/task/${event.target.id}`,
+      headers: {
+         'X-CSRFToken': csrf
+       },
+      success: function(data) {
+        console.log(data['msgs'])
+        data['msgs'].forEach(function(itm) {
+          let message = $(
+            `<div class="incoming_msg message" id="${itm.chat}">` +
+              `<div class="incoming_msg_img"><img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>` +
+              `<div class="received_msg">` +
+                `<div class="received_withd_msg">` +
+                  `<p>${itm.text}</p>` +
+                  `<span class="time_date">${itm.datetime}</span>` +
+                `</div>` +
+              `</div>` +
+            `</div>`
+          )
+          let last_msg = $('.message').last()
+          let msgs = $('.msg_history')[0]
+
+          if (last_msg.length > 0) {
+            message.insertAfter(last_msg)
+          } else {
+            message.appendTo(msgs)
+          }
+          msgs.scrollTop = msgs.scrollHeight;
+        })
+      }
+    });
   });
 
   $('.msg_send_btn').click(function (event) {

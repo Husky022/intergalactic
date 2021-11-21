@@ -14,6 +14,8 @@ from moneyapp.models import UserBalance
 from moneyapp.models import Transaction
 from userprofile.models import Message, Chat, NewMessage
 
+from time import sleep
+
 
 class UserProfileView(View):
     title = 'личный кабинет'
@@ -216,13 +218,16 @@ class Messages(View):
                 text=ajax.get('text')
             )
             message.save()
+            users_in_chat = chat.user.all()
+            for user in users_in_chat:
+                new_msg = NewMessage(message=message, to_user=user)
+                new_msg.save()
 
             result = {
                 'datetime': message.datetime.strftime('%d %M %Y г. %H:%M'),
                 'text': message.text,
                 'chat': ajax.get('chat')
             }
-            print(result)
             return JsonResponse(result)
 
 
@@ -234,3 +239,19 @@ class CreateChat(View):
         request.user.chat_set.add(chat)
         addressee.chat_set.add(chat)
         return HttpResponseRedirect(reverse('profile:correspondence'))
+
+
+def task(request, chat):
+    while True:
+        messages = NewMessage.objects.filter(to_user=request.user)
+        if messages:
+            result = {'msgs': []}
+            for msg in messages:
+                result['msgs'].append({
+                    'datetime': msg.message.datetime.strftime('%d %M %Y г. %H:%M'),
+                    'text': msg.message.text,
+                    'chat': chat,
+                })
+            messages.delete()
+            return JsonResponse(result)
+        sleep(1)
