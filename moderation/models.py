@@ -26,8 +26,8 @@ class ArticleMessage(models.Model):
 
 
 class BlockedUser(models.Model):
-    user = models.ForeignKey(
-        IntergalacticUser, verbose_name='Пользователь', on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        IntergalacticUser, verbose_name='Пользователь', related_name='blusers', on_delete=models.CASCADE)
     text = models.TextField(verbose_name='Причина блокировки', blank=True)
     datetime = models.DateTimeField(verbose_name='Дата и время блокировки', auto_now_add=True)
 

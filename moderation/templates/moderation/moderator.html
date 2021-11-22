@@ -54,6 +54,38 @@
                 </table>
             </div>
         </div>
+    <p class="profile_subheading_2">Заблокированные статьи: </p>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" style="background: none !important;">
+                <table>
+                    <tbody>
+                    {% for article in blocked %}
+                        <tr>
+                            <td>
+                                <div class="block-moder-article" style="background-color: #ffdede">
+                                    <table>
+                                        <tr>
+                                            <td rowspan="2" class="article-name">
+                                                <a href="{% url 'moderation:article' article.pk %}" class="article-anchor" style="color: #707070">
+                                                    <p>{{ article.name }}</p>
+                                                </a>
+                                            </td>
+                                            <td class="hub-name" style="color: #707070"><p>{{ article.hub.name }}</p></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td class="hub-name" style="color: #707070"><p>{{ article.add_datetime }}</p></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 </body>
 {% endblock %}

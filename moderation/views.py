@@ -14,6 +14,7 @@ from authapp.models import NotificationModel
 from authapp.services.notifications import Notification
 from mainapp.models import Article, ArticleStatus
 from moderation.models import ArticleMessage, Complaint, ComplaintMessage
+from django.db import models
 
 
 class ModerationMixin(View):
@@ -35,6 +36,7 @@ class Moderator(ModerationMixin, ListView):
     template_name = 'moderation/moderator.html'
     paginate_by = 5
 
+
 #    def get_queryset(self):
 #        queryset = Article.objects.filter(
 #            article_status_new=ArticleStatus.objects.get(name='На модерации'))
@@ -47,6 +49,9 @@ class Moderator(ModerationMixin, ListView):
             article_status_new=ArticleStatus.objects.get(name='На модерации'))
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
                                                                              recipient=self.request.user.id).count()
+        context['blocked'] = Article.objects.filter(
+            article_status_new=ArticleStatus.objects.get(short_name='AB'))
+
         return context
 
 
@@ -114,13 +119,13 @@ class RejectArticle(ModerationMixin):
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
-# class BlockedArticle(ModerationMixin):
-#     def get(self, request, pk):
-#         article = get_object_or_404(Article, pk=pk)
-#         article.article_status_new = ArticleStatus.objects.get(name='Заблокированна')
-#         article.is_active = False
-#         article.save()
-#         return HttpResponseRedirect(reverse_lazy('moderation:main'))
+class BlockedArticle(ModerationMixin):
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        article.article_status_new = ArticleStatus.objects.get(name='Заблокирована')
+        article.is_active = False
+        article.save()
+        return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 
 class ModerateComplaints(ModerationMixin, ListView):
