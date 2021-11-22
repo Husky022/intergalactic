@@ -16,13 +16,17 @@ class Comments:
 
     def add_get_or_post(self):
         """Сохранение комментарий и их комментарий"""
-        if self.get_post['text_comment'].startswith('@moderator'):
-            comment = self.add_complaint()
-        else:
-            comment = Comment.objects.create(article=self.article, author=self.user,
-                                             text=self.get_post['text_comment'],
-                                             parent_id=self.get_post.get("comment_id", None))
-            comment.save()
+        # if self.get_post['text_comment'].startswith('@moderator'):
+        #     comment = self.add_complaint()
+        # else:
+        #     comment = Comment.objects.create(article=self.article, author=self.user,
+        #                                      text=self.get_post['text_comment'],
+        #                                      parent_id=self.get_post.get("comment_id", None))
+        #     comment.save()
+        comment = Comment.objects.create(article=self.article, author=self.user,
+                                         text=self.get_post['text_comment'],
+                                         parent_id=self.get_post.get("comment_id", None))
+        comment.save()
         notification = Notification(comment)
         notification.send()
 
@@ -35,16 +39,16 @@ class Comments:
         comment.text = "Этот комментарий был удален"
         comment.save()
 
-    def add_complaint(self):
-        """Создание жалобы"""
-        complaint = Complaint.objects.create(article=self.article, complainant=self.user,
-                                             text=self.get_post['text_comment'][len('@moderator'):])
-        complaint.save()
-        first_complaint_message = ComplaintMessage.objects.create(
-            complaint=complaint, article=self.article, message_from=self.user,
-            text=self.get_post['text_comment'][len('@moderator'):])
-        first_complaint_message.save()
-        return complaint
+    # def add_complaint(self):
+    #     """Создание жалобы"""
+    #     complaint = Complaint.objects.create(article=self.article, complainant=self.user,
+    #                                          text=self.get_post['text_comment'][len('@moderator'):])
+    #     complaint.save()
+    #     first_complaint_message = ComplaintMessage.objects.create(
+    #         complaint=complaint, article=self.article, message_from=self.user,
+    #         text=self.get_post['text_comment'][len('@moderator'):])
+    #     first_complaint_message.save()
+    #     return complaint
 
     def article_count_comment(self, context):
         count_comment = len(context["comments"])
