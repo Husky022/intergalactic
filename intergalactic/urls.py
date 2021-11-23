@@ -29,7 +29,7 @@ urlpatterns = [
     path('blog_admin/', include('adminapp.urls', namespace='adminapp')),
     path('moderation/', include('moderation.urls', namespace='moderation')),
     path('moneyapp/', include('moneyapp.urls', namespace='moneyapp')),
-    path('', include('social_django.urls')),
+    path('', include('social_django.urls', namespace="social")),
 ]
 
 if settings.DEBUG:
