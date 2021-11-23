@@ -36,7 +36,7 @@ $(document).ready(function () {
           data['msgs'].forEach(function (itm) {
             let message = $(
               `<div class="incoming_msg message" id="${itm.chat}">` +
-              `<div class="incoming_msg_img"><img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>` +
+              `<div class="incoming_msg_img"><img src="${itm.avatar}" alt="sunil"></div>` +
               `<div class="received_msg">` +
               `<div class="received_withd_msg">` +
               `<p>${itm.text}</p>` +
@@ -54,6 +54,7 @@ $(document).ready(function () {
               message.appendTo(msgs)
             }
             msgs.scrollTop = msgs.scrollHeight;
+            $(`#${id}.last_message`)[0].textContent = itm.text
             get_new_message(id)
           })
         }
@@ -63,6 +64,15 @@ $(document).ready(function () {
 
   $('.chat_list').click(function (event) {
     get_messages(event.target.id)
+    $(`.chat_list`).each(function(index, chat) {
+      if(chat.id === event.target.id && !('active_chat' in chat.classList)) {
+        chat.classList.add('active_chat')
+      } else {
+        chat.classList.remove('active_chat')
+      }
+      $('.write_msg')[0].removeAttribute('disabled')
+    })
+
     get_new_message(event.target.id)
     let msgs = $('.msg_history')[0]
     msgs.scrollTop = msgs.scrollHeight;
@@ -98,6 +108,7 @@ $(document).ready(function () {
             message.appendTo(msgs)
           }
           msgs.scrollTop = msgs.scrollHeight;
+          $(`#${data.chat}.last_message`)[0].textContent = data.text
         }
       });
     }

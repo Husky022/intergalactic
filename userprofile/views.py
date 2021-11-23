@@ -258,11 +258,12 @@ def task(request, chat):
             for msg in messages:
                 msg_datetime = msg.message.datetime + timedelta(hours=3)
                 msg_datetime = msg_datetime.strftime('%d %B %Y г. %H:%M')
-
+                avatar = msg.message.author.avatar.url if msg.message.author.avatar else '/static/img/default_avatar.jpg'
                 result['msgs'].append({
                     'datetime': msg_datetime,
                     'text': msg.message.text,
                     'chat': chat,
+                    'avatar': avatar,
                 })
             messages.delete()
             return JsonResponse(result)
