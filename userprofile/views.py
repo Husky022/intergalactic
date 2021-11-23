@@ -1,4 +1,6 @@
 import json
+import locale
+import pytz
 
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import View, CreateView
@@ -15,6 +17,7 @@ from moneyapp.models import Transaction
 from userprofile.models import Message, Chat, NewMessage
 
 from time import sleep
+from datetime import timedelta
 
 
 class UserProfileView(View):
@@ -208,6 +211,7 @@ class Messages(View):
             return render(request, 'userprofile/messages.html', context)
 
     def post(self, request):
+        locale.setlocale(locale.LC_ALL, "")
         """Сохранить новое сообщение"""
         if request.is_ajax():
             ajax = json.loads(request.body.decode('utf-8'))
@@ -220,11 +224,15 @@ class Messages(View):
             message.save()
             users_in_chat = chat.user.all()
             for user in users_in_chat:
-                new_msg = NewMessage(message=message, to_user=user)
-                new_msg.save()
+                if user != request.user:
+                    new_msg = NewMessage(message=message, to_user=user)
+                    new_msg.save()
+
+            msg_datetime = message.datetime + timedelta(hours=3)
+            msg_datetime = msg_datetime.strftime('%d %B %Y г. %H:%M')
 
             result = {
-                'datetime': message.datetime.strftime('%d %M %Y г. %H:%M'),
+                'datetime': msg_datetime,
                 'text': message.text,
                 'chat': ajax.get('chat')
             }
@@ -242,16 +250,21 @@ class CreateChat(View):
 
 
 def task(request, chat):
-    while True:
+    locale.setlocale(locale.LC_ALL, "")
+    for _ in range(30):
         messages = NewMessage.objects.filter(to_user=request.user)
         if messages:
             result = {'msgs': []}
             for msg in messages:
+                msg_datetime = msg.message.datetime + timedelta(hours=3)
+                msg_datetime = msg_datetime.strftime('%d %B %Y г. %H:%M')
+
                 result['msgs'].append({
-                    'datetime': msg.message.datetime.strftime('%d %M %Y г. %H:%M'),
+                    'datetime': msg_datetime,
                     'text': msg.message.text,
                     'chat': chat,
                 })
             messages.delete()
             return JsonResponse(result)
         sleep(1)
+    return JsonResponse({'msgs': 'retry'})
