@@ -45,18 +45,35 @@ $(document).ready(function () {
               `</div>` +
               `</div>`
             )
+
+            let msgs = $(`#${itm.chat}.msg_history`)[0]
             let last_msg = get_last_message()
-            let msgs = $('.msg_history')[0]
 
             if (last_msg.length > 0) {
               message.insertAfter(last_msg)
             } else {
               message.appendTo(msgs)
             }
+
             msgs.scrollTop = msgs.scrollHeight;
             $(`#${id}.last_message`)[0].textContent = itm.text
-            get_new_message(id)
           })
+          for (let key in data['chats']) {
+            $(`#${key}.last_message`)[0].textContent = data['chats'][key][0].text
+            $(`#${key}.chat_date`)[0].textContent = data['chats'][key][0].datetime
+            let not_read_msgs = $(`#${key}.not_readd`)
+            if (not_read_msgs[0]) {
+              not_read_msgs[0].textContent = Number(not_read_msgs[0].textContent) + 1
+            } else {
+              not_read_msgs = $(
+                `<p class="not_readd" id="${key}">${data['chats'][key].length}</p>`
+              )
+              let count = $(`div#${key}.not_read`)
+              not_read_msgs.appendTo(count)
+            }
+          }
+
+          get_new_message(id)
         }
       }
     });
@@ -64,6 +81,8 @@ $(document).ready(function () {
 
   $('.chat_list').click(function (event) {
     get_messages(event.target.id)
+    let not_read_msgs = $(`#${event.target.id}.not_readd`)
+    not_read_msgs.remove()
     $(`.chat_list`).each(function(index, chat) {
       if(chat.id === event.target.id && !('active_chat' in chat.classList)) {
         chat.classList.add('active_chat')
@@ -109,6 +128,7 @@ $(document).ready(function () {
           }
           msgs.scrollTop = msgs.scrollHeight;
           $(`#${data.chat}.last_message`)[0].textContent = data.text
+          $(`#${data.chat}.chat_date`)[0].textContent = data.datetime
         }
       });
     }

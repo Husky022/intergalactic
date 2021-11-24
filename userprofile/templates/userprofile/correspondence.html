@@ -33,8 +33,15 @@
                                                 ">
                                         </div>
                                         <div class="chat_ib" id="{{ chat.chat_item.pk }}">
-                                            <h5 id="{{ chat.chat_item.pk }}">{{ chat.member.username }}<span
-                                                class="chat_date">{{ chat.last_message.datetime }}</span></h5>
+                                            <h5 id="{{ chat.chat_item.pk }}">
+                                                {{ chat.member.username }}
+                                                <div class="not_read" id="{{ chat.chat_item.pk }}">
+                                                    {% if chat.not_read %}
+                                                    <p class="not_readd" id="{{ chat.chat_item.pk }}">{{ chat.not_read }}</p>
+                                                    {% endif %}
+                                                </div>
+                                                <span class="chat_date" id="{{ chat.chat_item.pk }}">{{ chat.last_message.datetime }}</span>
+                                            </h5>
                                             <p class='last_message' style="min-width: 400px" id="{{ chat.chat_item.pk }}">
                                                 {% if chat.last_message %}
                                                     {{ chat.last_message.text }}

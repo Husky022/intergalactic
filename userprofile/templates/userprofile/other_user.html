@@ -24,9 +24,11 @@
                             {% endif %}
                         </div>
                         <div class="user-admin-moder-buttons">
+                            {% if user.is_authenticated %}
                             <a class="btn-red-profile-block" href="{% url 'profile:new_chat' target_user.pk %}">
                                 Написать пользователю
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="info-about-user">

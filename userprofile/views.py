@@ -169,8 +169,6 @@ class CorrespondenceView(View):
 
     def get_context_data(self, request):
         chats = self.get_chats(request)
-
-        members = []
         context = {
             'chats': chats
         }
@@ -190,6 +188,7 @@ class CorrespondenceView(View):
                         'chat_item': chat,
                         'member': user,
                         'last_message': Message.objects.filter(chat=chat).last(),
+                        'not_read': Message.objects.filter(chat=chat, read=False).exclude(author=request.user).count(),
                     })
 
         return members_and_last_messages
@@ -200,11 +199,14 @@ class Messages(View):
         """Получить все сообщения чата и отрендерить их"""
         if request.is_ajax():
             chat = Chat.objects.get(pk=pk)
-            context = {'messages': Message.objects.filter(chat=chat)}
-            messages = Message.objects.filter(chat=chat, was_call=False)
+            messages = Message.objects.filter(chat=chat).order_by('datetime')
             for msg in messages:
                 msg.was_call = True
+                msg.read = True
                 msg.save()
+
+            context = {'messages': messages}
+
             new_messages = NewMessage.objects.filter(to_user=request.user)
             for msg in new_messages:
                 msg.delete()
@@ -242,29 +244,45 @@ class Messages(View):
 class CreateChat(View):
     def get(self, request, pk):
         addressee = IntergalacticUser.objects.get(pk=pk)
-        chat = Chat()
-        chat.save()
-        request.user.chat_set.add(chat)
-        addressee.chat_set.add(chat)
+        if not Chat.objects.filter(user=request.user).filter(user=addressee):
+            chat = Chat()
+            chat.save()
+            request.user.chat_set.add(chat)
+            addressee.chat_set.add(chat)
         return HttpResponseRedirect(reverse('profile:correspondence'))
 
 
-def task(request, chat):
+def get_new_messages(request, chat):
     locale.setlocale(locale.LC_ALL, "")
     for _ in range(30):
         messages = NewMessage.objects.filter(to_user=request.user)
         if messages:
-            result = {'msgs': []}
+            result = {
+                'msgs': [],
+                'chats': {},
+            }
             for msg in messages:
                 msg_datetime = msg.message.datetime + timedelta(hours=3)
                 msg_datetime = msg_datetime.strftime('%d %B %Y г. %H:%M')
                 avatar = msg.message.author.avatar.url if msg.message.author.avatar else '/static/img/default_avatar.jpg'
-                result['msgs'].append({
-                    'datetime': msg_datetime,
-                    'text': msg.message.text,
-                    'chat': chat,
-                    'avatar': avatar,
-                })
+                if msg.message.chat.pk == chat:
+                    result['msgs'].append({
+                        'datetime': msg_datetime,
+                        'text': msg.message.text,
+                        'chat': chat,
+                        'avatar': avatar,
+                    })
+                else:
+                    try:
+                        result['chats'][msg.message.chat.pk].appenp({
+                            'datetime': msg_datetime,
+                            'text': msg.message.text,
+                        })
+                    except:
+                        result['chats'][msg.message.chat.pk] = [{
+                            'datetime': msg_datetime,
+                            'text': msg.message.text,
+                        }]
             messages.delete()
             return JsonResponse(result)
         sleep(1)
