@@ -1,11 +1,31 @@
 $(document).ready(function (){
   let csrf = $('input[name=csrfmiddlewaretoken]')[0].value;
 
-    // var toastLiveExample = document.getElementById('liveToast')
-    // var toast = new bootstrap.Toast(toastLiveExample)
+
+  function showNotificationToast(theme, time){
+    let toastInsert = $(
+                  `<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">` +
+                  `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">` +
+                  `<div class="toast-header">` +
+                  `<img src="" class="rounded me-2" alt="">` +
+                  `<strong class="me-auto">${theme}</strong>` +
+                  `<small>${time}</small>` +
+                  `<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>` +
+                  `</div>` +
+                  `<div class="toast-body"><a class="toast-body" title="Уведомления" href="/auth/notifications/">Вам новое уведомление!</a></div>` +
+                  `</div>` +
+                  `</div>`
+              )
+
+              let blockBeforeToast = $('.main-content')
+              toastInsert.insertAfter(blockBeforeToast)
+              var toastLive = document.getElementById('liveToast')
+              var toast = new bootstrap.Toast(toastLive)
+              toast.show()
+  }
 
 
-  function get_notifications_live(count) {
+  function getNotificationsLive(count) {
       $.ajax({
         url: `/auth/notifications_live/${count}/`,
         headers: {
@@ -13,28 +33,26 @@ $(document).ready(function (){
         },
         timeout: 31000,
         success: function (data) {
-          if (data['notifications_live'] === 'retry') {
+          if (data['notifications_live_count'] === 'retry') {
             console.log('ещё разок')
-            get_notifications_live(count)
+            getNotificationsLive(count)
           } else {
-            console.log(data['notifications_live'])
+            console.log(data['notifications_live_count'])
             let count = $('#icon-count')
             if (count[0]) {
-              count[0].textContent = data['notifications_live']
+              count[0].textContent = data['notifications_live_count']
             } else {
-              var toastLiveExample = document.getElementById('liveToast')
-              var toast = new bootstrap.Toast(toastLiveExample)
-              toast.show()
               count = $(
-              `<span id="icon-count" class="badge notification-icon">${data['notifications_live']}</span>`
+              `<span id="icon-count" class="badge notification-icon">${data['notifications_live_count']}</span>`
             )
               let blockAfter = $('#menu-icon.notification')
               count.insertAfter(blockAfter)
-
-
             }
-            get_notifications_live(data['notifications_live'])
+            showNotificationToast(data['notification_theme'], data['notification_last_time'])
+            getNotificationsLive(data['notifications_live_count'])
         }
+
+
       }
     });
   }
@@ -44,6 +62,6 @@ $(document).ready(function (){
   } else {
     count = 0
   }
-  get_notifications_live(count)
+  getNotificationsLive(count)
 
 });

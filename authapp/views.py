@@ -16,6 +16,7 @@ from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from moderation.models import BlockedUser
 from moneyapp.models import UserBalance
+from userprofile.models import Message
 
 
 class LoginView(FormView):
@@ -144,14 +145,15 @@ class NotificationView(ListView):
 def notifications_live(request, count):
     for _ in range(30):
         notifications_live_count = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).count()
-        notification_last = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).last()
-        if notifications_live != count:
+        messages_live_count = Message.objects.filter(chat=request.user, read=0).count()
+        print(f'непрочитанные сообщения{messages_live_count}')
+        if notifications_live_count > count:
+            notification_last = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).order_by('-add_datetime').first()
             result = {
                 'notifications_live_count': notifications_live_count,
-                'notification_last_text': notification_last.text,
-                'notification_last_time': notification_last.time,
+                'notification_last_time': notification_last.add_datetime,
                 'notification_theme': notification_last.theme
             }
             return JsonResponse(result)
         sleep(1)
-    return JsonResponse({'notifications_live': 'retry'})
+    return JsonResponse({'notifications_live_count': 'retry'})
