@@ -52,6 +52,7 @@ class NotificationModel(models.Model):
     action = models.TextField(verbose_name='Текст')
     text = models.TextField(verbose_name='Текст', blank=True, null=True)
     target = models.TextField(verbose_name='Цель', blank=True, null=True)
+    theme = models.TextField(verbose_name='Тема', blank=True, null=True)
     article_id = models.PositiveIntegerField(
         verbose_name='ID статьи', null=True)
     comment_id = models.PositiveIntegerField(

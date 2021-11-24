@@ -11,5 +11,6 @@ urlpatterns = [
     path('register/', authapp.RegisterView.as_view(), name='register'),
     path('edit/', authapp.UserEditView.as_view(), name='edit'),
     path('notifications/', authapp.NotificationView.as_view(), name='notifications'),
-    path('blocked/', authapp.BlockedView.as_view(), name='blocked')
+    path('blocked/', authapp.BlockedView.as_view(), name='blocked'),
+    path('notifications_live/<int:count>/', authapp.notifications_live, name='notifications_live'),
 ]

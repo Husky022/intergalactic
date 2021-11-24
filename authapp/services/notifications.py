@@ -1,5 +1,6 @@
 import time
 
+from compat import JsonResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -19,8 +20,7 @@ def notifications_read(self):
 
 
 def notifications_not_read_quantity(self):
-    print(NotificationModel.objects.filter(
-        recipient_id=self.request.user.id, is_read=0).count())
+    print(NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count())
     return NotificationModel.objects.filter(recipient_id=self.request.user.id, is_read=0).count()
 
 
@@ -270,22 +270,23 @@ class Notification:
         return result
 
     def send(self):
-        print('init')
+        # print('init')
         for recipient in self.recipients:
-            print(recipient.id)
-            print(self.sender_id)
+            # print(recipient.id)
+            # print(self.sender_id)
             if recipient.id != self.sender_id:
-                print('init2')
+                # print('init2')
                 notification = NotificationModel.objects.create(recipient=recipient,
                                                                 sender_id=self.sender_id,
                                                                 action=self.action,
                                                                 text=self.text,
                                                                 target=self.target,
+                                                                theme=self.theme,
                                                                 article_id=self.article_id,
                                                                 comment_id=self.comment_id,
                                                                 like_id=self.like_id,
                                                                 complaint_id=self.complaint_id)
-                print('init3')
+                # print('init3')
                 notification.save()
 
                 if recipient.send_to_email:
