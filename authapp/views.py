@@ -145,8 +145,6 @@ class NotificationView(ListView):
 def notifications_live(request, count):
     for _ in range(30):
         notifications_live_count = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).count()
-        messages_live_count = Message.objects.filter(chat=request.user, read=0).count()
-        print(f'непрочитанные сообщения{messages_live_count}')
         if notifications_live_count > count:
             notification_last = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).order_by('-add_datetime').first()
             result = {
