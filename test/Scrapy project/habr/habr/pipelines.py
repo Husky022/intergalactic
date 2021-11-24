@@ -33,7 +33,7 @@ class HabrPipelineJson:
         return item
 
     def open_spider(self, spider):
-        self.file = open('result.json', 'w', encoding='utf-8')
+        self.file = open('articles.json', 'w', encoding='utf-8')
 
     def close_spider(self, spider):
         self.file.close()
