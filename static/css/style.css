@@ -875,11 +875,6 @@ a.article-anchor {
     width: 100%;
 }
 
-.no-article{
-    text-align: center;
-    padding-top:40px;
-}
-
 
 .flex-block-profile {
     margin-top: 10px;
@@ -1136,6 +1131,7 @@ textarea {
     }
 
 .user_blocked_card {
+    background: #eeeeee;
     opacity: 0.5;
 }
 
@@ -1210,4 +1206,10 @@ td.users {
     align-content: center;
     justify-content: flex-start;
     align-items: stretch;
+}
+
+
+.blocked_moderation{
+    background: #fdeeee;
+    opacity: 0.7;
 }

@@ -12,6 +12,7 @@ from authapp.forms import IntergalacticUserRegisterForm
 from moderation.models import BlockedUser
 from authapp.models import IntergalacticUser, NotificationModel
 from moneyapp.models import Transaction
+# from moderation.models import BlockedUserStatus
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -34,10 +35,10 @@ class UsersListView(LoginRequiredMixin, ListView):
         context = super(UsersListView, self).get_context_data(**kwargs)
         context['title'] = 'пользователи'
         context['notifications_not_read'] = NotificationModel.objects.filter(is_read=0,
-                                                                           recipient=self.request.user.id).count()
+                                                                             recipient=self.request.user.id).count()
         context['transactions_not_read'] = Transaction.objects.filter(is_read=False, status='CREATED')
         context['transactions_not_read_count'] = Transaction.objects.filter(is_read=False, status='CREATED').count()
-
+        context['blocked_users'] = BlockedUser.objects.all()
         return context
 
 
@@ -95,18 +96,23 @@ def user_delete(request, pk):
 
     return render(request, "adminapp/user_delete.html", content)
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def user_blocked(request, pk):
     title = "пользователи/блокировка"
 
     user = get_object_or_404(IntergalacticUser, pk=pk)
 
-
-
-    blockedusers = BlockedUser.objects.create(user = user, text = 'text')
+    blockedusers = BlockedUser.objects.create(user=user, text='text')
     blockedusers.save()
     return HttpResponseRedirect(reverse("adminapp:users"))
 
+
+@user_passes_test(lambda u: u.is_superuser)
+def user_unblocked(request, pk):
+    user = get_object_or_404(IntergalacticUser, pk=pk)
+    BlockedUser.objects.filter(user=user).delete()
+    return HttpResponseRedirect(reverse("adminapp:users"))
 
 
 def db_profile_by_type(prefix, type, queries):

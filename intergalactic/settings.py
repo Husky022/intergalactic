@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
-from intergalactic.secrets import *
+from .secrets import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -228,15 +228,33 @@ AUTHENTICATION_BACKENDS = (
     # бекенд авторизации через Инстаграмм
     'social_core.backends.instagram.InstagramOAuth2',
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.github.GithubOAuth2',
     # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
 )
 
 LOGIN_REDIRECT_URL = '/'
 
+SOCIAL_AUTH_URL_NAMESPACE = "social"
 SOCIAL_AUTH_VK_OAUTH2_KEY = '7998337'
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'a17ekvXEJv5Z1jR0Ehwt'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1048709715494-5nu5ro08ec53hflml5djl4vin8vapdcu.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
+SOCIAL_AUTH_GITHUB_KEY = 'fd2ab6931c95372799bc'
+SOCIAL_AUTH_GITHUB_SECRET = '23f58e6ecacfe43a2852fd7f21af6379f3beebe5'
+
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.create_user",
+    "authapp.pipeline.save_user_profile",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)

@@ -122,6 +122,17 @@
  }
 },
 {
+ "model": "mainapp.articlestatus",
+ "pk": 6,
+ "fields": {
+  "short_name": "AB",
+  "name": "Заблокирована",
+  "name_plural": "Заблокированы",
+  "buttons": [
+  ]
+ }
+},
+{
  "model": "mainapp.article",
  "pk": 1,
  "fields": {
