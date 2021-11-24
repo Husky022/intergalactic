@@ -1,14 +1,17 @@
-$(document).ready(function (){
+$(document).ready(function () {
   let csrf = $('input[name=csrfmiddlewaretoken]')[0].value;
-  let update_item = NaN
+
+  function get_last_message() {
+    return $('.message').last()
+  }
 
   function get_messages(id) {
     $.ajax({
-      url:`/profile/get_messages/${id}`,
+      url: `/profile/get_messages/${id}`,
       headers: {
-         'X-CSRFToken': csrf
-       },
-      success: function(data) {
+        'X-CSRFToken': csrf
+      },
+      success: function (data) {
         let msgs = $('.msg_history')
         msgs[0].innerHTML = data;
         msgs.attr('id', id)
@@ -18,46 +21,118 @@ $(document).ready(function (){
     });
   }
 
-  $('.chat_list').click(function(event) {
-    if (update_item) {
-      clearInterval(update_item);
-    }
+  function get_new_message(id) {
+    $.ajax({
+      url: `/profile/task/${id}`,
+      headers: {
+        'X-CSRFToken': csrf
+      },
+      timeout: 31000,
+      success: function (data) {
+        if (data['msgs'] === 'retry') {
+          console.log('ещё разок')
+          get_new_message(id)
+        } else {
+          data['msgs'].forEach(function (itm) {
+            let message = $(
+              `<div class="incoming_msg message" id="${itm.chat}">` +
+              `<div class="incoming_msg_img"><img src="${itm.avatar}" alt="sunil"></div>` +
+              `<div class="received_msg">` +
+              `<div class="received_withd_msg">` +
+              `<p>${itm.text}</p>` +
+              `<span class="time_date">${itm.datetime}</span>` +
+              `</div>` +
+              `</div>` +
+              `</div>`
+            )
+
+            let msgs = $(`#${itm.chat}.msg_history`)[0]
+            let last_msg = get_last_message()
+
+            if (last_msg.length > 0) {
+              message.insertAfter(last_msg)
+            } else {
+              message.appendTo(msgs)
+            }
+
+            msgs.scrollTop = msgs.scrollHeight;
+            $(`#${id}.last_message`)[0].textContent = itm.text
+          })
+          for (let key in data['chats']) {
+            $(`#${key}.last_message`)[0].textContent = data['chats'][key][0].text
+            $(`#${key}.chat_date`)[0].textContent = data['chats'][key][0].datetime
+            let not_read_msgs = $(`#${key}.not_readd`)
+            if (not_read_msgs[0]) {
+              not_read_msgs[0].textContent = Number(not_read_msgs[0].textContent) + 1
+            } else {
+              not_read_msgs = $(
+                `<p class="not_readd" id="${key}">${data['chats'][key].length}</p>`
+              )
+              let count = $(`div#${key}.not_read`)
+              not_read_msgs.appendTo(count)
+            }
+          }
+
+          get_new_message(id)
+        }
+      }
+    });
+  }
+
+  $('.chat_list').click(function (event) {
     get_messages(event.target.id)
-    let update_messages = setInterval(() => get_messages(event.target.id), 1000);
-    update_item = update_messages
+    let not_read_msgs = $(`#${event.target.id}.not_readd`)
+    not_read_msgs.remove()
+    $(`.chat_list`).each(function(index, chat) {
+      if(chat.id === event.target.id && !('active_chat' in chat.classList)) {
+        chat.classList.add('active_chat')
+      } else {
+        chat.classList.remove('active_chat')
+      }
+      $('.write_msg')[0].removeAttribute('disabled')
+    })
+
+    get_new_message(event.target.id)
+    let msgs = $('.msg_history')[0]
+    msgs.scrollTop = msgs.scrollHeight;
   });
 
   $('.msg_send_btn').click(function (event) {
     let text = $('.write_msg').val();
-    $.ajax({
-      method:'POST',
-      url:'/profile/new_message/',
-      headers: {
-         'X-CSRFToken': csrf
-       },
-      data: JSON.stringify({ chat: event.target.id, text: text }),
-      contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      success: function(data) {
-        let message = $(
-          `<div class="outgoing_msg" id="${data.chat}">` +
+    if (text) {
+      $.ajax({
+        method: 'POST',
+        url: '/profile/new_message/',
+        headers: {
+          'X-CSRFToken': csrf
+        },
+        data: JSON.stringify({chat: event.target.id, text: text}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          let last_msg = get_last_message()
+          let message = $(
+            `<div class="outgoing_msg message" id="${Number(last_msg.attr('id')) + 1}">` +
             `<div class="sent_msg">` +
-              `<p>${data.text}</p>` +
-              `<span class="time_date">${data.datetime}</span>` +
+            `<p>${data.text}</p>` +
+            `<span class="time_date">${data.datetime}</span>` +
             `</div>` +
-          `</div>`
-        )
-        let last_msg = $('.message').last()
-        $('.write_msg')[0].value = "";
-        let msgs = $('.msg_history')[0]
-
-        if (last_msg.length > 0) {
-          message.insertAfter(last_msg)
-        } else {
-          message.appendTo(msgs)
+            `</div>`
+          )
+          $('.write_msg')[0].value = "";
+          let msgs = $('.msg_history')[0]
+          if (last_msg.length > 0) {
+            message.insertAfter(last_msg)
+          } else {
+            message.appendTo(msgs)
+          }
+          msgs.scrollTop = msgs.scrollHeight;
+          $(`#${data.chat}.last_message`)[0].textContent = data.text
+          $(`#${data.chat}.chat_date`)[0].textContent = data.datetime
         }
-        msgs.scrollTop = msgs.scrollHeight;
-      }
-    });
+      });
+    }
+
+    get_new_message(event.target.id)
   });
 });

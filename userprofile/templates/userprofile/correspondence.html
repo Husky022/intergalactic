@@ -24,23 +24,34 @@
                     <div class="inbox_chat">
                         {% if chats %}
                             {% for chat in chats %}
-                            <div class="chat_list active_chat" id="{{ chat.chat_item.pk }}">
-                                <div class="chat_people" id="{{ chat.chat_item.pk }}">
-                                    <div class="chat_img">
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" id="{{ chat.chat_item.pk }}">
-                                    </div>
-                                    <div class="chat_ib" id="{{ chat.chat_item.pk }}">
-                                        <h5 id="{{ chat.chat_item.pk }}">{{ chat.member.username }}<span class="chat_date">{{ chat.last_message.datetime }}</span></h5>
-                                        <p style="min-width: 400px" id="{{ chat.chat_item.pk }}">
-                                            {% if chat.last_message %}
-                                                {{ chat.last_message.text }}
-                                            {% else %}
-                                                (нет сообщений)
-                                            {% endif %}
-                                        </p>
+                                <div class="chat_list" id="{{ chat.chat_item.pk }}">
+                                    <div class="chat_people" id="{{ chat.chat_item.pk }}">
+                                        <div class="chat_img">
+                                            <img src="
+                                                {{ chat.member.avatar|media_folder_users }}
+                                                " alt="sunil" id="{{ chat.chat_item.pk }}
+                                                ">
+                                        </div>
+                                        <div class="chat_ib" id="{{ chat.chat_item.pk }}">
+                                            <h5 id="{{ chat.chat_item.pk }}">
+                                                {{ chat.member.username }}
+                                                <div class="not_read" id="{{ chat.chat_item.pk }}">
+                                                    {% if chat.not_read %}
+                                                    <p class="not_readd" id="{{ chat.chat_item.pk }}">{{ chat.not_read }}</p>
+                                                    {% endif %}
+                                                </div>
+                                                <span class="chat_date" id="{{ chat.chat_item.pk }}">{{ chat.last_message.datetime }}</span>
+                                            </h5>
+                                            <p class='last_message' style="min-width: 400px" id="{{ chat.chat_item.pk }}">
+                                                {% if chat.last_message %}
+                                                    {{ chat.last_message.text }}
+                                                {% else %}
+                                                    (нет сообщений)
+                                                {% endif %}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             {% endfor %}
                         {% else %}
                             <p>У вас пока нет ни одного чата</p>
@@ -50,11 +61,11 @@
                 </div>
                 <div class="mesgs">
                     <div class="msg_history">
-                        <div class="no_msg"><p>Выберете чат</p></div>
+                        <div class="no_msg"><h1>Выберете чат</h1></div>
                     </div>
                     <div class="type_msg">
                         <div class="input_msg_write">
-                            <input type="text" class="write_msg" placeholder="Type a message"/>
+                            <input disabled type="text" class="write_msg" placeholder="Текст сообщения"/>
                             <button class="msg_send_btn" type="button">
                                 ->
                             </button>
@@ -64,9 +75,6 @@
             </div>
         </div>
     </div>
-    <p class="text-center top_spac"> Design by
-        <a target="_blank" href="https://www.linkedin.com/in/sunil-rajput-nattho-singh/">Sunil Rajput</a>
-    </p>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/chat.js' %}"></script>
 {% endblock %}

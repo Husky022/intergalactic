@@ -17,4 +17,5 @@ urlpatterns = [
     path('get_messages/<int:pk>', profile.Messages.as_view(), name='get_messages'),
     path('new_message/', profile.Messages.as_view(), name='new_messages'),
     path('new_chat/<int:pk>', profile.CreateChat.as_view(), name='new_chat'),
+    path('task/<int:chat>', profile.get_new_messages, name='task'),
 ]
