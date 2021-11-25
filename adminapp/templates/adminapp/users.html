@@ -37,8 +37,7 @@
               <th class="users">Возраст</th>
               <th class="users">Почта</th>
               <th class="users">Последний вход</th>
-              <th class="users">Активен</th>
-              <th class="users">Сообщения</th>
+{#              <th class="users">Сообщения</th>#}
               <th class="users">Уведомления на почту</th>
               <th class="users">Действия с пользователем</th>
             </tr>
@@ -60,22 +59,22 @@
                     <td class="users">{{ object.email }}</td>
                     <td class="users">{{ object.last_login|date:'d.m.Y'}}</td>
                     {% if not object.is_superuser %}
-                     <td class="users">
-                            <form action="" method="post">
-                            {% csrf_token %}
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >
-                                </div>
-                            </form>
-                        </td>
-                        <td class="users">
-                            <form action="" method="post">
-                            {% csrf_token %}
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="chk" id="send_messages-{{ object.id }}" {% if object.send_messages %} checked {% endif %} >
-                                </div>
-                            </form>
-                        </td>
+{#                     <td class="users">#}
+{#                            <form action="" method="post">#}
+{#                            {% csrf_token %}#}
+{#                                <div class="form-check form-switch">#}
+{#                                    <input class="form-check-input" type="checkbox" name="chk" id="is_active-{{ object.id }}" {% if object.is_active %} checked {% endif %} >#}
+{#                                </div>#}
+{#                            </form>#}
+{#                        </td>#}
+{#                        <td class="users">#}
+{#                            <form action="" method="post">#}
+{#                            {% csrf_token %}#}
+{#                                <div class="form-check form-switch">#}
+{#                                    <input class="form-check-input" type="checkbox" name="chk" id="send_messages-{{ object.id }}" {% if object.send_messages %} checked {% endif %} >#}
+{#                                </div>#}
+{#                            </form>#}
+{#                        </td>#}
                         <td class="users">
                             <form action="" method="post">
                             {% csrf_token %}
@@ -84,37 +83,36 @@
                                 </div>
                             </form>
                         </td>
+                        <td class="users">
+                            <div>
+                                {% if not object.blusers %}
+                                <a title="Заблокировать пользователя {{ object.username }}" class="btn btn-outline-secondary  mx-2 my-3" href = {% url 'adminapp:user_blocked' object.pk %}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                        <path fill-rule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </a>
+                            {% endif %}
+                                 {% if object.blusers %}
+                                 <a title="Разблокировать пользователя {{ object.username }}" class="btn btn-outline-secondary mx-2" href = {% url 'adminapp:user_unblocked' object.pk %}>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+                                      <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                      <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                      </svg>
+                                  </a>
+                                {% endif %}
+                                <a title="Удалить пользователя {{ object.username }}" class="btn btn-outline-danger  mx-2 my-3" href = {% url 'adminapp:user_delete' object.pk %} >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
                     {% else %}
                     <td class="users"></td>
                     <td class="users"></td>
-                    <td class="users"></td>
                     {% endif %}
-                    <td class="users">
-                        <div>
-                            {% if not object.blusers %}
-                            <a title="Заблокировать пользователя {{ object.username }}" class="btn btn-outline-secondary  mx-2 my-3" href = {% url 'adminapp:user_blocked' object.pk %}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                                    <path fill-rule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-                             {% if object.blusers %}
-                             <a title="Разблокировать пользователя {{ object.username }}" class="btn btn-outline-secondary mx-2" href = {% url 'adminapp:user_unblocked' object.pk %}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
-                                  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                                  <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                  </svg>
-                              </a>
-                            {% endif %}
-                            <a title="Удалить пользователя {{ object.username }}" class="btn btn-outline-danger  mx-2 my-3" href = {% url 'adminapp:user_delete' object.pk %} >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </td>
                 </tr>
             {% endfor %}
         </table>
