@@ -29,6 +29,9 @@
                                 Написать пользователю
                             </a>
                             {% endif %}
+                            Рейтинг автора:
+                            <button type="button" class="btn btn-warning">{{target_user.rating_author| floatformat:2 }}</button>
+
                         </div>
                     </div>
                     <div class="info-about-user">
