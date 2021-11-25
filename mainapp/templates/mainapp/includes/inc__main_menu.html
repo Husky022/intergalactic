@@ -9,14 +9,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'main' %}">Главная</a>
                 </li>
-
-                           <li class="nav-item">
-                <!--                <form class="form-inline my-2 my-lg-0">-->
-                <!--                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-                <!--                    <button class="btn btn-outline-success" type="submit">Search</button>-->
-                <!--                </form>-->
-                               {% include 'mainapp/includes/inc__search.html' %}
-                           </li>
+                   <li class="nav-item">
+                       {% include 'mainapp/includes/inc__search.html' %}
+                   </li>
             </ul>
             {% if user.is_superuser %}
                 <div class="user-panel admin-moder-panel">
@@ -58,7 +53,7 @@
             {% endif %}
             <div class="user-panel">
                 {% if user.is_authenticated %}
-                    <a class="user-panel-button" title="Сообщения" href="{% url 'auth:notifications' %}">
+                    <a class="user-panel-button" title="Сообщения" href="{% url 'profile:correspondence' %}">
 {#                        {% if False %}#}
 {#                            <div class="menu-icon-box" style="margin-right: 20px">#}
 {#                                <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">#}

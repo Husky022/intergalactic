@@ -1,4 +1,4 @@
-from datetime import time
+import time
 from time import sleep
 
 from compat import JsonResponse
@@ -16,7 +16,7 @@ from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from moderation.models import BlockedUser
 from moneyapp.models import UserBalance
-from userprofile.models import Message
+from userprofile.models import Message, NewMessage
 
 
 class LoginView(FormView):
@@ -149,9 +149,23 @@ def notifications_live(request, count):
             notification_last = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).order_by('-add_datetime').first()
             result = {
                 'notifications_live_count': notifications_live_count,
-                'notification_last_time': notification_last.add_datetime,
+                'notification_last_time': time.ctime(),
                 'notification_theme': notification_last.theme
             }
             return JsonResponse(result)
         sleep(1)
     return JsonResponse({'notifications_live_count': 'retry'})
+
+
+def messages_live(request, count):
+    for _ in range(30):
+        messages_live_count = NewMessage.objects.filter(to_user=request.user).count()
+        if messages_live_count > count:
+            result = {
+                'messages_live_count': messages_live_count,
+                'messages_last_time': time.ctime(),
+                'messages_theme': 'Сообщение'
+            }
+            return JsonResponse(result)
+        sleep(1)
+    return JsonResponse({'messages_live_count': 'retry'})

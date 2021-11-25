@@ -12,7 +12,7 @@ $(document).ready(function (){
                   `<small>${time}</small>` +
                   `<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>` +
                   `</div>` +
-                  `<div class="toast-body"><a class="toast-body" title="Уведомления" href="/auth/notifications/">Вам новое уведомление!</a></div>` +
+                  `<div class="toast-body"><a class="toast-body" title="Уведомления" href="/auth/notifications/">Вам новое сообщение!</a></div>` +
                   `</div>` +
                   `</div>`
               )
@@ -27,34 +27,34 @@ $(document).ready(function (){
 
   function getNotificationsLive(count) {
       $.ajax({
-        url: `/auth/notifications_live/${count}/`,
+        url: `/auth/messages_live/${count}/`,
         headers: {
           'X-CSRFToken': csrf
         },
         timeout: 31000,
         success: function (data) {
-          if (data['notifications_live_count'] === 'retry') {
+          if (data['messages_live_count'] === 'retry') {
             console.log('ещё разок')
             getNotificationsLive(count)
           } else {
-            console.log(data['notifications_live_count'])
-            let count = $('#icon-count-notification')
+            console.log(data['messages_live_count'])
+            let count = $('#icon-count-message')
             if (count[0]) {
-              count[0].textContent = data['notifications_live_count']
+              count[0].textContent = data['messages_live_count']
             } else {
               count = $(
-              `<span id="icon-count-notification" class="badge notification-icon">${data['notifications_live_count']}</span>`
+              `<span id="icon-count-message" style="margin-left: 5px" class="badge notification-icon">${data['messages_live_count']}</span>`
             )
-              let blockAfter = $('#menu-icon.notification')
+              let blockAfter = $('#menu-icon.messages')
               count.insertAfter(blockAfter)
             }
-            showNotificationToast(data['notification_theme'], data['notification_last_time'])
-            getNotificationsLive(data['notifications_live_count'])
+            showNotificationToast(data['messages_theme'], data['messages_last_time'])
+            getNotificationsLive(data['messages_live_count'])
         }
       }
     });
   }
-  let count = $('#icon-count-notification')
+  let count = $('#icon-count-message')
   if (count[0]) {
     count = Number(count[0].textContent)
   } else {
