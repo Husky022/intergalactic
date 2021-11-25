@@ -203,8 +203,11 @@ class Notification:
         if isinstance(self.object, Likes):
             if self.object.comment_id:
                 comment = Comment.objects.filter(id=self.object.comment_id).first()
+                # print(comment)
                 recipient_id = comment.author_id
+                # print(recipient_id)
                 recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                # print(recipient)
             else:
                 article = Article.objects.filter(id=self.object.article_id).first()
                 recipient_id = article.author_id
@@ -274,12 +277,12 @@ class Notification:
         return result
 
     def send(self):
-        print('init')
+        # print('init')
         for recipient in self.recipients:
             print(recipient.id)
             print(self.sender_id)
             if recipient.id != self.sender_id:
-                print('init2')
+                # print('init2')
                 notification = NotificationModel.objects.create(recipient=recipient,
                                                                 sender_id=self.sender_id,
                                                                 action=self.action,
