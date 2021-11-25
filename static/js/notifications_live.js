@@ -51,8 +51,6 @@ $(document).ready(function (){
             showNotificationToast(data['notification_theme'], data['notification_last_time'])
             getNotificationsLive(data['notifications_live_count'])
         }
-
-
       }
     });
   }

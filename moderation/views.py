@@ -125,6 +125,8 @@ class BlockedArticle(ModerationMixin):
         article.article_status_new = ArticleStatus.objects.get(name='Заблокирована')
         article.is_active = False
         article.save()
+        notification = Notification(article, context='blocked')
+        notification.send()
         return HttpResponseRedirect(reverse_lazy('moderation:main'))
 
 

@@ -104,6 +104,10 @@ class Notification:
                 action = 'для публикации требуется иправить(доработать) статью '
                 self.theme = 'Модерация'
                 return action
+            elif self.context == 'blocked':
+                action = 'заблокирована Ваша статья '
+                self.theme = 'Модерация'
+                return action
             elif self.context == 'moderation':
                 action = 'отправил на модерацию статью '
                 self.theme = 'Модерация'
@@ -123,10 +127,10 @@ class Notification:
         if isinstance(self.object, Complaint):
             if self.object.comment:
                 action = 'подал жалобу на комментарий: '
-                self.theme = ':Жалоба на комментарий'
+                self.theme = 'Жалоба на комментарий'
             else:
                 action = 'подал жалобу на статью: '
-                self.theme = ':Жалоба на статью'
+                self.theme = 'Жалоба на статью'
             return action
         if isinstance(self.object, ComplaintMessage):
             action = 'оставил сообщение при обжаловании статьи '
