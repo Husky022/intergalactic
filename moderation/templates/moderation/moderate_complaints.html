@@ -10,10 +10,10 @@
         </script>
 
     <ul class="nav nav-pills mb-3">
-        <li class="nav-item"><a href="{% url 'moderation:main' %}" class="btn btn-primary btn-lg active" role="button"
+        <li class="nav-item"><a href="{% url 'moderation:main' %}" class="btn btn-secondary btn-sm active mx-2" role="button"
                 aria-disabled="true">Статьи на
                 проверку</a></li>
-        <li class="nav-item"></li><a href="{% url 'moderation:complaints' %}" class="btn btn-primary btn-lg disabled"
+        <li class="nav-item"></li><a href="{% url 'moderation:complaints' %}" class="btn btn-secondary btn-sm disabled active mx-2"
             role="button" aria-pressed="true">Жалобы
             пользователей</a></li>
     </ul>
@@ -25,7 +25,7 @@
                     {% for complaint in object_list %}
                     <tr>
                         <td>
-                            <div class="block-moder-article">
+                            <div class="block-moder-article"  style="width: 696px">
                                 <table>
                                     <tr>
                                         <td colspan="2">

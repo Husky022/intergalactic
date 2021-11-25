@@ -3,11 +3,15 @@
 
 
 {% block content %}
-<form class="form-horizontal" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ update_form.as_p }}
-    <input class="form-control" type="submit" value="сохранить">
-</form>
+    <div style="width: 400px !important;">
+        <div class="block-article" style="padding: 10%">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ update_form.as_p }}
+                <input class="form-control" type="submit" value="сохранить">
+            </form>
+        </div>
+    </div s>
 <a href="{% url 'adminapp:users' %}" class="btn btn-outline-secondary btn-block my-3" role="button">
     к списку пользователей
 </a>
