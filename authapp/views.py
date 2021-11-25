@@ -1,3 +1,7 @@
+from datetime import time
+from time import sleep
+
+from compat import JsonResponse
 from django.contrib import auth
 from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
@@ -12,6 +16,7 @@ from mainapp.models import Article, ArticleStatus
 from mainapp.forms import ArticleCreationForm
 from moderation.models import BlockedUser
 from moneyapp.models import UserBalance
+from userprofile.models import Message
 
 
 class LoginView(FormView):
@@ -135,3 +140,18 @@ class NotificationView(ListView):
     @reading_notifications
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context_data())
+
+
+def notifications_live(request, count):
+    for _ in range(30):
+        notifications_live_count = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).count()
+        if notifications_live_count > count:
+            notification_last = NotificationModel.objects.filter(recipient_id=request.user.id, is_read=0).order_by('-add_datetime').first()
+            result = {
+                'notifications_live_count': notifications_live_count,
+                'notification_last_time': notification_last.add_datetime,
+                'notification_theme': notification_last.theme
+            }
+            return JsonResponse(result)
+        sleep(1)
+    return JsonResponse({'notifications_live_count': 'retry'})
