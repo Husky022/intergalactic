@@ -80,28 +80,32 @@ class Notification:
             if self.object.comment_id:
                 if self.object.status == "LK":
                     action = 'поставил лайк комментарию '
-                    self.theme = 'Уведомление о лайке'
+                    self.theme = 'Лайк'
                     return action
                 elif self.object.status == "DZ":
                     action = 'поставил дизлайк комментарию '
-                    self.theme = 'Уведомление о дизлайке'
+                    self.theme = 'Дизлайк'
                     return action
             else:
                 if self.object.status == "LK":
                     action = 'поставил лайк статье '
-                    self.theme = 'Уведомление о лайке'
+                    self.theme = 'Лайк'
                     return action
                 elif self.object.status == "DZ":
                     action = 'поставил дизлайк статье '
-                    self.theme = 'Уведомление о дизлайке'
+                    self.theme = 'Дизлайк'
                     return action
         if isinstance(self.object, Article):
             if self.context == 'published':
                 action = 'после рассмотрения опубликована Ваша статья '
-                self.theme = 'Публикация статьи'
+                self.theme = 'Публикация'
                 return action
             elif self.context == 'rejected':
                 action = 'для публикации требуется иправить(доработать) статью '
+                self.theme = 'Модерация'
+                return action
+            elif self.context == 'blocked':
+                action = 'заблокирована Ваша статья '
                 self.theme = 'Модерация'
                 return action
             elif self.context == 'moderation':
@@ -123,10 +127,10 @@ class Notification:
         if isinstance(self.object, Complaint):
             if self.object.comment:
                 action = 'подал жалобу на комментарий: '
-                self.theme = ':Жалоба на комментарий'
+                self.theme = 'Жалоба'
             else:
                 action = 'подал жалобу на статью: '
-                self.theme = ':Жалоба на статью'
+                self.theme = 'Жалоба'
             return action
         if isinstance(self.object, ComplaintMessage):
             action = 'оставил сообщение при обжаловании статьи '
@@ -199,8 +203,11 @@ class Notification:
         if isinstance(self.object, Likes):
             if self.object.comment_id:
                 comment = Comment.objects.filter(id=self.object.comment_id).first()
+                # print(comment)
                 recipient_id = comment.author_id
+                # print(recipient_id)
                 recipient = IntergalacticUser.objects.filter(id=recipient_id).first()
+                # print(recipient)
             else:
                 article = Article.objects.filter(id=self.object.article_id).first()
                 recipient_id = article.author_id
@@ -272,8 +279,8 @@ class Notification:
     def send(self):
         # print('init')
         for recipient in self.recipients:
-            # print(recipient.id)
-            # print(self.sender_id)
+            print(recipient.id)
+            print(self.sender_id)
             if recipient.id != self.sender_id:
                 # print('init2')
                 notification = NotificationModel.objects.create(recipient=recipient,
@@ -286,7 +293,7 @@ class Notification:
                                                                 comment_id=self.comment_id,
                                                                 like_id=self.like_id,
                                                                 complaint_id=self.complaint_id)
-                # print('init3')
+                print('init3')
                 notification.save()
 
                 if recipient.send_to_email:
